@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="yoursite.com/"/>
-  <updated>2017-06-05T15:30:03.000Z</updated>
+  <updated>2017-09-08T16:56:43.000Z</updated>
   <id>yoursite.com/</id>
   
   <author>
@@ -16,48 +16,54 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>tech-link</title>
-    <link href="yoursite.com/2017/06/05/tech-link/"/>
-    <id>yoursite.com/2017/06/05/tech-link/</id>
-    <published>2017-06-05T14:57:18.000Z</published>
-    <updated>2017-06-05T15:30:03.000Z</updated>
+    <title>flink-latency-tracker</title>
+    <link href="yoursite.com/2017/09/09/flink-latency-tracker/"/>
+    <id>yoursite.com/2017/09/09/flink-latency-tracker/</id>
+    <published>2017-09-08T16:47:35.000Z</published>
+    <updated>2017-09-08T16:56:43.000Z</updated>
     
-    <content type="html"><![CDATA[<p><strong>文章目录</strong></p>
-<p><a href="https://mp.weixin.qq.com/s/-2FLdtEXWXKNrsO6E-9O4Q" title="Hive元数据库Mysql被打满分析与解决" target="_blank" rel="external">Hive元数据库Mysql被打满分析与解决</a><br>[神奇的[a-z]][2]</p>
-<p>[2]: </p>
+    <content type="html"><![CDATA[<p>关于Flink中的Latency track</p>
+<p><strong>目的:</strong> 为了监控Flink数据端到端的数据延迟</p>
+<p><strong>解决方案:</strong></p>
+<ol>
+<li>定时在source处定时的发送一个特殊的event，类似于watermark的处理方式，这里叫做LatencyMark。</li>
+<li>latencyMarker仅在source处产生,latencyMarker对象包含的是source operator的区分标志 subIndex以及vertexID（根据subIndex以及vertexID区分是否是同一个Marker）以及携带了发送的时间</li>
+<li>LatencyMark在各个operator间传递，在每个operator处将会比较LatencyMark和它当前的系统时间来决定延迟的大小，并存入LatencyGauge，每一个operator都会维护这样一个Metric（因此LatencyMark的实现就是基于TM和JM集群的机器系统时间是进行过同步的）</li>
+<li>当Operator有多个Output的时候，他会随机选择一个来发送，这确保了每一个Marker在整个流中只会出现一次，repartition也不会导致LatencyMark的数量暴增。<br>在sink operator处会维护source的最近128个latencyMarker，通过一个LatencyGauge来展示</li>
+</ol>
+<p><strong>具体实现:</strong></p>
+<p>默认latencyTrackingInterval是2000，也就是2s发送一个LatencyMarker。在StreamSource中判断，如果开启了latency track.那么就会定期发送LatencyMarker。</p>
+<p>在StreamSource（Operator）中的定时发送</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">latencyMarkTimer = processingTimeService.scheduleAtFixedRate(</div><div class="line">   new ProcessingTimeCallback() &#123;</div><div class="line">      @Override</div><div class="line">      public void onProcessingTime(long timestamp) throws Exception &#123;</div><div class="line">         try &#123;</div><div class="line">            // ProcessingTimeService callbacks are executed under the checkpointing lock</div><div class="line">            output.emitLatencyMarker(new LatencyMarker(timestamp, vertexID, subtaskIndex));</div><div class="line">         &#125; catch (Throwable t) &#123;</div><div class="line">            // we catch the Throwables here so that we don&apos;t trigger the processing</div><div class="line">            // timer services async exception handler</div><div class="line">            LOG.warn(&quot;Error while emitting latency marker.&quot;, t);</div><div class="line">         &#125;</div><div class="line">      &#125;</div><div class="line">   &#125;,</div><div class="line">   0L,</div><div class="line">   latencyTrackingInterval);</div></pre></td></tr></table></figure>
+<p>在Operator中处理：首先进行LatencyMarker处理再发送，<br>在AbstractStreamOperator类中定义的latencyMarker处理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public void reportLatency(LatencyMarker marker, boolean isSink) &#123;</div><div class="line">   LatencySourceDescriptor sourceDescriptor = LatencySourceDescriptor.of(marker, !isSink);</div><div class="line">   DescriptiveStatistics sourceStats = latencyStats.get(sourceDescriptor);</div><div class="line">   if (sourceStats == null) &#123;</div><div class="line">      // 512 element window (4 kb)</div><div class="line">      sourceStats = new DescriptiveStatistics(this.historySize);</div><div class="line">      latencyStats.put(sourceDescriptor, sourceStats);</div><div class="line">   &#125;</div><div class="line">   long now = System.currentTimeMillis();</div><div class="line">   sourceStats.addValue(now - marker.getMarkedTime());  //所以latency的计算时间是当前时间减去marker摄入的时间</div><div class="line">&#125;</div><div class="line"> </div><div class="line">1.首先生成一个Latency的描述符，sink operator的区分不同subIndex为不同LatencySource，其他operator不区分subIndex，只按照vertexID来区分</div><div class="line">2.然后生成对应Latency的描述符的最近&quot;historySize:128&quot;个Latency的值（WindowSize controls the number of values that contribute to the reported statistics. ）</div><div class="line">3.在这里值没有在web展示的原因是因为guage展示的不是一个数字，因而无法被展示</div></pre></td></tr></table></figure>
+<p>然后只要不是sink类型的operator，就会往后继续传递LatencyMarker。随机选择一个Channel来发送,这里就是为了保证一个latencyMarker在整个流中只会出现一次。这里和watermark的机制有点不一样，waterMark是遍历全部的channel来发送。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public void emitLatencyMarker(LatencyMarker latencyMarker) &#123;</div><div class="line">   if(outputs.length &lt;= 0) &#123;</div><div class="line">      // ignore</div><div class="line">   &#125; else if(outputs.length == 1) &#123;</div><div class="line">      outputs[0].emitLatencyMarker(latencyMarker);</div><div class="line">   &#125; else &#123;</div><div class="line">      // randomly select an output</div><div class="line">      outputs[RNG.nextInt(outputs.length)].emitLatencyMarker(latencyMarker);</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>LatencyMarker不会参与窗口时间的计算，应该说是不参与任何operator的计算，因此他只能用来衡量数据在整个DAG中流通的速度不能衡量operator计算的时间，这个只能通过单测来进行计算</strong><br><code>StreamInputProcessor#processInput</code>  这里进行对进入的element进行处理，对于watermark和LatencyMarker类型会先处理发送掉，不会经由后面的windowOperator或其他operator来处理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">if (result.isFullRecord()) &#123;</div><div class="line">   StreamElement recordOrMark = deserializationDelegate.getInstance();</div><div class="line"> </div><div class="line">   if (recordOrMark.isWatermark()) &#123;</div><div class="line">      long watermarkMillis = recordOrMark.asWatermark().getTimestamp();</div><div class="line">      if (watermarkMillis &gt; watermarks[currentChannel]) &#123;</div><div class="line">         watermarks[currentChannel] = watermarkMillis;</div><div class="line">         long newMinWatermark = Long.MAX_VALUE;</div><div class="line">         for (long watermark: watermarks) &#123;</div><div class="line">            newMinWatermark = Math.min(watermark, newMinWatermark);</div><div class="line">         &#125;</div><div class="line">         if (newMinWatermark &gt; lastEmittedWatermark) &#123;</div><div class="line">            lastEmittedWatermark = newMinWatermark;</div><div class="line">            synchronized (lock) &#123;</div><div class="line">               streamOperator.processWatermark(new Watermark(lastEmittedWatermark));</div><div class="line">            &#125;</div><div class="line">         &#125;</div><div class="line">      &#125;</div><div class="line">      continue;</div><div class="line">   &#125; else if(recordOrMark.isLatencyMarker()) &#123;</div><div class="line">      // handle latency marker</div><div class="line">      synchronized (lock) &#123;</div><div class="line">         streamOperator.processLatencyMarker(recordOrMark.asLatencyMarker());</div><div class="line">      &#125;</div><div class="line">      continue;</div><div class="line">   &#125; else &#123;</div><div class="line">      // now we can do the actual processing</div><div class="line">      StreamRecord&lt;IN&gt; record = recordOrMark.asRecord();</div><div class="line">      synchronized (lock) &#123;</div><div class="line">         numRecordsIn.inc();</div><div class="line">         streamOperator.setKeyContextElement1(record);</div><div class="line">         streamOperator.processElement(record);</div><div class="line">      &#125;</div><div class="line">      return true;</div><div class="line">   &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>sink中只进行report不再进行forward了（StreamSink.java）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">protected void reportOrForwardLatencyMarker(LatencyMarker maker) &#123;</div><div class="line">   // all operators are tracking latencies</div><div class="line">   this.latencyGauge.reportLatency(maker, true);</div><div class="line"> </div><div class="line">   // sinks don&apos;t forward latency markers</div></pre></td></tr></table></figure>
+<p>总结：</p>
+<ol>
+<li>LatencyMarker能够较好的监控因网络抖动或数据反压引起的延迟，可以提前预警反压情况</li>
+<li>在正常情况（没有反压）下数据在DAG图中的流动延迟大概0.5s左右，所以说Flink的确是一个很快的引擎：）</li>
+</ol>
 ]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;&lt;strong&gt;文章目录&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://mp.weixin.qq.com/s/-2FLdtEXWXKNrsO6E-9O4Q&quot; title=&quot;Hive元数据库Mysql被打满分析与解决&quot; target=&quot;_blank&quot; re
+      &lt;p&gt;关于Flink中的Latency track&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;目的:&lt;/strong&gt; 为了监控Flink数据端到端的数据延迟&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;解决方案:&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;定时在source处定时的发送一个特殊的eve
     
     </summary>
     
-    
-  </entry>
-  
-  <entry>
-    <title>关于你</title>
-    <link href="yoursite.com/2016/10/06/%E5%85%B3%E4%BA%8E%E4%BD%A0/"/>
-    <id>yoursite.com/2016/10/06/关于你/</id>
-    <published>2016-10-06T08:12:35.000Z</published>
-    <updated>2016-10-06T09:24:55.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>本来,这是一直想开的一个技术博客，没想到推迟了这么久，第一篇还是写的关于你。我不想和别人去诉说，但是不写下来我觉得我一个人有点无法承受，所以最终还是选择记录在这里。</p>
-<p>3号4号去你那回来之后，郁积了很久，我不知道究竟出了什么问题，突然会让两个人的关系冲淡成这样，可能缘分这种东西，真的是说来就来说走就走。刚刚和你说过两个人要互相珍惜，不管发生什么都不能轻易放弃对方，可是一转头两个人就已经撞的头破血流。错是我的，怪我太笨，但是认错也不再能被接受，看淡之后的你真可怕。</p>
-<p>或许我们的关系这样断断续续就慢慢挥霍掉了两个人所有的耐心，又或者我们的相爱相杀的故事还没有完全开始，明天的事谁又说的准呢.但至少我明白一件事，无论怎样不能迷失了自己，所以我又要开始习惯自己，要拥有必先懂失去怎接受。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;本来,这是一直想开的一个技术博客，没想到推迟了这么久，第一篇还是写的关于你。我不想和别人去诉说，但是不写下来我觉得我一个人有点无法承受，所以最终还是选择记录在这里。&lt;/p&gt;
-&lt;p&gt;3号4号去你那回来之后，郁积了很久，我不知道究竟出了什么问题，突然会让两个人的关系冲淡成这样，
-    
-    </summary>
+      <category term="Flink" scheme="yoursite.com/categories/Flink/"/>
     
     
-      <category term="兔子" scheme="yoursite.com/tags/%E5%85%94%E5%AD%90/"/>
+      <category term="flink" scheme="yoursite.com/tags/flink/"/>
     
   </entry>
   
