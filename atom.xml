@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="yoursite.com/"/>
-  <updated>2017-09-08T17:36:11.000Z</updated>
+  <updated>2017-09-09T03:11:48.000Z</updated>
   <id>yoursite.com/</id>
   
   <author>
@@ -19,8 +19,8 @@
     <title>Hexo tutorial</title>
     <link href="yoursite.com/2017/09/09/hello-world/"/>
     <id>yoursite.com/2017/09/09/hello-world/</id>
-    <published>2017-09-08T17:36:11.000Z</published>
-    <updated>2017-09-08T17:36:11.000Z</updated>
+    <published>2017-09-09T03:11:48.000Z</published>
+    <updated>2017-09-09T03:11:48.000Z</updated>
     
     <content type="html"><![CDATA[<p>Hexo 写文章常用语法</p>
 <a id="more"></a>

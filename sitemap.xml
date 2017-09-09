@@ -4,14 +4,21 @@
   <url>
     <loc>yoursite.com/2017/09/09/hello-world/</loc>
     
-    <lastmod>2017-09-08T17:36:11.000Z</lastmod>
+    <lastmod>2017-09-09T03:11:48.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>yoursite.com/tags/index.html</loc>
+    
+    <lastmod>2017-09-09T03:11:37.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>yoursite.com/categories/index.html</loc>
     
-    <lastmod>2017-09-08T17:28:08.000Z</lastmod>
+    <lastmod>2017-09-09T03:11:28.000Z</lastmod>
     
   </url>
   
@@ -19,13 +26,6 @@
     <loc>yoursite.com/about/index.html</loc>
     
     <lastmod>2017-09-08T17:27:58.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>yoursite.com/tags/index.html</loc>
-    
-    <lastmod>2017-09-08T17:27:32.000Z</lastmod>
     
   </url>
   
