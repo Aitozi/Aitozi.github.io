@@ -55,11 +55,12 @@
     <link href="yoursite.com/2017/09/09/flink-latency-tracker/"/>
     <id>yoursite.com/2017/09/09/flink-latency-tracker/</id>
     <published>2017-09-08T16:47:35.000Z</published>
-    <updated>2017-09-09T03:47:52.000Z</updated>
+    <updated>2017-09-09T03:50:18.000Z</updated>
     
     <content type="html"><![CDATA[<p>关于Flink中的Latency track</p>
 <a id="more"></a>
-<h3 id="目的-为了监控Flink数据端到端的数据延迟"><a href="#目的-为了监控Flink数据端到端的数据延迟" class="headerlink" title="目的: 为了监控Flink数据端到端的数据延迟"></a>目的: 为了监控Flink数据端到端的数据延迟</h3><p><strong>解决方案:</strong></p>
+<h3 id="目的"><a href="#目的" class="headerlink" title="目的:"></a>目的:</h3><p>为了监控Flink数据端到端的数据延迟</p>
+<p><strong>解决方案:</strong></p>
 <ol>
 <li>定时在source处定时的发送一个特殊的event，类似于watermark的处理方式，这里叫做LatencyMark。</li>
 <li>latencyMarker仅在source处产生,latencyMarker对象包含的是source operator的区分标志 subIndex以及vertexID（根据subIndex以及vertexID区分是否是同一个Marker）以及携带了发送的时间</li>

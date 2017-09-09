@@ -108,7 +108,7 @@
 <meta property="og:url" content="yoursite.com/2017/09/09/flink-latency-tracker/index.html">
 <meta property="og:site_name" content="Aitozi">
 <meta property="og:description" content="关于Flink中的Latency track">
-<meta property="og:updated_time" content="2017-09-09T03:47:52.000Z">
+<meta property="og:updated_time" content="2017-09-09T03:50:18.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="flink-latency-tracker">
 <meta name="twitter:description" content="关于Flink中的Latency track">
@@ -390,7 +390,8 @@
       
         <p>关于Flink中的Latency track</p>
 <a id="more"></a>
-<h3 id="目的-为了监控Flink数据端到端的数据延迟"><a href="#目的-为了监控Flink数据端到端的数据延迟" class="headerlink" title="目的: 为了监控Flink数据端到端的数据延迟"></a>目的: 为了监控Flink数据端到端的数据延迟</h3><p><strong>解决方案:</strong></p>
+<h3 id="目的"><a href="#目的" class="headerlink" title="目的:"></a>目的:</h3><p>为了监控Flink数据端到端的数据延迟</p>
+<p><strong>解决方案:</strong></p>
 <ol>
 <li>定时在source处定时的发送一个特殊的event，类似于watermark的处理方式，这里叫做LatencyMark。</li>
 <li>latencyMarker仅在source处产生,latencyMarker对象包含的是source operator的区分标志 subIndex以及vertexID（根据subIndex以及vertexID区分是否是同一个Marker）以及携带了发送的时间</li>
@@ -665,7 +666,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#目的-为了监控Flink数据端到端的数据延迟"><span class="nav-number">1.</span> <span class="nav-text">目的: 为了监控Flink数据端到端的数据延迟</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体实现"><span class="nav-number">2.</span> <span class="nav-text">具体实现:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结："><span class="nav-number">3.</span> <span class="nav-text">总结：</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#目的"><span class="nav-number">1.</span> <span class="nav-text">目的:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体实现"><span class="nav-number">2.</span> <span class="nav-text">具体实现:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结："><span class="nav-number">3.</span> <span class="nav-text">总结：</span></a></li></ol></div>
             
 
           </div>
