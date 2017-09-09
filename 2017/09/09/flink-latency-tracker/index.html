@@ -108,7 +108,7 @@
 <meta property="og:url" content="yoursite.com/2017/09/09/flink-latency-tracker/index.html">
 <meta property="og:site_name" content="Aitozi">
 <meta property="og:description" content="关于Flink中的Latency track">
-<meta property="og:updated_time" content="2017-09-08T17:20:10.000Z">
+<meta property="og:updated_time" content="2017-09-09T03:31:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="flink-latency-tracker">
 <meta name="twitter:description" content="关于Flink中的Latency track">
@@ -390,7 +390,7 @@
       
         <p>关于Flink中的Latency track</p>
 <a id="more"></a>
-<p><strong>目的:</strong> 为了监控Flink数据端到端的数据延迟</p>
+<p>###目的: 为了监控Flink数据端到端的数据延迟</p>
 <p><strong>解决方案:</strong></p>
 <ol>
 <li>定时在source处定时的发送一个特殊的event，类似于watermark的处理方式，这里叫做LatencyMark。</li>
@@ -398,7 +398,7 @@
 <li>LatencyMark在各个operator间传递，在每个operator处将会比较LatencyMark和它当前的系统时间来决定延迟的大小，并存入LatencyGauge，每一个operator都会维护这样一个Metric（因此LatencyMark的实现就是基于TM和JM集群的机器系统时间是进行过同步的）</li>
 <li>当Operator有多个Output的时候，他会随机选择一个来发送，这确保了每一个Marker在整个流中只会出现一次，repartition也不会导致LatencyMark的数量暴增。<br>在sink operator处会维护source的最近128个latencyMarker，通过一个LatencyGauge来展示</li>
 </ol>
-<p><strong>具体实现:</strong></p>
+<p>###具体实现:</p>
 <p>默认latencyTrackingInterval是2000，也就是2s发送一个LatencyMarker。在StreamSource中判断，如果开启了latency track.那么就会定期发送LatencyMarker。</p>
 <p>在StreamSource（Operator）中的定时发送</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">latencyMarkTimer = processingTimeService.scheduleAtFixedRate(</div><div class="line">   <span class="keyword">new</span> ProcessingTimeCallback() &#123;</div><div class="line">      <span class="meta">@Override</span></div><div class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onProcessingTime</span><span class="params">(<span class="keyword">long</span> timestamp)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">         <span class="keyword">try</span> &#123;</div><div class="line">            <span class="comment">// ProcessingTimeService callbacks are executed under the checkpointing lock</span></div><div class="line">            output.emitLatencyMarker(<span class="keyword">new</span> LatencyMarker(timestamp, vertexID, subtaskIndex));</div><div class="line">         &#125; <span class="keyword">catch</span> (Throwable t) &#123;</div><div class="line">            <span class="comment">// we catch the Throwables here so that we don't trigger the processing</span></div><div class="line">            <span class="comment">// timer services async exception handler</span></div><div class="line">            LOG.warn(<span class="string">"Error while emitting latency marker."</span>, t);</div><div class="line">         &#125;</div><div class="line">      &#125;</div><div class="line">   &#125;,</div><div class="line">   <span class="number">0L</span>,</div><div class="line">   latencyTrackingInterval);</div></pre></td></tr></table></figure>
@@ -410,7 +410,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (result.isFullRecord()) &#123;</div><div class="line">   StreamElement recordOrMark = deserializationDelegate.getInstance();</div><div class="line"> </div><div class="line">   <span class="keyword">if</span> (recordOrMark.isWatermark()) &#123;</div><div class="line">      <span class="keyword">long</span> watermarkMillis = recordOrMark.asWatermark().getTimestamp();</div><div class="line">      <span class="keyword">if</span> (watermarkMillis &gt; watermarks[currentChannel]) &#123;</div><div class="line">         watermarks[currentChannel] = watermarkMillis;</div><div class="line">         <span class="keyword">long</span> newMinWatermark = Long.MAX_VALUE;</div><div class="line">         <span class="keyword">for</span> (<span class="keyword">long</span> watermark: watermarks) &#123;</div><div class="line">            newMinWatermark = Math.min(watermark, newMinWatermark);</div><div class="line">         &#125;</div><div class="line">         <span class="keyword">if</span> (newMinWatermark &gt; lastEmittedWatermark) &#123;</div><div class="line">            lastEmittedWatermark = newMinWatermark;</div><div class="line">            <span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">               streamOperator.processWatermark(<span class="keyword">new</span> Watermark(lastEmittedWatermark));</div><div class="line">            &#125;</div><div class="line">         &#125;</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">continue</span>;</div><div class="line">   &#125; <span class="keyword">else</span> <span class="keyword">if</span>(recordOrMark.isLatencyMarker()) &#123;</div><div class="line">      <span class="comment">// handle latency marker</span></div><div class="line">      <span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">         streamOperator.processLatencyMarker(recordOrMark.asLatencyMarker());</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">continue</span>;</div><div class="line">   &#125; <span class="keyword">else</span> &#123;</div><div class="line">      <span class="comment">// now we can do the actual processing</span></div><div class="line">      StreamRecord&lt;IN&gt; record = recordOrMark.asRecord();</div><div class="line">      <span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">         numRecordsIn.inc();</div><div class="line">         streamOperator.setKeyContextElement1(record);</div><div class="line">         streamOperator.processElement(record);</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">   &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
 <p>sink中只进行report不再进行forward了（StreamSink.java）</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">reportOrForwardLatencyMarker</span><span class="params">(LatencyMarker maker)</span> </span>&#123;</div><div class="line">   <span class="comment">// all operators are tracking latencies</span></div><div class="line">   <span class="keyword">this</span>.latencyGauge.reportLatency(maker, <span class="keyword">true</span>);</div><div class="line"> </div><div class="line">   <span class="comment">// sinks don't forward latency markers</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>总结：</p>
+<p>###总结：</p>
 <ol>
 <li>LatencyMarker能够较好的监控因网络抖动或数据反压引起的延迟，可以提前预警反压情况</li>
 <li>在正常情况（没有反压）下数据在DAG图中的流动延迟大概0.5s左右，所以说Flink的确是一个很快的引擎：）</li>
@@ -616,6 +616,32 @@
         
 
         
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://wuchong.me/" title="wuchong" target="_blank">wuchong</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://chenyuzhao.me/" title="yuzhao" target="_blank">yuzhao</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/yanghua_kobe?viewmode=contents" title="vinoyang" target="_blank">vinoyang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/lmalds?viewmode=contents" title="Imalds" target="_blank">Imalds</a>
+                </li>
+              
+            </ul>
+          </div>
         
 
         
