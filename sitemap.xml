@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>yoursite.com/2016/10/12/hello-world/</loc>
+    
+    <lastmod>2017-09-10T07:02:25.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>yoursite.com/2017/09/09/flink-latency-tracker/</loc>
     
     <lastmod>2017-09-09T04:35:55.000Z</lastmod>
@@ -26,13 +33,6 @@
     <loc>yoursite.com/tags/index.html</loc>
     
     <lastmod>2017-09-09T03:27:18.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>yoursite.com/2017/09/09/hello-world/</loc>
-    
-    <lastmod>2017-09-09T03:11:48.000Z</lastmod>
     
   </url>
   
