@@ -84,7 +84,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="hexo," />
+  <meta name="keywords" content="Flink," />
 
 
 
@@ -102,16 +102,19 @@
 
 
 
-<meta name="description" content="Hexo 写文章常用语法">
+<meta name="description" content="关于Flink中window的实现分析">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo tutorial">
-<meta property="og:url" content="yoursite.com/2016/10/12/hello-world/index.html">
+<meta property="og:title" content="flink中window实现的源码分析">
+<meta property="og:url" content="yoursite.com/2018/01/07/Flink Window实现源码分析/index.html">
 <meta property="og:site_name" content="Aitozi">
-<meta property="og:description" content="Hexo 写文章常用语法">
-<meta property="og:updated_time" content="2017-09-10T07:02:25.000Z">
+<meta property="og:description" content="关于Flink中window的实现分析">
+<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/18-1-7/74574325.jpg">
+<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/18-1-7/87202276.jpg">
+<meta property="og:updated_time" content="2018-01-06T18:14:37.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo tutorial">
-<meta name="twitter:description" content="Hexo 写文章常用语法">
+<meta name="twitter:title" content="flink中window实现的源码分析">
+<meta name="twitter:description" content="关于Flink中window的实现分析">
+<meta name="twitter:image" content="http://or0igopk2.bkt.clouddn.com/18-1-7/74574325.jpg">
 
 
 
@@ -140,13 +143,13 @@
 
 
 
-  <link rel="canonical" href="yoursite.com/2016/10/12/hello-world/"/>
+  <link rel="canonical" href="yoursite.com/2018/01/07/Flink Window实现源码分析/"/>
 
 
 
 
 
-  <title>Hexo tutorial | Aitozi</title>
+  <title>flink中window实现的源码分析 | Aitozi</title>
   
 
 
@@ -299,7 +302,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="yoursite.com/2016/10/12/hello-world/">
+    <link itemprop="mainEntityOfPage" href="yoursite.com/2018/01/07/Flink Window实现源码分析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="aitozi">
@@ -316,7 +319,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">Hexo tutorial</h2>
+          <h2 class="post-title" itemprop="name headline">flink中window实现的源码分析</h2>
         
 
         <div class="post-meta">
@@ -328,8 +331,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-12T00:47:35+08:00">
-                2016-10-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-07T02:05:43+08:00">
+                2018-01-07
               </time>
             
 
@@ -351,8 +354,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/常用命令/" itemprop="url" rel="index">
-                    <span itemprop="name">常用命令</span>
+                  <a href="/categories/源码分析/" itemprop="url" rel="index">
+                    <span itemprop="name">源码分析</span>
                   </a>
                 </span>
 
@@ -388,19 +391,46 @@
       
 
       
-        <p>Hexo 写文章常用语法</p>
+        <p>关于Flink中window的实现分析</p>
 <a id="more"></a>
-<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<p>###Create a page </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new page tags</div></pre></td></tr></table></figure>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+<h2 id="window"><a href="#window" class="headerlink" title="window"></a>window</h2><p>window提供了一种处理无界数据的一种手段</p>
+<h2 id="window的组件"><a href="#window的组件" class="headerlink" title="window的组件"></a>window的组件</h2><p>首先我们看window包含了哪些组件：触发器<code>trigger</code>，触发器上下文<code>triggerContext</code>，内部状态<code>windowState</code>，窗口分配器<code>windowassigner</code>, 内部时间服务器<code>internalTimerService</code>,初看到这么多的组件可能会有点懵，下面的分析会一点一点介绍这些组件的作用。</p>
+<p>今天我们从flink接收流元素进行处理的角度来分析其实现，在flink的DAG中流动的有这么几种元素：<code>StreamRecord</code>,<code>LatencyRecord</code>,<code>WaterMark</code>,<code>StreamStatus</code>,我们这里只考虑这样两种元素<code>StreamRecord</code>和<code>WaterMark</code></p>
+<h2 id="streamRecord"><a href="#streamRecord" class="headerlink" title="streamRecord"></a>streamRecord</h2><p>windowOperator实现了<code>KeyContext</code>,其实就是代表每一个windowOperator处理每一个元素就会在一个Key的上下文的环境中去做处理。</p>
+<p>当windowOperator接收到一条<code>StreamRecord</code>,windowOperator会做什么呢?</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">	numRecordsIn.inc();</div><div class="line">	streamOperator.setKeyContextElement1(record);</div><div class="line">	streamOperator.processElement(record);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li>首先设置该operator的key为当前元素</li>
+<li>根据element所携带的时间戳（processing time或者event  time）分配元素所应该属于的窗口，一个元素可能会隶属于多个窗口，比如slideWindowAssigner。</li>
+<li>如果这个窗口是一个可merge窗口，例如session窗口，那么就会进行和原有窗口的合并和状态的更新</li>
+</ol>
+<h3 id="窗口merge原理"><a href="#窗口merge原理" class="headerlink" title="窗口merge原理"></a>窗口merge原理</h3><p><img src="http://or0igopk2.bkt.clouddn.com/18-1-7/74574325.jpg" alt=""></p>
+<ol>
+<li>首先取出之前的所有未清除的窗口，和新分配到的窗口做一次merge，有重叠部分则新生成大的窗口</li>
+<li>将各个小窗口的真是数据merge到合并后的大窗口</li>
+<li>注册大窗口的清理时间触发器，清理原先子窗口的清理时间触发器</li>
+</ol>
+<p>窗口merge完之后，则会通过<code>triggerContext#OnElement</code>方法去进行判断是否能触发计算，触发方式如前文分析wartermark的那样，就是通过wartermark来判断这个窗口是否可以进行计算</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> TriggerResult <span class="title">onElement</span><span class="params">(Object element, <span class="keyword">long</span> timestamp, TimeWindow window, TriggerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">	<span class="keyword">if</span> (window.maxTimestamp() &lt;= ctx.getCurrentWatermark()) &#123;</div><div class="line">		<span class="comment">// if the watermark is already past the window fire immediately</span></div><div class="line">		<span class="keyword">return</span> TriggerResult.FIRE;</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		ctx.registerEventTimeTimer(window.maxTimestamp());</div><div class="line">		<span class="keyword">return</span> TriggerResult.CONTINUE;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果不能触发计算，我们看到其实他是将<code>window.maxTimestamp</code>注册到了<code>eventTimeQueue</code>中, 这里我们先记一下，后文会提到他的作用。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>到这里windowOperator接收到一个<code>StreamRecord</code>元素的处理逻辑已经结束了，如果窗口不是可merge类型的除了不做窗口merge，其他的操作也是大同小异，到这里也许你会有几个疑问(其实是我自己看代码的一些疑问：)</p>
+<ol>
+<li>如果我设置了allowLateness会对我们的计算结果产生什么样的影响呢？</li>
+<li>我是用<code>apply()</code>,<code>process()</code>函数或者<code>reduce()</code>这种聚合函数对于window的<code>cost</code>代价有多大的差别？</li>
+</ol>
+<h3 id="问题一"><a href="#问题一" class="headerlink" title="问题一"></a>问题一</h3><p>上文中提到的在处理元素的最后会注册一个窗口cleanupTimer，那么这个时间是多少呢? <code>window.maxTimestamp() + allowedLateness;</code>  所以我们看到一个窗口存在时长是水位线经过<code>window的最大时间+allowLateness</code>的时间，因此当水位线大于窗口最大时间后就会触发计算，而计算之后状态不会清空，会保留<code>allowedLateness</code>的时长，而此时窗口状态还在保留，所以<strong>上游有晚到的数据来一条就会触发一次该窗口的计算</strong>，而且每次计算的数据都是该窗口的全量数据，所以业务方要慎用，或者下游要做好相应的去重或更新措施，否则可能会造成结果的不准确</p>
+<h3 id="问题二"><a href="#问题二" class="headerlink" title="问题二"></a>问题二</h3><p>不同的函数最终影响的其实是我们最终window保存数据的state的形式有<code>ListState</code>，也有<code>reducingState</code>…,最终影响了rocksdb和checkpoint的大小，不过肯定是能用聚合还是用聚合函数比较好</p>
+<h2 id="waterMark"><a href="#waterMark" class="headerlink" title="waterMark"></a>waterMark</h2><p>当元素来的是一个watermark，window Operator又会以怎样的逻辑去处理呢?</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleWatermark</span><span class="params">(Watermark watermark)</span> </span>&#123;</div><div class="line">	<span class="keyword">try</span> &#123;</div><div class="line">		<span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">			lastEmittedWatermark = watermark.getTimestamp();</div><div class="line">			operator.processWatermark(watermark);</div><div class="line">		&#125;</div><div class="line">	&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"Exception occurred while processing valve output watermark: "</span>, e);		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里我们将关注到开篇提到的<code>internalTimeService</code>,</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">advanceWatermark</span><span class="params">(<span class="keyword">long</span> time)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">	currentWatermark = time;</div><div class="line"></div><div class="line">	InternalTimer&lt;K, N&gt; timer;</div><div class="line"></div><div class="line">	<span class="keyword">while</span> ((timer = eventTimeTimersQueue.peek()) != <span class="keyword">null</span> &amp;&amp; timer.getTimestamp() &lt;= time) &#123;</div><div class="line"></div><div class="line">		Set&lt;InternalTimer&lt;K, N&gt;&gt; timerSet = getEventTimeTimerSetForTimer(timer);</div><div class="line">		timerSet.remove(timer);</div><div class="line">		eventTimeTimersQueue.remove();</div><div class="line"></div><div class="line">		keyContext.setCurrentKey(timer.getKey());</div><div class="line">		triggerTarget.onEventTime(timer);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="watermark元素处理逻辑"><a href="#watermark元素处理逻辑" class="headerlink" title="watermark元素处理逻辑"></a>watermark元素处理逻辑</h3><p><img src="http://or0igopk2.bkt.clouddn.com/18-1-7/87202276.jpg" alt=""></p>
+<ol>
+<li>当流元素是watermark时主要处理逻辑集中在<code>internaltimerservice</code>上</li>
+<li>如果<code>eventTimeTimersQueue</code>这个优先级队列中最早的时间低于了水位线，那么就会取出同一时刻的所有key的timer进行计算</li>
+<li>处理可能意味着窗口的计算触发或者某些窗口的清理</li>
+</ol>
+<p>以上便是flink对于窗口的实现逻辑。</p>
 
       
     </div>
@@ -442,7 +472,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/hexo/" rel="tag"># hexo</a>
+            <a href="/tags/Flink/" rel="tag"># Flink</a>
           
         </div>
       
@@ -455,15 +485,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/12/17/为什么现代系统架构需要一个新的编程模型--actor编程模型/" rel="next" title="为什么现代系统架构需要一个新的编程模型 actor编程模型">
+                <i class="fa fa-chevron-left"></i> 为什么现代系统架构需要一个新的编程模型 actor编程模型
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/09/09/flink-latency-tracker/" rel="prev" title="flink-latency-tracker">
-                flink-latency-tracker <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -658,7 +688,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#window"><span class="nav-number">1.</span> <span class="nav-text">window</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#window的组件"><span class="nav-number">2.</span> <span class="nav-text">window的组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#streamRecord"><span class="nav-number">3.</span> <span class="nav-text">streamRecord</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#窗口merge原理"><span class="nav-number">3.1.</span> <span class="nav-text">窗口merge原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题一"><span class="nav-number">4.1.</span> <span class="nav-text">问题一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题二"><span class="nav-number">4.2.</span> <span class="nav-text">问题二</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#waterMark"><span class="nav-number">5.</span> <span class="nav-text">waterMark</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#watermark元素处理逻辑"><span class="nav-number">5.1.</span> <span class="nav-text">watermark元素处理逻辑</span></a></li></ol></li></ol></div>
             
 
           </div>
