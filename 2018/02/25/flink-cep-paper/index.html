@@ -84,7 +84,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Flink," />
+  <meta name="keywords" content="Flink,CEP," />
 
 
 
@@ -102,19 +102,23 @@
 
 
 
-<meta name="description" content="关于Flink中window的实现分析">
+<meta name="description" content="CEP实现论文">
 <meta property="og:type" content="article">
-<meta property="og:title" content="flink中window实现的源码分析">
-<meta property="og:url" content="yoursite.com/2018/01/07/Flink Window实现源码分析/index.html">
+<meta property="og:title" content="flink-cep-paper">
+<meta property="og:url" content="yoursite.com/2018/02/25/flink-cep-paper/index.html">
 <meta property="og:site_name" content="Aitozi">
-<meta property="og:description" content="关于Flink中window的实现分析">
-<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/18-1-7/74574325.jpg">
-<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/18-1-7/87202276.jpg">
-<meta property="og:updated_time" content="2018-01-07T03:17:05.000Z">
+<meta property="og:description" content="CEP实现论文">
+<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/18-2-25/25532292.jpg">
+<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/18-2-25/18248041.jpg">
+<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/18-2-25/20508653.jpg">
+<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/18-2-25/48608682.jpg">
+<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/18-2-25/87062132.jpg">
+<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/18-2-25/41465208.jpg">
+<meta property="og:updated_time" content="2018-02-25T12:44:25.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="flink中window实现的源码分析">
-<meta name="twitter:description" content="关于Flink中window的实现分析">
-<meta name="twitter:image" content="http://or0igopk2.bkt.clouddn.com/18-1-7/74574325.jpg">
+<meta name="twitter:title" content="flink-cep-paper">
+<meta name="twitter:description" content="CEP实现论文">
+<meta name="twitter:image" content="http://or0igopk2.bkt.clouddn.com/18-2-25/25532292.jpg">
 
 
 
@@ -143,13 +147,13 @@
 
 
 
-  <link rel="canonical" href="yoursite.com/2018/01/07/Flink Window实现源码分析/"/>
+  <link rel="canonical" href="yoursite.com/2018/02/25/flink-cep-paper/"/>
 
 
 
 
 
-  <title>flink中window实现的源码分析 | Aitozi</title>
+  <title>flink-cep-paper | Aitozi</title>
   
 
 
@@ -302,7 +306,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="yoursite.com/2018/01/07/Flink Window实现源码分析/">
+    <link itemprop="mainEntityOfPage" href="yoursite.com/2018/02/25/flink-cep-paper/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="aitozi">
@@ -319,7 +323,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">flink中window实现的源码分析</h2>
+          <h2 class="post-title" itemprop="name headline">flink-cep-paper</h2>
         
 
         <div class="post-meta">
@@ -331,8 +335,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-07T02:05:43+08:00">
-                2018-01-07
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-25T20:19:15+08:00">
+                2018-02-25
               </time>
             
 
@@ -354,8 +358,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/源码分析/" itemprop="url" rel="index">
-                    <span itemprop="name">源码分析</span>
+                  <a href="/categories/论文/" itemprop="url" rel="index">
+                    <span itemprop="name">论文</span>
                   </a>
                 </span>
 
@@ -373,8 +377,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/01/07/Flink Window实现源码分析/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2018/01/07/Flink Window实现源码分析/" itemprop="commentsCount"></span>
+                <a href="/2018/02/25/flink-cep-paper/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2018/02/25/flink-cep-paper/" itemprop="commentsCount"></span>
                 </a>
               </span>
               <!--/noindex-->
@@ -408,46 +412,99 @@
       
 
       
-        <p>关于Flink中window的实现分析</p>
+        <p>CEP实现论文</p>
 <a id="more"></a>
-<h2 id="window"><a href="#window" class="headerlink" title="window"></a>window</h2><p>window提供了一种处理无界数据的一种手段</p>
-<h2 id="window的组件"><a href="#window的组件" class="headerlink" title="window的组件"></a>window的组件</h2><p>首先我们看window包含了哪些组件：触发器<code>trigger</code>，触发器上下文<code>triggerContext</code>，内部状态<code>windowState</code>，窗口分配器<code>windowassigner</code>, 内部时间服务器<code>internalTimerService</code>,初看到这么多的组件可能会有点懵，下面的分析会一点一点介绍这些组件的作用。</p>
-<p>今天我们从flink接收流元素进行处理的角度来分析其实现，在flink的DAG中流动的有这么几种元素：<code>StreamRecord</code>,<code>LatencyRecord</code>,<code>WaterMark</code>,<code>StreamStatus</code>,我们这里只考虑这样两种元素<code>StreamRecord</code>和<code>WaterMark</code></p>
-<h2 id="streamRecord"><a href="#streamRecord" class="headerlink" title="streamRecord"></a>streamRecord</h2><p>windowOperator实现了<code>KeyContext</code>,其实就是代表每一个windowOperator处理每一个元素就会在一个Key的上下文的环境中去做处理。</p>
-<p>当windowOperator接收到一条<code>StreamRecord</code>,windowOperator会做什么呢?</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">	numRecordsIn.inc();</div><div class="line">	streamOperator.setKeyContextElement1(record);</div><div class="line">	streamOperator.processElement(record);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>2016年1月29号，社区提了这个patch<a href="https://github.com/apache/flink/pull/1557" target="_blank" rel="external">[FLINK-3216]</a>引入flink cep模块，flink cep实现基于论文：<a href="https://people.cs.umass.edu/%7Eyanlei/publications/sase-sigmod08.pdf" target="_blank" rel="external">Efficient Pattern Matching over Event Streams</a>。我们来深入阅读以下这篇论文。</p>
+<h3 id="event-pattern查询表达形式"><a href="#event-pattern查询表达形式" class="headerlink" title="event pattern查询表达形式"></a>event pattern查询表达形式</h3><p>先看三个查询<br><img src="http://or0igopk2.bkt.clouddn.com/18-2-25/25532292.jpg" alt=""></p>
+<p><em>Query1</em></p>
+<p>匹配出的是：挑选从货架取出的商品，未经checkout，带离了商店的行为序列</p>
 <ol>
-<li>首先设置该operator的key为当前元素</li>
-<li>根据element所携带的时间戳（processing time或者event  time）分配元素所应该属于的窗口，一个元素可能会隶属于多个窗口，比如slideWindowAssigner。</li>
-<li>如果这个窗口是一个可merge窗口，例如session窗口，那么就会进行和原有窗口的合并和状态的更新</li>
+<li><code>SEQ(Shelf a, ∼(Register b), Exit c)</code></li>
+<li>where条件指定了a，b，c的tagid相同</li>
+<li>within指定窗口大小12小时</li>
 </ol>
-<h3 id="窗口merge原理"><a href="#窗口merge原理" class="headerlink" title="窗口merge原理"></a>窗口merge原理</h3><p><img src="http://or0igopk2.bkt.clouddn.com/18-1-7/74574325.jpg" alt=""></p>
+<p><em>Query2</em></p>
+<p>匹配出的是：一个污染报警和相关受污染的发货卸货流转站点序列</p>
 <ol>
-<li>首先取出之前的所有未清除的窗口，和新分配到的窗口做一次merge，有重叠部分则新生成大的窗口</li>
-<li>将各个小窗口的真实数据merge到合并后的大窗口</li>
-<li>注册大窗口的清理时间触发器，清理原先子窗口的清理时间触发器</li>
+<li>报警类型是污染</li>
+<li>匹配出的装载点和前一个到达点一致</li>
+<li>within指定匹配窗口大小是3小时</li>
 </ol>
-<p>窗口merge完之后，则会通过<code>triggerContext#OnElement</code>方法去进行判断是否能触发计算，触发方式如前文分析wartermark的那样，就是通过wartermark来判断这个窗口是否可以进行计算</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> TriggerResult <span class="title">onElement</span><span class="params">(Object element, <span class="keyword">long</span> timestamp, TimeWindow window, TriggerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">	<span class="keyword">if</span> (window.maxTimestamp() &lt;= ctx.getCurrentWatermark()) &#123;</div><div class="line">		<span class="comment">// if the watermark is already past the window fire immediately</span></div><div class="line">		<span class="keyword">return</span> TriggerResult.FIRE;</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		ctx.registerEventTimeTimer(window.maxTimestamp());</div><div class="line">		<span class="keyword">return</span> TriggerResult.CONTINUE;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>如果不能触发计算，我们看到其实他是将<code>window.maxTimestamp</code>注册到了<code>eventTimeQueue</code>中, 这里我们先记一下，后文会提到他的作用。</p>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>到这里windowOperator接收到一个<code>StreamRecord</code>元素的处理逻辑已经结束了，如果窗口不是可merge类型的除了不做窗口merge，其他的操作也是大同小异，到这里也许你会有几个疑问(其实是我自己看代码的一些疑问：)</p>
+<p><em>Query3</em></p>
+<p>匹配出的是：匹配股票交易拐点</p>
 <ol>
-<li>如果我设置了allowLateness会对我们的计算结果产生什么样的影响呢？</li>
-<li>我是用<code>apply()</code>,<code>process()</code>函数或者<code>reduce()</code>这种聚合函数对于window的<code>cost</code>代价有多大的差别？</li>
+<li>初始成交量高于1000</li>
+<li>持续增加，最后成交量突然跌为最高点的80%以下的序列</li>
+<li>1小时的时间窗口</li>
 </ol>
-<h3 id="问题一"><a href="#问题一" class="headerlink" title="问题一"></a>问题一</h3><p>上文中提到的在处理元素的最后会注册一个窗口cleanupTimer，那么这个时间是多少呢? <code>window.maxTimestamp() + allowedLateness;</code>  所以我们看到一个窗口存在时长是水位线经过<code>window的最大时间+allowLateness</code>的时间，因此当水位线大于窗口最大时间后就会触发计算，而计算之后状态不会清空，会保留<code>allowedLateness</code>的时长，而此时窗口状态还在保留，所以<strong>上游有晚到的数据来一条就会触发一次该窗口的计算</strong>，而且每次计算的数据都是该窗口的全量数据，所以业务方要慎用，或者下游要做好相应的去重或更新措施，否则可能会造成结果的不准确</p>
-<h3 id="问题二"><a href="#问题二" class="headerlink" title="问题二"></a>问题二</h3><p>不同的函数最终影响的其实是我们最终window保存数据的state的形式有<code>ListState</code>，也有<code>reducingState</code>…,最终影响了rocksdb和checkpoint的大小，不过肯定是能用聚合还是用聚合函数比较好</p>
-<h2 id="waterMark"><a href="#waterMark" class="headerlink" title="waterMark"></a>waterMark</h2><p>当元素来的是一个watermark，window Operator又会以怎样的逻辑去处理呢?</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleWatermark</span><span class="params">(Watermark watermark)</span> </span>&#123;</div><div class="line">	<span class="keyword">try</span> &#123;</div><div class="line">		<span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">			lastEmittedWatermark = watermark.getTimestamp();</div><div class="line">			operator.processWatermark(watermark);</div><div class="line">		&#125;</div><div class="line">	&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"Exception occurred while processing valve output watermark: "</span>, e);		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里我们将关注到开篇提到的<code>internalTimeService</code>,</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">advanceWatermark</span><span class="params">(<span class="keyword">long</span> time)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">	currentWatermark = time;</div><div class="line"></div><div class="line">	InternalTimer&lt;K, N&gt; timer;</div><div class="line"></div><div class="line">	<span class="keyword">while</span> ((timer = eventTimeTimersQueue.peek()) != <span class="keyword">null</span> &amp;&amp; timer.getTimestamp() &lt;= time) &#123;</div><div class="line"></div><div class="line">		Set&lt;InternalTimer&lt;K, N&gt;&gt; timerSet = getEventTimeTimerSetForTimer(timer);</div><div class="line">		timerSet.remove(timer);</div><div class="line">		eventTimeTimersQueue.remove();</div><div class="line"></div><div class="line">		keyContext.setCurrentKey(timer.getKey());</div><div class="line">		triggerTarget.onEventTime(timer);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="watermark元素处理逻辑"><a href="#watermark元素处理逻辑" class="headerlink" title="watermark元素处理逻辑"></a>watermark元素处理逻辑</h3><p><img src="http://or0igopk2.bkt.clouddn.com/18-1-7/87202276.jpg" alt=""></p>
+<p>可以看出规则是怎么描述的：</p>
 <ol>
-<li>当流元素是watermark时主要处理逻辑集中在<code>internaltimerservice</code>上</li>
-<li>如果<code>eventTimeTimersQueue</code>这个优先级队列中最早的时间低于了水位线，那么就会取出同一时刻的所有key的timer进行计算</li>
-<li>处理可能意味着窗口的计算触发或者某些窗口的清理</li>
+<li>指定匹配出的序列是什么（structure）</li>
+<li>限制或筛选条件 </li>
 </ol>
-<p>以上便是flink对于窗口的实现逻辑。</p>
+<p>还需要匹配策略来进行规制匹配。</p>
+<ol>
+<li>严格的邻近匹配（Strict  contiguity）：只有连续两个event能满足匹配，中间不能夹杂其他不符合条件的元素</li>
+<li>分区邻近匹配（Partition contiguity）：这就是说被选出的两个event之间不一定需要完全紧密相连，但是在一个分区中的需要紧密相连 如<em>Query3</em>中的a[]需要连续，a与b不需要连续</li>
+<li>skip_till_next_match: 所有的不相关的元素都会被跳过，不再考虑是不是邻近的元素</li>
+<li>skip_till_any_match: <em>Query2</em>解释了这种用法。比如当前最后识别的shipment到达了X位置。这时候读进来一条，X-&gt;Y的Event，在<code>skip_till_any_match</code>匹配规则下系统会做两件事：1.接收X-&gt;Y事件，更新状态2.在当前状态的另一个实例中不接收他来保留一个状态。这样当下一个比如来了个X-&gt;Z事件那还是可以接受这个实例。这种策略就是返回所有的可能的序列（allowing non-deterministic actions）在接收到同一个事件后可以有不一样的走向</li>
+</ol>
+<hr>
+<p>以上介绍了event pattern的查询形式，接下来我们看其内部实现算法。</p>
+<h3 id="NFA-非确定性自动状态机"><a href="#NFA-非确定性自动状态机" class="headerlink" title="NFA 非确定性自动状态机"></a>NFA 非确定性自动状态机</h3><p>非确定性自动状态机由以下结构组成。A = (Q,E,θ,q1,F),</p>
+<pre><code>Q: 一系列状态
+E： 边
+θ： 计算公式
+q1：起始状态
+F: 结束状态
+</code></pre><p><img src="http://or0igopk2.bkt.clouddn.com/18-2-25/18248041.jpg" alt=""></p>
+<p><strong>States</strong></p>
+<blockquote>
+<p>the start state,a[1], is where the matching process begins.  It awaits input to start the Kleene plus and to select an event into the a[1] unit of the match<br>buffer.  At the next state a[i], it attempts to select another event into the a[i] (i &gt; 1) unit of the buffer.  The subsequent state b denotes that the matching process has fulfilled the Kleene plus (for a particular match) and is ready to process the next pattern component.  The final state, F, represents<br>the completion of the process, resulting in the creation of a pattern match.</p>
+</blockquote>
+<p><strong>Edges</strong></p>
+<blockquote>
+<p>Each state is associated with a number of edges,<br>representing the actions that can be taken at the state.  As Figure 2(a) shows, each state that is a singleton state or the first  state,p[1],  of  a pair  has  a  forward begin  edge.   Each second state, p[i], of a pair has a forward proceed edge, and a looping take edge.  Every state (except the start and final states)  has  a  looping ignore  edge.   The  start  state  has  no edges to it as we are only interested in matches that start with selected events.<br>Each edge at a state, q, is precisely described by a triplet:(1) a formula that specifies the condition on taking it, denoted by θq-edge, (2) an operation on the input stream (i.e.,consume an event or not), and (3) an operation on the match buffer (i.e.,  write to the buffer or not).  Formulas of edges are compiled from pattern queries, which we explain in detail shortly.  As shown in Figure 2(a), we use solid lines to denote begin and take edges that consume an event from the input and write it to the buffer, and dashed  lines for ignore edges that consume an event but do not write it to the  buffer. The  proceed  edge  is  a special edge: it does not consume any input event but only evaluates its formula and tries proceeding.  We distinguish the proceed edge from ignore edges in the style of arrow, denoting its behavior.</p>
+</blockquote>
+<p><em>非确定性</em><br>某些state具有两条边，但是这两条边的行为不一定是完全相反的</p>
+<p>NFA算法过程：</p>
+<ol>
+<li>先根据整个structure构建state和边的行为</li>
+<li>将condition翻译成边上的公式</li>
+<li>将select strategy翻译成边上的公式</li>
+<li>将时间窗口翻译成：最先匹配的元素和最后的元素时长不能超过窗口大小</li>
+</ol>
+<p>优化：</p>
+<ol>
+<li>先做过滤</li>
+<li>将window条件前置</li>
+<li>优化proceed边，进入下一个state的时候要检查是否满足begin的条件判断</li>
+</ol>
+<h3 id="带版本的内存共享"><a href="#带版本的内存共享" class="headerlink" title="带版本的内存共享"></a>带版本的内存共享</h3><p><img src="http://or0igopk2.bkt.clouddn.com/18-2-25/20508653.jpg" alt=""></p>
+<p>通过带版本的共享内存解决多runs之间的重复事件问题。</p>
+<h3 id="Computation-state"><a href="#Computation-state" class="headerlink" title="Computation state"></a>Computation state</h3><p><img src="http://or0igopk2.bkt.clouddn.com/18-2-25/48608682.jpg" alt=""></p>
+<ol>
+<li>version number of a run</li>
+<li>current automaton state the run is in</li>
+<li>a pointer to the most revent event selected into the buffer</li>
+<li>a vector =&gt; 保留做edge判断的所需的最少的元素。例如上图中存储了a[i]的和和count为了计算平均值</li>
+</ol>
+<h3 id="Merge相同的Runs"><a href="#Merge相同的Runs" class="headerlink" title="Merge相同的Runs"></a>Merge相同的Runs</h3><p><img src="http://or0igopk2.bkt.clouddn.com/18-2-25/87062132.jpg" alt=""></p>
+<p><img src="http://or0igopk2.bkt.clouddn.com/18-2-25/41465208.jpg" alt=""></p>
+<p>将Query3中的avg算法改为max算法，他们在接收到e4之后达到了同样的状态，因此其之后的运算可以merge为一个。</p>
+<ol>
+<li>首先探测什么时候两个runs一样了，引入了算子M。每一个状态机都有一个mask，每一个mask对每一个Vector中列都有一个bit位，都相同时那么这两个run就是相等的。</li>
+<li>创建combined的run<ol>
+<li>时间设置为最小的那个时间</li>
+</ol>
+</li>
+</ol>
+<h3 id="Backtrack算法（回溯）"><a href="#Backtrack算法（回溯）" class="headerlink" title="Backtrack算法（回溯）"></a>Backtrack算法（回溯）</h3><p>每次只跑一个run，跑失败了再回退到分叉点跑另一条。也就是以广度优先搜索方式 <code>breadth first search manner</code></p>
+<h3 id="待补充"><a href="#待补充" class="headerlink" title="待补充"></a>待补充</h3><ol>
+<li>性能评估方案</li>
+<li>有哪些因素会影响计算速度和吞吐</li>
+<li>内存优化管理措施</li>
+</ol>
 
       
     </div>
@@ -491,6 +548,8 @@
           
             <a href="/tags/Flink/" rel="tag"># Flink</a>
           
+            <a href="/tags/CEP/" rel="tag"># CEP</a>
+          
         </div>
       
 
@@ -502,8 +561,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/12/17/为什么现代系统架构需要一个新的编程模型--actor编程模型/" rel="next" title="为什么现代系统架构需要一个新的编程模型 actor编程模型">
-                <i class="fa fa-chevron-left"></i> 为什么现代系统架构需要一个新的编程模型 actor编程模型
+              <a href="/2018/01/23/常阅读博客/" rel="next" title="常阅读博客">
+                <i class="fa fa-chevron-left"></i> 常阅读博客
               </a>
             
           </div>
@@ -511,10 +570,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/01/23/常阅读博客/" rel="prev" title="常阅读博客">
-                常阅读博客 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -727,7 +782,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#window"><span class="nav-number">1.</span> <span class="nav-text">window</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#window的组件"><span class="nav-number">2.</span> <span class="nav-text">window的组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#streamRecord"><span class="nav-number">3.</span> <span class="nav-text">streamRecord</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#窗口merge原理"><span class="nav-number">3.1.</span> <span class="nav-text">窗口merge原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题一"><span class="nav-number">4.1.</span> <span class="nav-text">问题一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题二"><span class="nav-number">4.2.</span> <span class="nav-text">问题二</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#waterMark"><span class="nav-number">5.</span> <span class="nav-text">waterMark</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#watermark元素处理逻辑"><span class="nav-number">5.1.</span> <span class="nav-text">watermark元素处理逻辑</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#event-pattern查询表达形式"><span class="nav-number">2.</span> <span class="nav-text">event pattern查询表达形式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NFA-非确定性自动状态机"><span class="nav-number">3.</span> <span class="nav-text">NFA 非确定性自动状态机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#带版本的内存共享"><span class="nav-number">4.</span> <span class="nav-text">带版本的内存共享</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Computation-state"><span class="nav-number">5.</span> <span class="nav-text">Computation state</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Merge相同的Runs"><span class="nav-number">6.</span> <span class="nav-text">Merge相同的Runs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Backtrack算法（回溯）"><span class="nav-number">7.</span> <span class="nav-text">Backtrack算法（回溯）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#待补充"><span class="nav-number">8.</span> <span class="nav-text">待补充</span></a></li></ol></div>
             
 
           </div>
@@ -894,7 +949,7 @@
 		_hcwp.push({widget:"Bloggerstream", widget_id: 101742, selector:".hc-comment-count", label: "{\%COUNT%\}" });
 
 		
-		_hcwp.push({widget:"Stream", widget_id: 101742, xid: "2018/01/07/Flink Window实现源码分析/"});
+		_hcwp.push({widget:"Stream", widget_id: 101742, xid: "2018/02/25/flink-cep-paper/"});
 		
 
 		(function() {
