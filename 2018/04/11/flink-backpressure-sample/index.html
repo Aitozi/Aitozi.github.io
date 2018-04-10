@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Flink," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Aitozi" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="我们在点击flink ui的operator-&amp;gt;backpressure之后，会触发Backpressure采样：每隔BACK_PRESSURE_REFRESH_INTERVAL的间隔进行一次采样。
+BackPressureStatsTracker#triggerStackTraceSample123456789101112131415161718192021222324252627282">
+<meta property="og:type" content="article">
+<meta property="og:title" content="flink-ui中的反压采样">
+<meta property="og:url" content="yoursite.com/2018/04/11/flink-backpressure-sample/index.html">
+<meta property="og:site_name" content="Aitozi">
+<meta property="og:description" content="我们在点击flink ui的operator-&amp;gt;backpressure之后，会触发Backpressure采样：每隔BACK_PRESSURE_REFRESH_INTERVAL的间隔进行一次采样。
+BackPressureStatsTracker#triggerStackTraceSample123456789101112131415161718192021222324252627282">
+<meta property="og:updated_time" content="2018-04-10T23:06:27.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="flink-ui中的反压采样">
+<meta name="twitter:description" content="我们在点击flink ui的operator-&amp;gt;backpressure之后，会触发Backpressure采样：每隔BACK_PRESSURE_REFRESH_INTERVAL的间隔进行一次采样。
+BackPressureStatsTracker#triggerStackTraceSample123456789101112131415161718192021222324252627282">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="yoursite.com/2018/04/11/flink-backpressure-sample/"/>
+
+
+
+
+
+  <title>flink-ui中的反压采样 | Aitozi</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?401ec1ae8efb32dbfdc69ceb9347ed48";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Aitozi</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="yoursite.com/2018/04/11/flink-backpressure-sample/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="aitozi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aitozi">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">flink-ui中的反压采样</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-11T07:02:51+08:00">
+                2018-04-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/源码分析/" itemprop="url" rel="index">
+                    <span itemprop="name">源码分析</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/04/11/flink-backpressure-sample/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2018/04/11/flink-backpressure-sample/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <a id="more"></a>
+<p>我们在点击flink ui的<code>operator-&gt;backpressure</code>之后，会触发Backpressure采样：每隔<code>BACK_PRESSURE_REFRESH_INTERVAL</code>的间隔进行一次采样。</p>
+<h3 id="BackPressureStatsTracker-triggerStackTraceSample"><a href="#BackPressureStatsTracker-triggerStackTraceSample" class="headerlink" title="BackPressureStatsTracker#triggerStackTraceSample"></a>BackPressureStatsTracker#triggerStackTraceSample</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"> <span class="comment">/**</span></div><div class="line"> * Triggers a stack trace sample for a operator to gather the back pressure</div><div class="line"> * statistics. If there is a sample in progress for the operator, the call</div><div class="line"> * is ignored.</div><div class="line"> *</div><div class="line"> * <span class="doctag">@param</span> vertex Operator to get the stats for. 代表要采样的Operator节点</div><div class="line"> * <span class="doctag">@return</span> Flag indicating whether a sample with triggered.</div><div class="line"> */</div><div class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">triggerStackTraceSample</span><span class="params">(ExecutionJobVertex vertex)</span> </span>&#123;</div><div class="line">	<span class="comment">// 保证没有并行triggerSimple</span></div><div class="line">	<span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">		<span class="keyword">if</span> (shutDown) &#123;</div><div class="line">			<span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="comment">//排除掉已经pending在采样和结束的Operator</span></div><div class="line">		<span class="keyword">if</span> (!pendingStats.contains(vertex) &amp;&amp;</div><div class="line">				!vertex.getGraph().getState().isGloballyTerminalState()) &#123;</div><div class="line">				</div><div class="line">			<span class="comment">// 拿到对应ExecutionGraph的FutureExecutor，这是用以在相应的ExecutionGraph发起任务的</span></div><div class="line">			Executor executor = vertex.getGraph().getFutureExecutor();</div><div class="line"></div><div class="line">			<span class="comment">// Only trigger if still active job</span></div><div class="line">			<span class="keyword">if</span> (executor != <span class="keyword">null</span>) &#123;</div><div class="line">				pendingStats.add(vertex);</div><div class="line"></div><div class="line">				<span class="keyword">if</span> (LOG.isDebugEnabled()) &#123;</div><div class="line">					LOG.debug(<span class="string">"Triggering stack trace sample for tasks: "</span> + Arrays.toString(vertex.getTaskVertices()));</div><div class="line">				&#125;</div><div class="line">				<span class="comment">// 核心方法 通过StackTraceSampleCoordinator 去发起相应的trigger流程, 这里的Future是Flink内部自己定义的异步结果接口 具体可查看FlinkFuture.java(可以深入了解下)</span></div><div class="line">				Future&lt;StackTraceSample&gt; sample = coordinator.triggerStackTraceSample(</div><div class="line">						vertex.getTaskVertices(),</div><div class="line">						numSamples,</div><div class="line">						delayBetweenSamples,</div><div class="line">						MAX_STACK_TRACE_DEPTH);</div><div class="line">				<span class="comment">// 指定异步回调函数（采样结果分析的函数）</span></div><div class="line">				sample.handleAsync(<span class="keyword">new</span> StackTraceSampleCompletionCallback(vertex), executor);</div><div class="line"></div><div class="line">				<span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="StackTraceSampleCoordinator-triggerStackTraceSample"><a href="#StackTraceSampleCoordinator-triggerStackTraceSample" class="headerlink" title="StackTraceSampleCoordinator#triggerStackTraceSample"></a>StackTraceSampleCoordinator#triggerStackTraceSample</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">	 * Triggers a stack trace sample to all tasks.</div><div class="line">	 *</div><div class="line">	 * @param tasksToSample       Tasks to sample.</div><div class="line">	 * @param numSamples          Number of stack trace samples to collect.</div><div class="line">	 * @param delayBetweenSamples Delay between consecutive samples.</div><div class="line">	 * @param maxStackTraceDepth  Maximum depth of the stack trace. 0 indicates</div><div class="line">	 *                            no maximum and keeps the complete stack trace.</div><div class="line">	 * @return A future of the completed stack trace sample</div><div class="line">	 */</div><div class="line">	@SuppressWarnings(&quot;unchecked&quot;)</div><div class="line">	public Future&lt;StackTraceSample&gt; triggerStackTraceSample(</div><div class="line">			ExecutionVertex[] tasksToSample,</div><div class="line">			int numSamples,</div><div class="line">			Time delayBetweenSamples,</div><div class="line">			int maxStackTraceDepth) &#123;</div><div class="line"></div><div class="line">		checkNotNull(tasksToSample, &quot;Tasks to sample&quot;);</div><div class="line">		checkArgument(tasksToSample.length &gt;= 1, &quot;No tasks to sample&quot;);</div><div class="line">		checkArgument(numSamples &gt;= 1, &quot;No number of samples&quot;);</div><div class="line">		checkArgument(maxStackTraceDepth &gt;= 0, &quot;Negative maximum stack trace depth&quot;);</div><div class="line"></div><div class="line">		// 通过ExecutionVertex获取ExecutionAttemptID和Execution，并最后做存活判断</div><div class="line">		// Execution IDs of running tasks</div><div class="line">		ExecutionAttemptID[] triggerIds = new ExecutionAttemptID[tasksToSample.length];</div><div class="line">		Execution[] executions = new Execution[tasksToSample.length];</div><div class="line"></div><div class="line">		// Check that all tasks are RUNNING before triggering anything. The</div><div class="line">		// triggering can still fail.</div><div class="line">		for (int i = 0; i &lt; triggerIds.length; i++) &#123;</div><div class="line">			Execution execution = tasksToSample[i].getCurrentExecutionAttempt();</div><div class="line">			if (execution != null &amp;&amp; execution.getState() == ExecutionState.RUNNING) &#123;</div><div class="line">				executions[i] = execution;</div><div class="line">				triggerIds[i] = execution.getAttemptId();</div><div class="line">			&#125; else &#123;</div><div class="line">				return FlinkCompletableFuture.completedExceptionally(</div><div class="line">					new IllegalStateException(&quot;Task &quot; + tasksToSample[i]</div><div class="line">					.getTaskNameWithSubtaskIndex() + &quot; is not running.&quot;));</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		synchronized (lock) &#123;</div><div class="line">			if (isShutDown) &#123;</div><div class="line">				return FlinkCompletableFuture.completedExceptionally(new IllegalStateException(&quot;Shut down&quot;));</div><div class="line">			&#125;</div><div class="line"></div><div class="line">			final int sampleId = sampleIdCounter++;</div><div class="line"></div><div class="line">			LOG.debug(&quot;Triggering stack trace sample &#123;&#125;&quot;, sampleId);</div><div class="line">			</div><div class="line">			// 包含采样id和ExecutionAttemptID</div><div class="line">			final PendingStackTraceSample pending = new PendingStackTraceSample(</div><div class="line">					sampleId, triggerIds);</div><div class="line"></div><div class="line">			// Discard the sample if it takes too long. We don&apos;t send cancel</div><div class="line">			// messages to the task managers, but only wait for the responses</div><div class="line">			// and then ignore them.</div><div class="line">			long expectedDuration = numSamples * delayBetweenSamples.toMilliseconds();</div><div class="line">			Time timeout = Time.milliseconds(expectedDuration + sampleTimeout);</div><div class="line"></div><div class="line">			// Add the pending sample before scheduling the discard task to</div><div class="line">			// prevent races with removing it again.</div><div class="line">			pendingSamples.put(sampleId, pending);</div><div class="line"></div><div class="line">			// Trigger all samples</div><div class="line">			// execution是executionVertex的多次执行（recovery...）</div><div class="line">			for (Execution execution: executions) &#123;</div><div class="line">			    // 对相应的execution进行多次numSamples采样，但是都是同一个sampleId</div><div class="line">				final Future&lt;StackTraceSampleResponse&gt; stackTraceSampleFuture = execution.requestStackTraceSample(</div><div class="line">					sampleId,</div><div class="line">					numSamples,</div><div class="line">					delayBetweenSamples,</div><div class="line">					maxStackTraceDepth,</div><div class="line">					timeout);</div><div class="line"></div><div class="line">				stackTraceSampleFuture.handleAsync(new BiFunction&lt;StackTraceSampleResponse, Throwable, Void&gt;() &#123;</div><div class="line">					@Override</div><div class="line">					public Void apply(StackTraceSampleResponse stackTraceSampleResponse, Throwable throwable) &#123;</div><div class="line">						if (stackTraceSampleResponse != null) &#123;</div><div class="line">						    // 收集返回的List&lt;StackTraceElement[]&gt; 到PendingStackTraceSample</div><div class="line">							collectStackTraces(</div><div class="line">								stackTraceSampleResponse.getSampleId(),</div><div class="line">								stackTraceSampleResponse.getExecutionAttemptID(),</div><div class="line">								// 返回的堆栈信息包含所有的采样结果</div><div class="line">								stackTraceSampleResponse.getSamples());</div><div class="line">						&#125; else &#123;</div><div class="line">							cancelStackTraceSample(sampleId, throwable);</div><div class="line">						&#125;</div><div class="line"></div><div class="line">						return null;</div><div class="line">					&#125;</div><div class="line">				&#125;, executor);</div><div class="line">			&#125;</div><div class="line"></div><div class="line">			return pending.getStackTraceSampleFuture();</div><div class="line">		&#125;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<h3 id="BackPressureStatsTracker-StackTraceSampleCompletionCallback"><a href="#BackPressureStatsTracker-StackTraceSampleCompletionCallback" class="headerlink" title="BackPressureStatsTracker#StackTraceSampleCompletionCallback"></a>BackPressureStatsTracker#StackTraceSampleCompletionCallback</h3><p>采样的结果就是<code>StackTraceSample</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">* java.lang.Object.wait(Native Method)</div><div class="line">* o.a.f.[...].LocalBufferPool.requestBuffer(LocalBufferPool.java:163)</div><div class="line">* o.a.f.[...].LocalBufferPool.requestBufferBlocking(LocalBufferPool.java:133) &lt;--- BLOCKING</div><div class="line">* request</div><div class="line">* [...]</div></pre></td></tr></table></figure>
+<p>利用这样的线程堆栈类型来判断是否block住了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">		 * Creates the back pressure stats from a stack trace sample.</div><div class="line">		 *</div><div class="line">		 * @param sample Stack trace sample to base stats on.</div><div class="line">		 *</div><div class="line">		 * @return Back pressure stats</div><div class="line">		 */</div><div class="line">		private OperatorBackPressureStats createStatsFromSample(StackTraceSample sample) &#123;</div><div class="line">			Map&lt;ExecutionAttemptID, List&lt;StackTraceElement[]&gt;&gt; traces = sample.getStackTraces();</div><div class="line"></div><div class="line">			// Map task ID to subtask index, because the web interface expects</div><div class="line">			// it like that.</div><div class="line">			// 方便下面根据executionId查询相应的并发度</div><div class="line">			Map&lt;ExecutionAttemptID, Integer&gt; subtaskIndexMap = Maps</div><div class="line">					.newHashMapWithExpectedSize(traces.size());</div><div class="line"></div><div class="line">			Set&lt;ExecutionAttemptID&gt; sampledTasks = sample.getStackTraces().keySet();</div><div class="line"></div><div class="line">			for (ExecutionVertex task : vertex.getTaskVertices()) &#123;</div><div class="line">				ExecutionAttemptID taskId = task.getCurrentExecutionAttempt().getAttemptId();</div><div class="line">				if (sampledTasks.contains(taskId)) &#123;</div><div class="line">					subtaskIndexMap.put(taskId, task.getParallelSubtaskIndex());</div><div class="line">				&#125; else &#123;</div><div class="line">					LOG.debug(&quot;Outdated sample. A task, which is part of the &quot; +</div><div class="line">							&quot;sample has been reset.&quot;);</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line"></div><div class="line">			// Ratio of blocked samples to total samples per sub task. Array</div><div class="line">			// position corresponds to sub task index.</div><div class="line">			// 数组的index和task的并发度相绑定</div><div class="line">			double[] backPressureRatio = new double[traces.size()];</div><div class="line"></div><div class="line">			for (Entry&lt;ExecutionAttemptID, List&lt;StackTraceElement[]&gt;&gt; entry : traces.entrySet()) &#123;</div><div class="line">				int backPressureSamples = 0;</div><div class="line"></div><div class="line">				List&lt;StackTraceElement[]&gt; taskTraces = entry.getValue();</div><div class="line"></div><div class="line">				for (StackTraceElement[] trace : taskTraces) &#123;</div><div class="line">					for (int i = trace.length - 1; i &gt;= 0; i--) &#123;</div><div class="line">						StackTraceElement elem = trace[i];</div><div class="line"></div><div class="line">						if (elem.getClassName().equals(EXPECTED_CLASS_NAME) &amp;&amp;</div><div class="line">								elem.getMethodName().equals(EXPECTED_METHOD_NAME)) &#123;</div><div class="line"></div><div class="line">							backPressureSamples++;</div><div class="line">							break; // Continue with next stack trace</div><div class="line">						&#125;</div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line"></div><div class="line">				int subtaskIndex = subtaskIndexMap.get(entry.getKey());</div><div class="line"></div><div class="line">				int size = taskTraces.size();</div><div class="line">				double ratio = (size &gt; 0)</div><div class="line">						? ((double) backPressureSamples) / size</div><div class="line">						: 0;</div><div class="line"></div><div class="line">				backPressureRatio[subtaskIndex] = ratio;</div><div class="line">			&#125;</div><div class="line"></div><div class="line">			return new OperatorBackPressureStats(</div><div class="line">					sample.getSampleId(),</div><div class="line">					sample.getEndTime(),</div><div class="line">					backPressureRatio);</div><div class="line">		&#125;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>至此完成采样</p>
+<p>待学习</p>
+<ol>
+<li>Flink反压原理</li>
+<li>理解清里面很多的Future使用方法</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>谢谢支持</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="aitozi WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Flink/" rel="tag"># Flink</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/10/advance-maven-shade-plugin/" rel="next" title="maven-shade-plugin插件高级用法">
+                <i class="fa fa-chevron-left"></i> maven-shade-plugin插件高级用法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="hypercomments_widget"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="aitozi" />
+          <p class="site-author-name" itemprop="name">aitozi</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="gjying1314@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                    
+                      E-Mail
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://wuchong.me/" title="wuchong" target="_blank">wuchong</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://chenyuzhao.me/" title="yuzhao" target="_blank">yuzhao</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/yanghua_kobe?viewmode=contents" title="vinoyang" target="_blank">vinoyang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/lmalds?viewmode=contents" title="Imalds" target="_blank">Imalds</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/androidlushangderen" title="hadoop" target="_blank">hadoop</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/xrq730/p/5260294.html" title="java开发" target="_blank">java开发</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.hollischuang.com/" title="阿里工程师" target="_blank">阿里工程师</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/fxjwind/" title="阿里流计算工程师" target="_blank">阿里流计算工程师</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://jm.taobao.org/" title="阿里中间件博客" target="_blank">阿里中间件博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://armsword.com/" title="duruofei" target="_blank">duruofei</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#BackPressureStatsTracker-triggerStackTraceSample"><span class="nav-number">1.</span> <span class="nav-text">BackPressureStatsTracker#triggerStackTraceSample</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StackTraceSampleCoordinator-triggerStackTraceSample"><span class="nav-number">2.</span> <span class="nav-text">StackTraceSampleCoordinator#triggerStackTraceSample</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BackPressureStatsTracker-StackTraceSampleCompletionCallback"><span class="nav-number">3.</span> <span class="nav-text">BackPressureStatsTracker#StackTraceSampleCompletionCallback</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">aitozi</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+		<script type="text/javascript">
+		_hcwp = window._hcwp || [];
+
+		_hcwp.push({widget:"Bloggerstream", widget_id: 101742, selector:".hc-comment-count", label: "{\%COUNT%\}" });
+
+		
+		_hcwp.push({widget:"Stream", widget_id: 101742, xid: "2018/04/11/flink-backpressure-sample/"});
+		
+
+		(function() {
+		if("HC_LOAD_INIT" in window)return;
+		HC_LOAD_INIT = true;
+		var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+		var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+		hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/101742/"+lang+"/widget.js";
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(hcc, s.nextSibling);
+		})();
+		</script>
+
+	
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
