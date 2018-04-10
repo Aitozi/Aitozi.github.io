@@ -108,7 +108,7 @@
 <meta property="og:url" content="yoursite.com/2018/04/11/flink-streamGraph/index.html">
 <meta property="og:site_name" content="Aitozi">
 <meta property="og:description" content="flink DAG图流转分析">
-<meta property="og:updated_time" content="2018-04-10T23:16:15.000Z">
+<meta property="og:updated_time" content="2018-04-10T23:19:36.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="flink图流转之StreamGraph">
 <meta name="twitter:description" content="flink DAG图流转分析">
@@ -415,9 +415,7 @@
 <li>物理执行图：JobManager 根据 ExecutionGraph 对 Job 进行调度后，在各个TaskManager 上部署 Task 后形成的“图”，并不是一个具体的数据结构。</li>
 </ul>
 <p>今天我们就来看下streamGraph的生成</p>
-<p>##StreamGraph的生成</p>
-<p>###组件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">StreamGraph：根据用户通过 Stream API 编写的代码生成的最初的图。</div><div class="line">StreamNode：用来代表 operator 的类，并具有所有相关的属性，如并发度、入边和出边等。</div><div class="line">StreamEdge：表示连接两个StreamNode的边。</div></pre></td></tr></table></figure>
+<h2 id="StreamGraph的生成"><a href="#StreamGraph的生成" class="headerlink" title="StreamGraph的生成"></a>StreamGraph的生成</h2><h3 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">StreamGraph：根据用户通过 Stream API 编写的代码生成的最初的图。</div><div class="line">StreamNode：用来代表 operator 的类，并具有所有相关的属性，如并发度、入边和出边等。</div><div class="line">StreamEdge：表示连接两个StreamNode的边。</div></pre></td></tr></table></figure>
 <p>flink任务从定义一个运行环境开始<code>streamExecutionEnvironment</code>，流计算任务起始于addSource,我们来看这个函数，addSource之后生成了一个<code>DataStream</code>. <code>DataStream</code>的构造函数参数接收一个<code>StreamTransformation</code>类型的对象，这个对象反映了流之间的转换操作。但是这个transformation和<code>operation</code>不是一一对应的。一些分区操作：union，split/select，partition只是逻辑概念，并不会在最后的dag图上显示出来。<br>在生成datastream之后，经历<code>DataStream.java</code>中定义的一些api算子，完成业务逻辑的定义，在这之中可能包含以下的转化：</p>
 <p>假设一个场景：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">addsource -&gt; map -&gt; filter -&gt; connect -&gt; flatmap </div><div class="line">-&gt; keyby -&gt; window -&gt; apply -&gt; addSink -&gt; excute</div></pre></td></tr></table></figure>
@@ -719,7 +717,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#StreamGraph的生成"><span class="nav-number">2.</span> <span class="nav-text">StreamGraph的生成</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#组件"><span class="nav-number">2.1.</span> <span class="nav-text">组件</span></a></li></ol></li></ol></div>
             
 
           </div>
