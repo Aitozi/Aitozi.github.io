@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="yoursite.com/"/>
-  <updated>2018-05-25T13:58:48.000Z</updated>
+  <updated>2018-05-27T12:15:46.000Z</updated>
   <id>yoursite.com/</id>
   
   <author>
@@ -14,6 +14,52 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>flink中jobgraph的生成逻辑</title>
+    <link href="yoursite.com/2018/05/26/flink-jobgraph-generate/"/>
+    <id>yoursite.com/2018/05/26/flink-jobgraph-generate/</id>
+    <published>2018-05-26T10:43:23.000Z</published>
+    <updated>2018-05-27T12:15:46.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>flink中jobgraph的生成逻辑，接前面的文章<a href="http://aitozi.com/2018/04/11/flink-streamGraph/" target="_blank" rel="external">flink图流转之StreamGraph</a></p>
+<a id="more"></a>
+<blockquote>
+<p>今天想了一下源码分析类的文章应该是直接在源码上做注释来的直接，然后再抛开细节概括总体流程和关键点，今天这篇分析jobgraph生成的文章就以这个形式展开</p>
+</blockquote>
+<ol>
+<li>先生成各个节点streamnode的hash值  主体代码在：<code>StreamGraphHasherV2.java</code></li>
+<li>设置chaining<ul>
+<li>找到节点中能chain和不能chain的边</li>
+<li>生成相应的JobVertex节点，并设置StreamConfig（资源，名称，chain的节点），这个streamConfig是在部署期间比较重要的一个配置项，并拼接物理执行顺序，主要在connect函数</li>
+</ul>
+</li>
+<li>设置inEdges配置项</li>
+<li>设置slotsharingGroup</li>
+<li>配置checkpoint，这里主要设置需要发送barrier的节点即source节点</li>
+</ol>
+<p><em>其实总结就是分两步：</em></p>
+<ol>
+<li>在createChain过程中创建JobVertex</li>
+<li>设置各个StreamConfig需要的信息用作生成物理执行图的时候使用</li>
+</ol>
+<p>主要涉及的代码为两块，如下：</p>
+<script src="//gist.github.com/2e021e923ed394155b191853e0975a71.js?file=StreamGraphHasherV2.java"></script>
+<script src="//gist.github.com/2e021e923ed394155b191853e0975a71.js?file=StreamingJobGraphGenerator.java"></script>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;flink中jobgraph的生成逻辑，接前面的文章&lt;a href=&quot;http://aitozi.com/2018/04/11/flink-streamGraph/&quot;&gt;flink图流转之StreamGraph&lt;/a&gt;&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="源码分析" scheme="yoursite.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    
+    
+      <category term="Flink" scheme="yoursite.com/tags/Flink/"/>
+    
+  </entry>
   
   <entry>
     <title>flink cep源码分析</title>

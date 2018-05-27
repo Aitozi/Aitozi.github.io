@@ -84,7 +84,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Flink," />
 
 
 
@@ -102,15 +102,16 @@
 
 
 
-<meta name="description" content="What makes a difference? Persistence!">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Aitozi">
-<meta property="og:url" content="yoursite.com/archives/2016/index.html">
+<meta name="description" content="flink中jobgraph的生成逻辑，接前面的文章flink图流转之StreamGraph">
+<meta property="og:type" content="article">
+<meta property="og:title" content="flink中jobgraph的生成逻辑">
+<meta property="og:url" content="yoursite.com/2018/05/26/flink-jobgraph-generate/index.html">
 <meta property="og:site_name" content="Aitozi">
-<meta property="og:description" content="What makes a difference? Persistence!">
+<meta property="og:description" content="flink中jobgraph的生成逻辑，接前面的文章flink图流转之StreamGraph">
+<meta property="og:updated_time" content="2018-05-27T12:15:46.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Aitozi">
-<meta name="twitter:description" content="What makes a difference? Persistence!">
+<meta name="twitter:title" content="flink中jobgraph的生成逻辑">
+<meta name="twitter:description" content="flink中jobgraph的生成逻辑，接前面的文章flink图流转之StreamGraph">
 
 
 
@@ -139,13 +140,13 @@
 
 
 
-  <link rel="canonical" href="yoursite.com/archives/2016/"/>
+  <link rel="canonical" href="yoursite.com/2018/05/26/flink-jobgraph-generate/"/>
 
 
 
 
 
-  <title>归档 | Aitozi</title>
+  <title>flink中jobgraph的生成逻辑 | Aitozi</title>
   
 
 
@@ -180,7 +181,7 @@
     
   
 
-  <div class="container sidebar-position-left  page-archive  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -284,74 +285,233 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
-
-      <span class="archive-page-counter">
-        
-        
-        
-          
-        
-        嗯..! 目前共计 14 篇日志。 继续努力。
-      </span>
-
-      
-
-        
-        
-        
-
-        
-          
-          <div class="collection-title">
-            <h2 class="archive-year motion-element" id="archive-year-2016">2016</h2>
-          </div>
-        
-        
-
-        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="yoursite.com/2018/05/26/flink-jobgraph-generate/">
 
-      <h3 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="aitozi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aitozi">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2016/10/12/hello-world/" itemprop="url">
-              
-                <span itemprop="name">Hexo tutorial</span>
-              
-            </a>
         
-      </h3>
+          <h2 class="post-title" itemprop="name headline">flink中jobgraph的生成逻辑</h2>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-10-12T00:47:35+08:00"
-              content="2016-10-12" >
-          10-12
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-26T18:43:23+08:00">
+                2018-05-26
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/源码分析/" itemprop="url" rel="index">
+                    <span itemprop="name">源码分析</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/05/26/flink-jobgraph-generate/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2018/05/26/flink-jobgraph-generate/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
+      
 
+      
+        <p>flink中jobgraph的生成逻辑，接前面的文章<a href="http://aitozi.com/2018/04/11/flink-streamGraph/" target="_blank" rel="external">flink图流转之StreamGraph</a></p>
+<a id="more"></a>
+<blockquote>
+<p>今天想了一下源码分析类的文章应该是直接在源码上做注释来的直接，然后再抛开细节概括总体流程和关键点，今天这篇分析jobgraph生成的文章就以这个形式展开</p>
+</blockquote>
+<ol>
+<li>先生成各个节点streamnode的hash值  主体代码在：<code>StreamGraphHasherV2.java</code></li>
+<li>设置chaining<ul>
+<li>找到节点中能chain和不能chain的边</li>
+<li>生成相应的JobVertex节点，并设置StreamConfig（资源，名称，chain的节点），这个streamConfig是在部署期间比较重要的一个配置项，并拼接物理执行顺序，主要在connect函数</li>
+</ul>
+</li>
+<li>设置inEdges配置项</li>
+<li>设置slotsharingGroup</li>
+<li>配置checkpoint，这里主要设置需要发送barrier的节点即source节点</li>
+</ol>
+<p><em>其实总结就是分两步：</em></p>
+<ol>
+<li>在createChain过程中创建JobVertex</li>
+<li>设置各个StreamConfig需要的信息用作生成物理执行图的时候使用</li>
+</ol>
+<p>主要涉及的代码为两块，如下：</p>
+<script src="//gist.github.com/2e021e923ed394155b191853e0975a71.js?file=StreamGraphHasherV2.java"></script>
+<script src="//gist.github.com/2e021e923ed394155b191853e0975a71.js?file=StreamingJobGraphGenerator.java"></script>
+
+      
     </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>谢谢支持</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="aitozi WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Flink/" rel="tag"># Flink</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/25/flink-cep-code/" rel="next" title="flink cep源码分析">
+                <i class="fa fa-chevron-left"></i> flink cep源码分析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -359,6 +519,12 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="hypercomments_widget"></div>
+    
+  </div>
+
 
         </div>
         
@@ -645,11 +811,9 @@
   
 
   
-  
-    <script type="text/javascript" id="motion.page.archive">
-      $('.archive-year').velocity('transition.slideLeftIn');
-    </script>
-  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
 
 
   
@@ -674,6 +838,8 @@
 
 		_hcwp.push({widget:"Bloggerstream", widget_id: 101742, selector:".hc-comment-count", label: "{\%COUNT%\}" });
 
+		
+		_hcwp.push({widget:"Stream", widget_id: 101742, xid: "2018/05/26/flink-jobgraph-generate/"});
 		
 
 		(function() {
