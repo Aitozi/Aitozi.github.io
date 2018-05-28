@@ -4,9 +4,9 @@
   
   <link href="/atom.xml" rel="self"/>
   
-  <link href="www.aitozi.com/"/>
+  <link href="http://www.aitozi.com/"/>
   <updated>2018-05-27T12:15:46.000Z</updated>
-  <id>www.aitozi.com/</id>
+  <id>http://www.aitozi.com/</id>
   
   <author>
     <name>aitozi</name>
@@ -17,8 +17,8 @@
   
   <entry>
     <title>flink中jobgraph的生成逻辑</title>
-    <link href="www.aitozi.com/2018/05/26/flink-jobgraph-generate/"/>
-    <id>www.aitozi.com/2018/05/26/flink-jobgraph-generate/</id>
+    <link href="http://www.aitozi.com/2018/05/26/flink-jobgraph-generate/"/>
+    <id>http://www.aitozi.com/2018/05/26/flink-jobgraph-generate/</id>
     <published>2018-05-26T10:43:23.000Z</published>
     <updated>2018-05-27T12:15:46.000Z</updated>
     
@@ -54,17 +54,17 @@
     
     </summary>
     
-      <category term="源码分析" scheme="www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+      <category term="源码分析" scheme="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
     
     
-      <category term="Flink" scheme="www.aitozi.com/tags/Flink/"/>
+      <category term="Flink" scheme="http://www.aitozi.com/tags/Flink/"/>
     
   </entry>
   
   <entry>
     <title>flink cep源码分析</title>
-    <link href="www.aitozi.com/2018/05/25/flink-cep-code/"/>
-    <id>www.aitozi.com/2018/05/25/flink-cep-code/</id>
+    <link href="http://www.aitozi.com/2018/05/25/flink-cep-code/"/>
+    <id>http://www.aitozi.com/2018/05/25/flink-cep-code/</id>
     <published>2018-05-25T13:54:23.000Z</published>
     <updated>2018-05-25T13:58:48.000Z</updated>
     
@@ -102,19 +102,19 @@
     
     </summary>
     
-      <category term="源码分析" scheme="www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+      <category term="源码分析" scheme="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
     
     
-      <category term="Flink" scheme="www.aitozi.com/tags/Flink/"/>
+      <category term="Flink" scheme="http://www.aitozi.com/tags/Flink/"/>
     
-      <category term="cep" scheme="www.aitozi.com/tags/cep/"/>
+      <category term="cep" scheme="http://www.aitozi.com/tags/cep/"/>
     
   </entry>
   
   <entry>
     <title>flink图流转之StreamGraph</title>
-    <link href="www.aitozi.com/2018/04/11/flink-streamGraph/"/>
-    <id>www.aitozi.com/2018/04/11/flink-streamGraph/</id>
+    <link href="http://www.aitozi.com/2018/04/11/flink-streamGraph/"/>
+    <id>http://www.aitozi.com/2018/04/11/flink-streamGraph/</id>
     <published>2018-04-10T23:13:58.000Z</published>
     <updated>2018-04-10T23:19:36.000Z</updated>
     
@@ -170,17 +170,17 @@
     
     </summary>
     
-      <category term="源码分析" scheme="www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+      <category term="源码分析" scheme="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
     
     
-      <category term="Flink" scheme="www.aitozi.com/tags/Flink/"/>
+      <category term="Flink" scheme="http://www.aitozi.com/tags/Flink/"/>
     
   </entry>
   
   <entry>
     <title>flink-ui中的反压采样</title>
-    <link href="www.aitozi.com/2018/04/11/flink-backpressure-sample/"/>
-    <id>www.aitozi.com/2018/04/11/flink-backpressure-sample/</id>
+    <link href="http://www.aitozi.com/2018/04/11/flink-backpressure-sample/"/>
+    <id>http://www.aitozi.com/2018/04/11/flink-backpressure-sample/</id>
     <published>2018-04-10T23:02:51.000Z</published>
     <updated>2018-04-10T23:08:08.000Z</updated>
     
@@ -207,17 +207,17 @@
     
     </summary>
     
-      <category term="源码分析" scheme="www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+      <category term="源码分析" scheme="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
     
     
-      <category term="Flink" scheme="www.aitozi.com/tags/Flink/"/>
+      <category term="Flink" scheme="http://www.aitozi.com/tags/Flink/"/>
     
   </entry>
   
   <entry>
     <title>maven-shade-plugin插件高级用法</title>
-    <link href="www.aitozi.com/2018/04/10/advance-maven-shade-plugin/"/>
-    <id>www.aitozi.com/2018/04/10/advance-maven-shade-plugin/</id>
+    <link href="http://www.aitozi.com/2018/04/10/advance-maven-shade-plugin/"/>
+    <id>http://www.aitozi.com/2018/04/10/advance-maven-shade-plugin/</id>
     <published>2018-04-10T14:06:03.000Z</published>
     <updated>2018-04-10T14:15:18.000Z</updated>
     
@@ -250,17 +250,17 @@
     
     </summary>
     
-      <category term="编程工具" scheme="www.aitozi.com/categories/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7/"/>
+      <category term="编程工具" scheme="http://www.aitozi.com/categories/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7/"/>
     
     
-      <category term="Maven" scheme="www.aitozi.com/tags/Maven/"/>
+      <category term="Maven" scheme="http://www.aitozi.com/tags/Maven/"/>
     
   </entry>
   
   <entry>
     <title>上篇·flink 1.4利用kafka0.11实现完整的一致性语义</title>
-    <link href="www.aitozi.com/2018/03/11/flink-kafka-exactly-once/"/>
-    <id>www.aitozi.com/2018/03/11/flink-kafka-exactly-once/</id>
+    <link href="http://www.aitozi.com/2018/03/11/flink-kafka-exactly-once/"/>
+    <id>http://www.aitozi.com/2018/03/11/flink-kafka-exactly-once/</id>
     <published>2018-03-11T14:29:44.000Z</published>
     <updated>2018-03-11T14:39:45.000Z</updated>
     
@@ -335,17 +335,17 @@
     
     </summary>
     
-      <category term="源码分析" scheme="www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+      <category term="源码分析" scheme="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
     
     
-      <category term="Flink" scheme="www.aitozi.com/tags/Flink/"/>
+      <category term="Flink" scheme="http://www.aitozi.com/tags/Flink/"/>
     
   </entry>
   
   <entry>
     <title>flink-cep-paper</title>
-    <link href="www.aitozi.com/2018/02/25/flink-cep-paper/"/>
-    <id>www.aitozi.com/2018/02/25/flink-cep-paper/</id>
+    <link href="http://www.aitozi.com/2018/02/25/flink-cep-paper/"/>
+    <id>http://www.aitozi.com/2018/02/25/flink-cep-paper/</id>
     <published>2018-02-25T12:19:15.000Z</published>
     <updated>2018-02-25T12:44:25.000Z</updated>
     
@@ -450,19 +450,19 @@ F: 结束状态
     
     </summary>
     
-      <category term="论文" scheme="www.aitozi.com/categories/%E8%AE%BA%E6%96%87/"/>
+      <category term="论文" scheme="http://www.aitozi.com/categories/%E8%AE%BA%E6%96%87/"/>
     
     
-      <category term="Flink" scheme="www.aitozi.com/tags/Flink/"/>
+      <category term="Flink" scheme="http://www.aitozi.com/tags/Flink/"/>
     
-      <category term="CEP" scheme="www.aitozi.com/tags/CEP/"/>
+      <category term="CEP" scheme="http://www.aitozi.com/tags/CEP/"/>
     
   </entry>
   
   <entry>
     <title>常阅读博客</title>
-    <link href="www.aitozi.com/2018/01/23/%E5%B8%B8%E9%98%85%E8%AF%BB%E5%8D%9A%E5%AE%A2/"/>
-    <id>www.aitozi.com/2018/01/23/常阅读博客/</id>
+    <link href="http://www.aitozi.com/2018/01/23/%E5%B8%B8%E9%98%85%E8%AF%BB%E5%8D%9A%E5%AE%A2/"/>
+    <id>http://www.aitozi.com/2018/01/23/常阅读博客/</id>
     <published>2018-01-23T01:58:30.000Z</published>
     <updated>2018-04-11T09:43:27.000Z</updated>
     
@@ -481,15 +481,15 @@ F: 结束状态
     
     </summary>
     
-      <category term="杂" scheme="www.aitozi.com/categories/%E6%9D%82/"/>
+      <category term="杂" scheme="http://www.aitozi.com/categories/%E6%9D%82/"/>
     
     
   </entry>
   
   <entry>
     <title>flink中window实现的源码分析</title>
-    <link href="www.aitozi.com/2018/01/07/Flink%20Window%E5%AE%9E%E7%8E%B0%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
-    <id>www.aitozi.com/2018/01/07/Flink Window实现源码分析/</id>
+    <link href="http://www.aitozi.com/2018/01/07/Flink%20Window%E5%AE%9E%E7%8E%B0%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    <id>http://www.aitozi.com/2018/01/07/Flink Window实现源码分析/</id>
     <published>2018-01-06T18:05:43.000Z</published>
     <updated>2018-01-07T03:17:05.000Z</updated>
     
@@ -541,17 +541,17 @@ F: 结束状态
     
     </summary>
     
-      <category term="源码分析" scheme="www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+      <category term="源码分析" scheme="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
     
     
-      <category term="Flink" scheme="www.aitozi.com/tags/Flink/"/>
+      <category term="Flink" scheme="http://www.aitozi.com/tags/Flink/"/>
     
   </entry>
   
   <entry>
     <title>为什么现代系统架构需要一个新的编程模型 actor编程模型</title>
-    <link href="www.aitozi.com/2017/12/17/%E4%B8%BA%E4%BB%80%E4%B9%88%E7%8E%B0%E4%BB%A3%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E9%9C%80%E8%A6%81%E4%B8%80%E4%B8%AA%E6%96%B0%E7%9A%84%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B--actor%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B/"/>
-    <id>www.aitozi.com/2017/12/17/为什么现代系统架构需要一个新的编程模型--actor编程模型/</id>
+    <link href="http://www.aitozi.com/2017/12/17/%E4%B8%BA%E4%BB%80%E4%B9%88%E7%8E%B0%E4%BB%A3%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E9%9C%80%E8%A6%81%E4%B8%80%E4%B8%AA%E6%96%B0%E7%9A%84%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B--actor%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B/"/>
+    <id>http://www.aitozi.com/2017/12/17/为什么现代系统架构需要一个新的编程模型--actor编程模型/</id>
     <published>2017-12-17T13:32:20.000Z</published>
     <updated>2017-12-17T13:48:15.000Z</updated>
     
@@ -592,17 +592,17 @@ F: 结束状态
     
     </summary>
     
-      <category term="技术视角" scheme="www.aitozi.com/categories/%E6%8A%80%E6%9C%AF%E8%A7%86%E8%A7%92/"/>
+      <category term="技术视角" scheme="http://www.aitozi.com/categories/%E6%8A%80%E6%9C%AF%E8%A7%86%E8%A7%92/"/>
     
     
-      <category term="akka" scheme="www.aitozi.com/tags/akka/"/>
+      <category term="akka" scheme="http://www.aitozi.com/tags/akka/"/>
     
   </entry>
   
   <entry>
     <title>ArrayDeque源码分析</title>
-    <link href="www.aitozi.com/2017/11/24/ArrayDeque%E5%AE%9E%E7%8E%B0%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
-    <id>www.aitozi.com/2017/11/24/ArrayDeque实现源码分析/</id>
+    <link href="http://www.aitozi.com/2017/11/24/ArrayDeque%E5%AE%9E%E7%8E%B0%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    <id>http://www.aitozi.com/2017/11/24/ArrayDeque实现源码分析/</id>
     <published>2017-11-24T07:32:23.000Z</published>
     <updated>2017-11-24T07:45:26.000Z</updated>
     
@@ -757,17 +757,17 @@ F: 结束状态
     
     </summary>
     
-      <category term="源码分析" scheme="www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+      <category term="源码分析" scheme="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
     
     
-      <category term="jdk" scheme="www.aitozi.com/tags/jdk/"/>
+      <category term="jdk" scheme="http://www.aitozi.com/tags/jdk/"/>
     
   </entry>
   
   <entry>
     <title>flink-watermark</title>
-    <link href="www.aitozi.com/2017/09/10/flink-watermark/"/>
-    <id>www.aitozi.com/2017/09/10/flink-watermark/</id>
+    <link href="http://www.aitozi.com/2017/09/10/flink-watermark/"/>
+    <id>http://www.aitozi.com/2017/09/10/flink-watermark/</id>
     <published>2017-09-10T07:59:23.000Z</published>
     <updated>2017-09-10T08:13:26.000Z</updated>
     
@@ -858,17 +858,17 @@ F: 结束状态
     
     </summary>
     
-      <category term="源码分析" scheme="www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+      <category term="源码分析" scheme="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
     
     
-      <category term="Flink" scheme="www.aitozi.com/tags/Flink/"/>
+      <category term="Flink" scheme="http://www.aitozi.com/tags/Flink/"/>
     
   </entry>
   
   <entry>
     <title>flink-latency-tracker</title>
-    <link href="www.aitozi.com/2017/09/09/flink-latency-tracker/"/>
-    <id>www.aitozi.com/2017/09/09/flink-latency-tracker/</id>
+    <link href="http://www.aitozi.com/2017/09/09/flink-latency-tracker/"/>
+    <id>http://www.aitozi.com/2017/09/09/flink-latency-tracker/</id>
     <published>2017-09-08T16:47:35.000Z</published>
     <updated>2017-09-10T08:03:51.000Z</updated>
     
@@ -904,17 +904,17 @@ F: 结束状态
     
     </summary>
     
-      <category term="源码分析" scheme="www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+      <category term="源码分析" scheme="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
     
     
-      <category term="Flink" scheme="www.aitozi.com/tags/Flink/"/>
+      <category term="Flink" scheme="http://www.aitozi.com/tags/Flink/"/>
     
   </entry>
   
   <entry>
     <title>Hexo tutorial</title>
-    <link href="www.aitozi.com/2016/10/12/hello-world/"/>
-    <id>www.aitozi.com/2016/10/12/hello-world/</id>
+    <link href="http://www.aitozi.com/2016/10/12/hello-world/"/>
+    <id>http://www.aitozi.com/2016/10/12/hello-world/</id>
     <published>2016-10-11T16:47:35.000Z</published>
     <updated>2017-09-10T07:02:25.000Z</updated>
     
@@ -939,10 +939,10 @@ F: 结束状态
     
     </summary>
     
-      <category term="常用命令" scheme="www.aitozi.com/categories/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+      <category term="常用命令" scheme="http://www.aitozi.com/categories/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
     
     
-      <category term="hexo" scheme="www.aitozi.com/tags/hexo/"/>
+      <category term="hexo" scheme="http://www.aitozi.com/tags/hexo/"/>
     
   </entry>
   
