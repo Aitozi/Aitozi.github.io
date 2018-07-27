@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.aitozi.com/"/>
-  <updated>2018-05-27T12:15:46.000Z</updated>
+  <updated>2018-07-27T16:56:21.000Z</updated>
   <id>http://www.aitozi.com/</id>
   
   <author>
@@ -16,9 +16,108 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Java序列化拾掇</title>
+    <link href="http://www.aitozi.com/java-serialization.html"/>
+    <id>http://www.aitozi.com/java-serialization.html</id>
+    <published>2018-07-27T16:51:18.000Z</published>
+    <updated>2018-07-27T16:56:21.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Java序列化拾掇</p>
+<a id="more"></a>
+<blockquote>
+<p>本来想总结一下对google protobuf的用法总结，然而搜资料的过程中发现对很多java序列化的知识不足，故做了一些拾掇，在flink中关于类型序列化的地方其实也涉及很多，待以后看到，如有新的思考再来补充。</p>
+</blockquote>
+<h2 id="java序列化"><a href="#java序列化" class="headerlink" title="java序列化"></a>java序列化</h2><ol>
+<li>在Java中，只要一个类实现了java.io.Serializable接口，那么它就可以被序列化</li>
+<li>若父类未实现Serializable,而子类序列化了，父类属性值不会被保存，反序列化后父类属性值丢失</li>
+<li>通过ObjectOutputStream和ObjectInputStream对对象进行序列化及反序列化</li>
+<li>在deserialized的时候类的构造器是不会被调用的，只会调用没有实现Serializabe接口的父类的无参构造方法，如果其父类不可序列化，并且没有无参构造函数就会导致<code>InvalidClassException</code></li>
+<li>只有non-static的成员并且没有标记为transient才会被序列化</li>
+<li>类所包含的成员变量也必须是可序列化的</li>
+<li>transient 关键字的作用是控制变量的序列化，在变量声明前加上该关键字，可以阻止该变量被序列化到文件中，在被反序列化后，transient 变量的值被设为初始值，如 int 型的是 0，对象型的是 null</li>
+<li>java的serialVersionUID用来表明类的不同版本间的兼容性，必须被定义成final static long才能生效，否则会报错</li>
+<li>在使用Externalizable进行序列化的时候，在读取对象时，会调用被序列化类的无参构造器去创建一个新的对象，然后再将被保存对象的字段的值分别填充到新对象中。所以，实现Externalizable接口的类必须要提供一个public的无参的构造器，如果一个Java类没有定义任何构造函数，编译器会帮我们自动添加一个无参的构造方法，可是，如果我们在类中定义了一个有参数的构造方法了，编译器便不会再帮我们创建无参构造方法，这点需要注意</li>
+<li>用户自定义的 writeObject 和 readObject 方法可以允许用户控制序列化的过程</li>
+</ol>
+<h3 id="serialVersionUID"><a href="#serialVersionUID" class="headerlink" title="serialVersionUID"></a>serialVersionUID</h3><p>Java的序列化机制是通过在运行时判断类的serialVersionUID来验证版本一致性的。在进行反序列化时，JVM会把传来 的字节流中的serialVersionUID与本地相应实体（类）的serialVersionUID进行比较，如果相同就认为是一致的，可以进行反序 列化，否则就会出现序列化版本不一致的异常。 </p>
+<p>当实现java.io.Serializable接口的实体（类）没有显式地定义一个名为serialVersionUID，类型为long的变 量时，Java序列化机制会根据编译的class自动生成一个serialVersionUID作序列化版本比较用，这种情况下，只有同一次编译生成的 class才会生成相同的serialVersionUID 。 </p>
+<p>如果我们不希望通过编译来强制划分软件版本，即实现序列化接口的实体能够兼容先前版本，未作更改的类，就需要显式地定义一个名为serialVersionUID，类型为long的变量，不修改这个变量值的序列化实体都可以相互进行串行化和反串行化。</p>
+<h3 id="在内部类使用中带来的困扰"><a href="#在内部类使用中带来的困扰" class="headerlink" title="在内部类使用中带来的困扰"></a>在内部类使用中带来的困扰</h3><blockquote>
+<p>A class that is serializable with an enclosing class that is not serializable causes serialization to fail.<br>Non-static nested classes that implement Serializable must be defined in an enclosing class that is also serializable. Non-static nested classes retain an implicit reference to an instance of their enclosing class. If the enclosing class is not serializable, the Java serialization mechanism fails with a java.io.NotSerializableException.</p>
+</blockquote>
+<p>一个非静态的内部类实现了Serializable接口，要求其外部类也同样实现Serializable接口。这是因为一个非静态内部类包含有一个隐式的指向外部包装类实例对象的一个指针，如上面指出的规则，序列化的时候要求类的非静态成员也需要是可序列化的，如果外部类没有声明Serializable，java序列化机制就会报错，解法通常是</p>
+<ul>
+<li>将内部类声明为static，这样就不包含隐式指针了</li>
+<li>将外部类声明为Serializable</li>
+</ul>
+<p>在flink中采用了另一种解法，用户通过匿名内部类来定义一个userFuntion，通常userFunction需要被序列化来分发到各个task节点来执行，定义成static不如匿名类方便，外部主类定义成Serializable的代价又比较大，因此采用另一种解法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">for (Field f: cls.getDeclaredFields()) &#123;</div><div class="line">	if (f.getName().startsWith(&quot;this$&quot;)) &#123;</div><div class="line">		// found a closure referencing field - now try to clean</div><div class="line">		closureAccessed |= cleanThis0(func, cls, f.getName());</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">private static boolean cleanThis0(Object func, Class&lt;?&gt; cls, String this0Name) &#123;</div><div class="line"></div><div class="line">	This0AccessFinder this0Finder = new This0AccessFinder(this0Name);</div><div class="line">	getClassReader(cls).accept(this0Finder, 0);</div><div class="line"></div><div class="line">	final boolean accessesClosure = this0Finder.isThis0Accessed();</div><div class="line"></div><div class="line">	if (LOG.isDebugEnabled()) &#123;</div><div class="line">		LOG.debug(this0Name + &quot; is accessed: &quot; + accessesClosure);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	if (!accessesClosure) &#123;</div><div class="line">		Field this0;</div><div class="line">		try &#123;</div><div class="line">			this0 = func.getClass().getDeclaredField(this0Name);</div><div class="line">		&#125; catch (NoSuchFieldException e) &#123;</div><div class="line">			// has no this$0, just return</div><div class="line">			throw new RuntimeException(&quot;Could not set &quot; + this0Name + &quot;: &quot; + e);</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		try &#123;</div><div class="line">			this0.setAccessible(true);</div><div class="line">			this0.set(func, null);</div><div class="line">		&#125;</div><div class="line">		catch (Exception e) &#123;</div><div class="line">			// should not happen, since we use setAccessible</div><div class="line">			throw new RuntimeException(&quot;Could not set &quot; + this0Name + &quot; to null. &quot; + e.getMessage(), e);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	return accessesClosure;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>对每一个userFunction(可能实现自一个匿名内部类)有一个clean的机制。</p>
+<ul>
+<li>检查其声明字段有没有<code>this$</code>开始的，即指向外部类的引用</li>
+<li>如果有将对应的字段通过反射置成null,这样就不会受第三条规则的困扰了</li>
+</ul>
+<h3 id="自定义序列化"><a href="#自定义序列化" class="headerlink" title="自定义序列化"></a>自定义序列化</h3><p>在序列化过程中，如果被序列化的类中定义了writeObject 和 readObject 方法，虚拟机会试图调用对象类里的 writeObject 和 readObject 方法，进行用户自定义的序列化和反序列化。并且这两个方法的signature必须是以下这样才会生效，否则就是默认的序列化方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">private void readObject(java.io.ObjectInputStream in)</div><div class="line">     throws IOException, ClassNotFoundException;</div><div class="line">private void writeObject(java.io.ObjectOutputStream out)</div><div class="line">     throws IOException;</div></pre></td></tr></table></figure>
+<p>如果没有这样的方法，则默认调用是 ObjectOutputStream 的 defaultWriteObject 方法以及 ObjectInputStream 的 defaultReadObject 方法。这两个方法没有覆写，也没有被显式调用，为什么会生效呢？ 具体可以参见<a href="https://mp.weixin.qq.com/s/ABtxdNpr4bLpXtFiOK47hA" target="_blank" rel="external">https://mp.weixin.qq.com/s/ABtxdNpr4bLpXtFiOK47hA</a></p>
+<blockquote>
+<p>在使用ObjectOutputStream的writeObject方法和ObjectInputStream的readObject方法时，会通过反射的方式调用</p>
+</blockquote>
+<p>关于序列化的困惑可以在这个源码中得到解答</p>
+<blockquote>
+<p>ObjectOutputStream#writeObject</p>
+<p>writeObject =&gt; writeObject0 =&gt; writeOrdinaryObject =&gt; writeSerialData =&gt; invokeWriteObject</p>
+</blockquote>
+<p>可以参见ArrayList使用了这种自定义序列化的方法，ArrayList实际上是动态数组，每次在放满以后自动增长设定的长度值，如果数组自动增长长度设为100，而实际只放了一个元素，那就会序列化99个null元素。为了保证在序列化的时候不会将这么多null同时进行序列化，ArrayList把元素数组设置为transient。</p>
+<p><em>Ps：在两个方法的开始处，你会发现调用了defaultWriteObject()和defaultReadObject()。它们做的是默认的序列化进程，就像写/读所有的non-transient和 non-static字段(但他们不会去做serialVersionUID的检查).通常说来，所有我们想要自己处理的字段都应该声明为transient。这样的话，defaultWriteObject/defaultReadObject便可以专注于其余字段，而我们则可为这些特定的字段(译者：指transient)定制序列化。使用那两个默认的方法并不是强制的，而是给予了处理复杂应用时更多的灵活性</em></p>
+<h3 id="关于反序列化的时候构造方法是否会被调用（反序列化是怎么做的）"><a href="#关于反序列化的时候构造方法是否会被调用（反序列化是怎么做的）" class="headerlink" title="关于反序列化的时候构造方法是否会被调用（反序列化是怎么做的）"></a>关于反序列化的时候构造方法是否会被调用（反序列化是怎么做的）</h3><blockquote>
+<p>A non-serializable, immediate superclass of a serializable class that does not itself declare an accessible, no-argument constructor causes deserialization to fail<br>To allow subtypes of non-serializable classes to be serialized, the subtype may assume responsibility for saving and restoring the state of the supertype’s public, protected, and (if accessible) package fields. The subtype may assume this responsibility only if the class it extends has an accessible no-arg constructor to initialize the class’s state. It is an error to declare a class Serializable if this is not the case. The error will be detected at runtime.</p>
+</blockquote>
+<p>反序列化其实是将先前序列化生成的byte流重新构建成一个对象，byte流包含了所有重构对象的信息，包括class的元数据，实例的变量的类型信息，以及相应的值。然后在反序列化的时候它要求<strong>all the parent classes of instance should be Serializable; and if any super class in hirarchy is not Serializable then it must have a default constructor</strong>。在反序列化的时候会一直搜寻其父类，直到找到第一个不可序列化的类，就尝试调用其无参构造函数创建对象，如果所有的父类都是可序列化的，最终找到的就是Object类，然后首先创建一个Object对象。接着JVM就继续读取byte流，设置相关的类型信息，一个空对象创建完成后，jvm就设置相关的static字段，并调用<code>readObject</code>方法进行赋值</p>
+<p>由于本类的构造方法不会被调用，所以你期望某个变量的初始化在构造方法中完成得到的只会是null。</p>
+<p>在构造函数的调用上<code>Externalizable</code>和<code>Serializable</code>的表现不同，Externalizable依赖于本身类的无参构造函数</p>
+<h3 id="利用序列化来做deepCopy"><a href="#利用序列化来做deepCopy" class="headerlink" title="利用序列化来做deepCopy"></a>利用序列化来做deepCopy</h3><p>主要用到了<code>ByteArrayOutputStream</code>,存储在内存中，不做持久化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public SerializableClass deepCopy() throws Exception&#123;</div><div class="line">    //Serialization of object</div><div class="line">    ByteArrayOutputStream bos = new ByteArrayOutputStream();</div><div class="line">    ObjectOutputStream out = new ObjectOutputStream(bos);</div><div class="line">    out.writeObject(this);</div><div class="line"></div><div class="line">    //De-serialization of object</div><div class="line">    ByteArrayInputStream bis = new   ByteArrayInputStream(bos.toByteArray());</div><div class="line">    ObjectInputStream in = new ObjectInputStream(bis);</div><div class="line">    SerializableClass copied = (SerializableClass) in.readObject();</div><div class="line">    return copied;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>更多关于java clone 可参考:</p>
+<p><a href="https://howtodoinjava.com/core-java/cloning/a-guide-to-object-cloning-in-java/" target="_blank" rel="external">https://howtodoinjava.com/core-java/cloning/a-guide-to-object-cloning-in-java/</a></p>
+<h3 id="如果对象状态需要同步，则对象序列化也需要同步"><a href="#如果对象状态需要同步，则对象序列化也需要同步" class="headerlink" title="如果对象状态需要同步，则对象序列化也需要同步"></a>如果对象状态需要同步，则对象序列化也需要同步</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">private synchronized void writeObject(ObjectOutputStream s) throws IOException &#123;</div><div class="line">        s.defaultWriteObject();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="单例模式序列化"><a href="#单例模式序列化" class="headerlink" title="单例模式序列化"></a>单例模式序列化</h3><p>参考：</p>
+<ul>
+<li><a href="http://www.hollischuang.com/archives/1144" target="_blank" rel="external">http://www.hollischuang.com/archives/1144</a></li>
+<li>枚举实现可序列化单例 <a href="http://www.cnblogs.com/cielosun/p/6596475.html" target="_blank" rel="external">http://www.cnblogs.com/cielosun/p/6596475.html</a> </li>
+<li><a href="https://leokongwq.github.io/2017/08/21/why-enum-singleton-are-serialization-safe.html" target="_blank" rel="external">https://leokongwq.github.io/2017/08/21/why-enum-singleton-are-serialization-safe.html</a></li>
+</ul>
+<h3 id="在不同的classloader之间进行对象的序列化和反序列化"><a href="#在不同的classloader之间进行对象的序列化和反序列化" class="headerlink" title="在不同的classloader之间进行对象的序列化和反序列化"></a>在不同的classloader之间进行对象的序列化和反序列化</h3><p>如上所说，在同一个classloader中，利用如下的方法serializabale和deserializable对象：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">ByteArrayOutputStream bo=new ByteArrayOutputStream();</div><div class="line">ObjectOutputStream oo=new ObjectOutputStream(bo);</div><div class="line">oo.writeObject(outObject);</div><div class="line">ByteArrayInputStream bi=new ByteArrayInputStream(bo.toByteArray());</div><div class="line">ObjectInputStream oi=new ObjectInputStream(bi);</div><div class="line">Object inObject = oi.readObject();</div></pre></td></tr></table></figure>
+<p> 当序列化的对象和反序列化的对象不在同一个classloader中时，以上的代码执行时，就会报无法把属性付给对象的错误，此时应当，通过设置反序列化得classloader，来解决这个问题。</p>
+<p>首先，从ObjectInputStream继承一个自己的ObjectInputStream</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">public class CustomObjectInputStream extends ObjectInputStream &#123;</div><div class="line"></div><div class="line">    protected ClassLoader classLoader = this.getClass().getClassLoader();</div><div class="line"></div><div class="line">    public CustomObjectInputStream(InputStream in) throws IOException &#123;</div><div class="line">        super(in);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public CustomObjectInputStream(InputStream in, ClassLoader cl)</div><div class="line">            throws IOException &#123;</div><div class="line">        super(in);</div><div class="line">        this.classLoader = cl;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    protected Class&lt;?&gt; resolveClass(ObjectStreamClass desc) throws IOException,</div><div class="line">            ClassNotFoundException &#123;</div><div class="line">        // TODO Auto-generated method stub</div><div class="line">        String name = desc.getName();</div><div class="line">        try &#123;</div><div class="line">            return Class.forName(name, false, this.classLoader);</div><div class="line">        &#125; catch (ClassNotFoundException ex) &#123;</div><div class="line">            return super.resolveClass(desc);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>比较重要的是这里的resolveClass方法传入classloader,反序列化时将classloader传入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"> ByteArrayOutputStream bo=new ByteArrayOutputStream();</div><div class="line">ObjectOutputStream oo=new ObjectOutputStream(bo);</div><div class="line">oo.writeObject(outObject);</div><div class="line">ByteArrayInputStream bi=new ByteArrayInputStream(bo.toByteArray());</div><div class="line">CustomObjectInputStream oi=new CustomObjectInputStream(bi, outObject.getClass().getClassLoader());</div><div class="line">Object = oi.readObject();</div><div class="line">// flink源码中也有多次类似的使用userClassloader和FlinkClassLoader的切换</div><div class="line">https://issues.apache.org/jira/browse/FLINK-9122 这个bug曾经就是因为这个原因引起的</div></pre></td></tr></table></figure>
+<h3 id="序列化相关方法"><a href="#序列化相关方法" class="headerlink" title="序列化相关方法"></a>序列化相关方法</h3><p>writeObject、readObject、readObjectNoData、writeReplace和readResolve 待补充</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://help.semmle.com/wiki/display/JAVA/Serializable+inner+class+of+non-serializable+class," title="Serializable inner class of non-serializable class" target="_blank" rel="external">Serializable inner class of non-serializable class</a></li>
+<li><a href="https://mp.weixin.qq.com/s/-D9N9_9IDqSbuIjuADJ7ZA" target="_blank" rel="external">https://mp.weixin.qq.com/s/-D9N9_9IDqSbuIjuADJ7ZA</a></li>
+<li><a href="https://howtodoinjava.com/core-java/serialization/how-deserialization-process-happen-in-java/" target="_blank" rel="external">https://howtodoinjava.com/core-java/serialization/how-deserialization-process-happen-in-java/</a></li>
+<li><a href="https://www.quora.com/Why-are-enum-singleton-serialization-safe" target="_blank" rel="external">https://www.quora.com/Why-are-enum-singleton-serialization-safe</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Java序列化拾掇&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="serialization" scheme="http://www.aitozi.com/tags/serialization/"/>
+    
+  </entry>
+  
+  <entry>
     <title>flink中jobgraph的生成逻辑</title>
-    <link href="http://www.aitozi.com/2018/05/26/flink-jobgraph-generate/"/>
-    <id>http://www.aitozi.com/2018/05/26/flink-jobgraph-generate/</id>
+    <link href="http://www.aitozi.com/flink-jobgraph-generate.html"/>
+    <id>http://www.aitozi.com/flink-jobgraph-generate.html</id>
     <published>2018-05-26T10:43:23.000Z</published>
     <updated>2018-05-27T12:15:46.000Z</updated>
     
@@ -63,8 +162,8 @@
   
   <entry>
     <title>flink cep源码分析</title>
-    <link href="http://www.aitozi.com/2018/05/25/flink-cep-code/"/>
-    <id>http://www.aitozi.com/2018/05/25/flink-cep-code/</id>
+    <link href="http://www.aitozi.com/flink-cep-code.html"/>
+    <id>http://www.aitozi.com/flink-cep-code.html</id>
     <published>2018-05-25T13:54:23.000Z</published>
     <updated>2018-05-25T13:58:48.000Z</updated>
     
@@ -113,8 +212,8 @@
   
   <entry>
     <title>flink图流转之StreamGraph</title>
-    <link href="http://www.aitozi.com/2018/04/11/flink-streamGraph/"/>
-    <id>http://www.aitozi.com/2018/04/11/flink-streamGraph/</id>
+    <link href="http://www.aitozi.com/flink-streamGraph.html"/>
+    <id>http://www.aitozi.com/flink-streamGraph.html</id>
     <published>2018-04-10T23:13:58.000Z</published>
     <updated>2018-04-10T23:19:36.000Z</updated>
     
@@ -179,8 +278,8 @@
   
   <entry>
     <title>flink-ui中的反压采样</title>
-    <link href="http://www.aitozi.com/2018/04/11/flink-backpressure-sample/"/>
-    <id>http://www.aitozi.com/2018/04/11/flink-backpressure-sample/</id>
+    <link href="http://www.aitozi.com/flink-backpressure-sample.html"/>
+    <id>http://www.aitozi.com/flink-backpressure-sample.html</id>
     <published>2018-04-10T23:02:51.000Z</published>
     <updated>2018-04-10T23:08:08.000Z</updated>
     
@@ -216,8 +315,8 @@
   
   <entry>
     <title>maven-shade-plugin插件高级用法</title>
-    <link href="http://www.aitozi.com/2018/04/10/advance-maven-shade-plugin/"/>
-    <id>http://www.aitozi.com/2018/04/10/advance-maven-shade-plugin/</id>
+    <link href="http://www.aitozi.com/advance-maven-shade-plugin.html"/>
+    <id>http://www.aitozi.com/advance-maven-shade-plugin.html</id>
     <published>2018-04-10T14:06:03.000Z</published>
     <updated>2018-04-10T14:15:18.000Z</updated>
     
@@ -259,8 +358,8 @@
   
   <entry>
     <title>上篇·flink 1.4利用kafka0.11实现完整的一致性语义</title>
-    <link href="http://www.aitozi.com/2018/03/11/flink-kafka-exactly-once/"/>
-    <id>http://www.aitozi.com/2018/03/11/flink-kafka-exactly-once/</id>
+    <link href="http://www.aitozi.com/flink-kafka-exactly-once.html"/>
+    <id>http://www.aitozi.com/flink-kafka-exactly-once.html</id>
     <published>2018-03-11T14:29:44.000Z</published>
     <updated>2018-03-11T14:39:45.000Z</updated>
     
@@ -344,8 +443,8 @@
   
   <entry>
     <title>flink-cep-paper</title>
-    <link href="http://www.aitozi.com/2018/02/25/flink-cep-paper/"/>
-    <id>http://www.aitozi.com/2018/02/25/flink-cep-paper/</id>
+    <link href="http://www.aitozi.com/flink-cep-paper.html"/>
+    <id>http://www.aitozi.com/flink-cep-paper.html</id>
     <published>2018-02-25T12:19:15.000Z</published>
     <updated>2018-02-25T12:44:25.000Z</updated>
     
@@ -461,8 +560,8 @@ F: 结束状态
   
   <entry>
     <title>常阅读博客</title>
-    <link href="http://www.aitozi.com/2018/01/23/%E5%B8%B8%E9%98%85%E8%AF%BB%E5%8D%9A%E5%AE%A2/"/>
-    <id>http://www.aitozi.com/2018/01/23/常阅读博客/</id>
+    <link href="http://www.aitozi.com/%E5%B8%B8%E9%98%85%E8%AF%BB%E5%8D%9A%E5%AE%A2.html"/>
+    <id>http://www.aitozi.com/常阅读博客.html</id>
     <published>2018-01-23T01:58:30.000Z</published>
     <updated>2018-04-11T09:43:27.000Z</updated>
     
@@ -488,8 +587,8 @@ F: 结束状态
   
   <entry>
     <title>flink中window实现的源码分析</title>
-    <link href="http://www.aitozi.com/2018/01/07/Flink%20Window%E5%AE%9E%E7%8E%B0%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
-    <id>http://www.aitozi.com/2018/01/07/Flink Window实现源码分析/</id>
+    <link href="http://www.aitozi.com/Flink%20Window%E5%AE%9E%E7%8E%B0%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html"/>
+    <id>http://www.aitozi.com/Flink Window实现源码分析.html</id>
     <published>2018-01-06T18:05:43.000Z</published>
     <updated>2018-01-07T03:17:05.000Z</updated>
     
@@ -550,8 +649,8 @@ F: 结束状态
   
   <entry>
     <title>为什么现代系统架构需要一个新的编程模型 actor编程模型</title>
-    <link href="http://www.aitozi.com/2017/12/17/%E4%B8%BA%E4%BB%80%E4%B9%88%E7%8E%B0%E4%BB%A3%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E9%9C%80%E8%A6%81%E4%B8%80%E4%B8%AA%E6%96%B0%E7%9A%84%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B--actor%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B/"/>
-    <id>http://www.aitozi.com/2017/12/17/为什么现代系统架构需要一个新的编程模型--actor编程模型/</id>
+    <link href="http://www.aitozi.com/%E4%B8%BA%E4%BB%80%E4%B9%88%E7%8E%B0%E4%BB%A3%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E9%9C%80%E8%A6%81%E4%B8%80%E4%B8%AA%E6%96%B0%E7%9A%84%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B--actor%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B.html"/>
+    <id>http://www.aitozi.com/为什么现代系统架构需要一个新的编程模型--actor编程模型.html</id>
     <published>2017-12-17T13:32:20.000Z</published>
     <updated>2017-12-17T13:48:15.000Z</updated>
     
@@ -601,8 +700,8 @@ F: 结束状态
   
   <entry>
     <title>ArrayDeque源码分析</title>
-    <link href="http://www.aitozi.com/2017/11/24/ArrayDeque%E5%AE%9E%E7%8E%B0%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
-    <id>http://www.aitozi.com/2017/11/24/ArrayDeque实现源码分析/</id>
+    <link href="http://www.aitozi.com/ArrayDeque%E5%AE%9E%E7%8E%B0%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html"/>
+    <id>http://www.aitozi.com/ArrayDeque实现源码分析.html</id>
     <published>2017-11-24T07:32:23.000Z</published>
     <updated>2017-11-24T07:45:26.000Z</updated>
     
@@ -766,8 +865,8 @@ F: 结束状态
   
   <entry>
     <title>flink-watermark</title>
-    <link href="http://www.aitozi.com/2017/09/10/flink-watermark/"/>
-    <id>http://www.aitozi.com/2017/09/10/flink-watermark/</id>
+    <link href="http://www.aitozi.com/flink-watermark.html"/>
+    <id>http://www.aitozi.com/flink-watermark.html</id>
     <published>2017-09-10T07:59:23.000Z</published>
     <updated>2017-09-10T08:13:26.000Z</updated>
     
@@ -867,8 +966,8 @@ F: 结束状态
   
   <entry>
     <title>flink-latency-tracker</title>
-    <link href="http://www.aitozi.com/2017/09/09/flink-latency-tracker/"/>
-    <id>http://www.aitozi.com/2017/09/09/flink-latency-tracker/</id>
+    <link href="http://www.aitozi.com/flink-latency-tracker.html"/>
+    <id>http://www.aitozi.com/flink-latency-tracker.html</id>
     <published>2017-09-08T16:47:35.000Z</published>
     <updated>2017-09-10T08:03:51.000Z</updated>
     
@@ -913,8 +1012,8 @@ F: 结束状态
   
   <entry>
     <title>Hexo tutorial</title>
-    <link href="http://www.aitozi.com/2016/10/12/hello-world/"/>
-    <id>http://www.aitozi.com/2016/10/12/hello-world/</id>
+    <link href="http://www.aitozi.com/hello-world.html"/>
+    <id>http://www.aitozi.com/hello-world.html</id>
     <published>2016-10-11T16:47:35.000Z</published>
     <updated>2017-09-10T07:02:25.000Z</updated>
     
