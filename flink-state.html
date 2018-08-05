@@ -112,7 +112,7 @@
 <meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/18-8-2/82936981.jpg">
 <meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/18-8-3/53377760.jpg">
 <meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/18-8-3/18711916.jpg">
-<meta property="og:updated_time" content="2018-08-05T04:35:07.000Z">
+<meta property="og:updated_time" content="2018-08-05T04:42:13.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="flink中状态实现的深入理解">
 <meta name="twitter:description" content="本文是源于要在内部分享，所以提前整理了一些flink中的状态的一些知识，flink状态所包含的东西很多，在下面列举了一些，还有一些在本文没有体现，后续会单独的挑出来再进行讲解">
@@ -537,12 +537,12 @@
 </ul>
 <p>实际实现上的keyGroup range和上图有区别，是连续的:</p>
 <p>比如：subtask1: [0-10], subtask2: [11-12] …</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">int start = operatorIndex == 0 ? 0 : ((operatorIndex * maxParallelism - 1) / parallelism) + 1;</div><div class="line">		int end = ((operatorIndex + 1) * maxParallelism - 1) / parallelism;</div><div class="line">		return new KeyGroupRange(start, end);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">int start = operatorIndex == 0 ? 0 : ((operatorIndex * maxParallelism - 1) / parallelism) + 1;</div><div class="line">int end = ((operatorIndex + 1) * maxParallelism - 1) / parallelism;</div><div class="line">return new KeyGroupRange(start, end);</div></pre></td></tr></table></figure>
 <ul>
 <li>每一个backend（subtask）上只有一个keygroup range</li>
 <li>每一个subtask在restore的时候就接收到了已经分配好的和重启后当前这个并发相绑定的keyStateHandle</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">subManagedKeyedState = getManagedKeyedStateHandles(operatorState, keyGroupPartitions.get(subTaskIndex));</div><div class="line">			subRawKeyedState = getRawKeyedStateHandles(operatorState, keyGroupPartitions.get(subTaskIndex));</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">subManagedKeyedState = getManagedKeyedStateHandles(operatorState, keyGroupPartitions.get(subTaskIndex));</div><div class="line">subRawKeyedState = getRawKeyedStateHandles(operatorState, keyGroupPartitions.get(subTaskIndex));</div></pre></td></tr></table></figure>
 <p>这里面关键的一步在于，根据新的subtask上的keyGroupRange，从原来的operator的keyGroupsStateHandle中求取本subtask所关心的一部分Handle，可以看到每个KeyGroupsStateHandle都维护了<code>KeyGroupRangeOffsets</code>这样一个变量，来标记这个handle所覆盖的keygrouprange，以及keygrouprange在stream中offset的位置，可以看下再snapshot的时候会记录offset到这个对象中来</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">keyGroupRangeOffsets.setKeyGroupOffset(mergeIterator.keyGroup(), outStream.getPos());</div></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public KeyGroupRangeOffsets getIntersection(KeyGroupRange keyGroupRange) &#123;</div><div class="line">		Preconditions.checkNotNull(keyGroupRange);</div><div class="line">		KeyGroupRange intersection = this.keyGroupRange.getIntersection(keyGroupRange);</div><div class="line">		long[] subOffsets = new long[intersection.getNumberOfKeyGroups()];</div><div class="line">		if(subOffsets.length &gt; 0) &#123;</div><div class="line">			System.arraycopy(</div><div class="line">					offsets,</div><div class="line">					computeKeyGroupIndex(intersection.getStartKeyGroup()),</div><div class="line">					subOffsets,</div><div class="line">					0,</div><div class="line">					subOffsets.length);</div><div class="line">		&#125;</div><div class="line">		return new KeyGroupRangeOffsets(intersection, subOffsets);</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
