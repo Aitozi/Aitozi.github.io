@@ -85,7 +85,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Flink," />
+  <meta name="keywords" content="RocksDB," />
 
 
 
@@ -103,19 +103,19 @@
 
 
 
-<meta name="description" content="关于Flink中window的实现分析">
+<meta name="description" content="本文翻译自：https://github.com/facebook/rocksdb/wiki/rocksdb-basics
+主要是rocksdb的一些概念理解和介绍">
 <meta property="og:type" content="article">
-<meta property="og:title" content="flink中window实现的源码分析">
-<meta property="og:url" content="http://www.aitozi.com/Flink Window实现源码分析.html">
+<meta property="og:title" content="rocksdb概念简介">
+<meta property="og:url" content="http://www.aitozi.com/rocksdb-wiki.html">
 <meta property="og:site_name" content="Aitozi">
-<meta property="og:description" content="关于Flink中window的实现分析">
-<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/18-1-7/74574325.jpg">
-<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/18-1-7/87202276.jpg">
-<meta property="og:updated_time" content="2018-01-07T03:17:05.000Z">
+<meta property="og:description" content="本文翻译自：https://github.com/facebook/rocksdb/wiki/rocksdb-basics
+主要是rocksdb的一些概念理解和介绍">
+<meta property="og:updated_time" content="2018-08-23T15:24:03.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="flink中window实现的源码分析">
-<meta name="twitter:description" content="关于Flink中window的实现分析">
-<meta name="twitter:image" content="http://or0igopk2.bkt.clouddn.com/18-1-7/74574325.jpg">
+<meta name="twitter:title" content="rocksdb概念简介">
+<meta name="twitter:description" content="本文翻译自：https://github.com/facebook/rocksdb/wiki/rocksdb-basics
+主要是rocksdb的一些概念理解和介绍">
 
 
 
@@ -144,13 +144,13 @@
 
 
 
-  <link rel="canonical" href="http://www.aitozi.com/Flink Window实现源码分析.html"/>
+  <link rel="canonical" href="http://www.aitozi.com/rocksdb-wiki.html"/>
 
 
 
 
 
-  <title>flink中window实现的源码分析 | Aitozi</title>
+  <title>rocksdb概念简介 | Aitozi</title>
   
 
 
@@ -303,7 +303,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.aitozi.com/Flink Window实现源码分析.html">
+    <link itemprop="mainEntityOfPage" href="http://www.aitozi.com/rocksdb-wiki.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="aitozi">
@@ -320,7 +320,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">flink中window实现的源码分析</h2>
+          <h2 class="post-title" itemprop="name headline">rocksdb概念简介</h2>
         
 
         <div class="post-meta">
@@ -332,8 +332,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-07T02:05:43+08:00">
-                2018-01-07
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-23T23:20:44+08:00">
+                2018-08-23
               </time>
             
 
@@ -342,28 +342,6 @@
             
           </span>
 
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/源码分析/" itemprop="url" rel="index">
-                    <span itemprop="name">源码分析</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -374,8 +352,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/Flink Window实现源码分析.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="Flink Window实现源码分析.html" itemprop="commentsCount"></span>
+                <a href="/rocksdb-wiki.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="rocksdb-wiki.html" itemprop="commentsCount"></span>
                 </a>
               </span>
               <!--/noindex-->
@@ -409,46 +387,29 @@
       
 
       
-        <p>关于Flink中window的实现分析</p>
+        <p>本文翻译自：<a href="https://github.com/facebook/rocksdb/wiki/rocksdb-basics" target="_blank" rel="external">https://github.com/facebook/rocksdb/wiki/rocksdb-basics</a></p>
+<p>主要是rocksdb的一些概念理解和介绍</p>
 <a id="more"></a>
-<h2 id="window"><a href="#window" class="headerlink" title="window"></a>window</h2><p>window提供了一种处理无界数据的一种手段</p>
-<h2 id="window的组件"><a href="#window的组件" class="headerlink" title="window的组件"></a>window的组件</h2><p>首先我们看window包含了哪些组件：触发器<code>trigger</code>，触发器上下文<code>triggerContext</code>，内部状态<code>windowState</code>，窗口分配器<code>windowassigner</code>, 内部时间服务器<code>internalTimerService</code>,初看到这么多的组件可能会有点懵，下面的分析会一点一点介绍这些组件的作用。</p>
-<p>今天我们从flink接收流元素进行处理的角度来分析其实现，在flink的DAG中流动的有这么几种元素：<code>StreamRecord</code>,<code>LatencyRecord</code>,<code>WaterMark</code>,<code>StreamStatus</code>,我们这里只考虑这样两种元素<code>StreamRecord</code>和<code>WaterMark</code></p>
-<h2 id="streamRecord"><a href="#streamRecord" class="headerlink" title="streamRecord"></a>streamRecord</h2><p>windowOperator实现了<code>KeyContext</code>,其实就是代表每一个windowOperator处理每一个元素就会在一个Key的上下文的环境中去做处理。</p>
-<p>当windowOperator接收到一条<code>StreamRecord</code>,windowOperator会做什么呢?</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">	numRecordsIn.inc();</div><div class="line">	streamOperator.setKeyContextElement1(record);</div><div class="line">	streamOperator.processElement(record);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<ol>
-<li>首先设置该operator的key为当前元素</li>
-<li>根据element所携带的时间戳（processing time或者event  time）分配元素所应该属于的窗口，一个元素可能会隶属于多个窗口，比如slideWindowAssigner。</li>
-<li>如果这个窗口是一个可merge窗口，例如session窗口，那么就会进行和原有窗口的合并和状态的更新</li>
-</ol>
-<h3 id="窗口merge原理"><a href="#窗口merge原理" class="headerlink" title="窗口merge原理"></a>窗口merge原理</h3><p><img src="http://or0igopk2.bkt.clouddn.com/18-1-7/74574325.jpg" alt=""></p>
-<ol>
-<li>首先取出之前的所有未清除的窗口，和新分配到的窗口做一次merge，有重叠部分则新生成大的窗口</li>
-<li>将各个小窗口的真实数据merge到合并后的大窗口</li>
-<li>注册大窗口的清理时间触发器，清理原先子窗口的清理时间触发器</li>
-</ol>
-<p>窗口merge完之后，则会通过<code>triggerContext#OnElement</code>方法去进行判断是否能触发计算，触发方式如前文分析wartermark的那样，就是通过wartermark来判断这个窗口是否可以进行计算</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> TriggerResult <span class="title">onElement</span><span class="params">(Object element, <span class="keyword">long</span> timestamp, TimeWindow window, TriggerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">	<span class="keyword">if</span> (window.maxTimestamp() &lt;= ctx.getCurrentWatermark()) &#123;</div><div class="line">		<span class="comment">// if the watermark is already past the window fire immediately</span></div><div class="line">		<span class="keyword">return</span> TriggerResult.FIRE;</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		ctx.registerEventTimeTimer(window.maxTimestamp());</div><div class="line">		<span class="keyword">return</span> TriggerResult.CONTINUE;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>如果不能触发计算，我们看到其实他是将<code>window.maxTimestamp</code>注册到了<code>eventTimeQueue</code>中, 这里我们先记一下，后文会提到他的作用。</p>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>到这里windowOperator接收到一个<code>StreamRecord</code>元素的处理逻辑已经结束了，如果窗口不是可merge类型的除了不做窗口merge，其他的操作也是大同小异，到这里也许你会有几个疑问(其实是我自己看代码的一些疑问：)</p>
-<ol>
-<li>如果我设置了allowLateness会对我们的计算结果产生什么样的影响呢？</li>
-<li>我是用<code>apply()</code>,<code>process()</code>函数或者<code>reduce()</code>这种聚合函数对于window的<code>cost</code>代价有多大的差别？</li>
-</ol>
-<h3 id="问题一"><a href="#问题一" class="headerlink" title="问题一"></a>问题一</h3><p>上文中提到的在处理元素的最后会注册一个窗口cleanupTimer，那么这个时间是多少呢? <code>window.maxTimestamp() + allowedLateness;</code>  所以我们看到一个窗口存在时长是水位线经过<code>window的最大时间+allowLateness</code>的时间，因此当水位线大于窗口最大时间后就会触发计算，而计算之后状态不会清空，会保留<code>allowedLateness</code>的时长，而此时窗口状态还在保留，所以<strong>上游有晚到的数据来一条就会触发一次该窗口的计算</strong>，而且每次计算的数据都是该窗口的全量数据，所以业务方要慎用，或者下游要做好相应的去重或更新措施，否则可能会造成结果的不准确</p>
-<h3 id="问题二"><a href="#问题二" class="headerlink" title="问题二"></a>问题二</h3><p>不同的函数最终影响的其实是我们最终window保存数据的state的形式有<code>ListState</code>，也有<code>reducingState</code>…,最终影响了rocksdb和checkpoint的大小，不过肯定是能用聚合还是用聚合函数比较好</p>
-<h2 id="waterMark"><a href="#waterMark" class="headerlink" title="waterMark"></a>waterMark</h2><p>当元素来的是一个watermark，window Operator又会以怎样的逻辑去处理呢?</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleWatermark</span><span class="params">(Watermark watermark)</span> </span>&#123;</div><div class="line">	<span class="keyword">try</span> &#123;</div><div class="line">		<span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">			lastEmittedWatermark = watermark.getTimestamp();</div><div class="line">			operator.processWatermark(watermark);</div><div class="line">		&#125;</div><div class="line">	&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"Exception occurred while processing valve output watermark: "</span>, e);		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里我们将关注到开篇提到的<code>internalTimeService</code>,</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">advanceWatermark</span><span class="params">(<span class="keyword">long</span> time)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">	currentWatermark = time;</div><div class="line"></div><div class="line">	InternalTimer&lt;K, N&gt; timer;</div><div class="line"></div><div class="line">	<span class="keyword">while</span> ((timer = eventTimeTimersQueue.peek()) != <span class="keyword">null</span> &amp;&amp; timer.getTimestamp() &lt;= time) &#123;</div><div class="line"></div><div class="line">		Set&lt;InternalTimer&lt;K, N&gt;&gt; timerSet = getEventTimeTimerSetForTimer(timer);</div><div class="line">		timerSet.remove(timer);</div><div class="line">		eventTimeTimersQueue.remove();</div><div class="line"></div><div class="line">		keyContext.setCurrentKey(timer.getKey());</div><div class="line">		triggerTarget.onEventTime(timer);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="watermark元素处理逻辑"><a href="#watermark元素处理逻辑" class="headerlink" title="watermark元素处理逻辑"></a>watermark元素处理逻辑</h3><p><img src="http://or0igopk2.bkt.clouddn.com/18-1-7/87202276.jpg" alt=""></p>
-<ol>
-<li>当流元素是watermark时主要处理逻辑集中在<code>internaltimerservice</code>上</li>
-<li>如果<code>eventTimeTimersQueue</code>这个优先级队列中最早的时间低于了水位线，那么就会取出同一时刻的所有key的timer进行计算</li>
-<li>处理可能意味着窗口的计算触发或者某些窗口的清理</li>
-</ol>
-<p>以上便是flink对于窗口的实现逻辑。</p>
+<p>rocksdb主要组成部分memtable,sstfile,logfile，rocksdb 支持将database切分成多个columnFamily，所有的数据库创建如果没有指定的话会是一个default column<br>他支持批量原子写入，key和value都是纯byte流，key和value的大小都没有做限制</p>
+<p>所有database中的数据都是以一个有序的形式被放置（怎么做的呢？后append的数据怎么有序），应用可以指定key的comparison方法，来指定key的排序方式，Iterator API可以在database做一个RangeScan操作，他会指向一个特定的key，然后进行一个一个遍历。在调用iterator的时候会创建database的即时视图，因此所有查询的key都是一致的。</p>
+<h3 id="Snapshot"><a href="#Snapshot" class="headerlink" title="Snapshot"></a>Snapshot</h3><p>Snapshot Api也支持创建database某一时间点的视图，Get和Iterator Api可以用以读取指定snapshot的数据，从某种意义上说，snapshot和iterator都会提供database的当前视图，但是他们的实现不同。iterator是短期的/前台线程的scan，而长期/后台的scan最好是通过snapshot。iterator会对所有底层与pint-in-time database视图相关的的文件保留一个引用计数，这些文件知道iterator结束之后才会被删除。然而snapshot不会阻碍文件的删除，取而代之的是在compaction的过程会意识到snapshots的存在，直接不会删除在已经存在于snapshot中的key。snapshot在database重启的会丢失，reload rocksdb library会释放所有的snapshot</p>
+<h3 id="Prefix-Iterators"><a href="#Prefix-Iterators" class="headerlink" title="Prefix Iterators"></a>Prefix Iterators</h3><p>大多数基于LSM设计的存储引擎都不太能支持高效的RangeScan API，因为他需要查阅每个文件，但是真正的应用并不是纯粹的随机读取key，一般会以一个key-prefix去查询，rocksdb利用了这个特点做了一些优化。应用可以配置prefix_extractor来指定key-prefix，rocksdb决定，存储的blooms，iterator可以通过ReadOptios指定prefix，然后rocksDB将会使用这些bloom bits来避免查询那些不包含那些key-perfix开始的key的文件。</p>
+<h3 id="Persistence"><a href="#Persistence" class="headerlink" title="Persistence"></a>Persistence</h3><p>rocksdb有一个事务日志，所有的puts操作会被存储在memtables中，同时也会可选的写入事务日志中，在重启的时候，会重新执行事务日志中的记录。事务日志可以配置和sst文件放在不同的目录。这是因为有时你并不想持久化数据文件，同时又可以将事务日志持久化到一个相对较慢的持久化存储中，来确保数据不会丢失。 每一个Put都有一个标志，通过WriteOptios来标志是否需要写入事务日志中，同时也可以配置是否需要同步等到数据已经被写入到事务日志完成之后才将Put操作标记为commit完成。</p>
+<p>在内部实现中，RocksDB会使用batch-commit的机制去批量的将事务操作提交到事务日志中，所以在一次同步调用中会提交多个transactions</p>
+<h3 id="Fault-Tolerance"><a href="#Fault-Tolerance" class="headerlink" title="Fault Tolerance"></a>Fault Tolerance</h3><p>Rocksdb使用checksum去检测存储是否有损坏</p>
+<h3 id="Multi-Threaded-Compactions"><a href="#Multi-Threaded-Compactions" class="headerlink" title="Multi-Threaded Compactions"></a>Multi-Threaded Compactions</h3><p>compaction的存在是为了删除同一个key的多个副本，这种情况发生在用户更新了某个key的值，compaction也负责将要删除的key进行删除。整个database是存储在sstable中的，当memtable满了的时候会写入到Level-0（L0）的文件中，RocksDB在将数据从memtable flush到文件的时候会先将重复的key进行删除。然后一些文件会周期性的读入并形成更大的文件，这就是compaction的过程。</p>
+<p>对于一个LSM的database的写入的吞吐量取决于compaction所能达到的速度，特别是数据存储在ssd或者RAM中。RocksDB可以配置为启用多个并发compaction线程。据观察，与单线程compaction相比，基于ssd的数据库的持续写入速率可能在多线程compaction的情况下增加10倍之多</p>
+<h3 id="compaction-Styles"><a href="#compaction-Styles" class="headerlink" title="compaction Styles"></a>compaction Styles</h3><p>通常的style的compaction是完全基于排序的，运行与L0文件或者L1+. Compaction会挑选一些按时间顺序相邻文件，然后将其合并成一个新的sstable</p>
+<p>level style compaction在数据库存储会分为多个等级，最近的数据存储在L0层，最老的数据存储在Lmax层，只有L0层会存在重叠的key，一次compaction会将Ln的file和Ln+1的file做compaction然后形成新的文件替换Ln+1的文件，Universal Style 和Level style相比通常会有较低的写入放大但是较高的磁盘占用和读放大</p>
+<p>（写入放大）：<br><a href="https://www.zhihu.com/question/31024021" target="_blank" rel="external">https://www.zhihu.com/question/31024021</a><br><a href="https://www.wikiwand.com/zh-hans/%E5%86%99%E5%85%A5%E6%94%BE%E5%A4%A7" target="_blank" rel="external">https://www.wikiwand.com/zh-hans/%E5%86%99%E5%85%A5%E6%94%BE%E5%A4%A7</a></p>
+<p>同时RocksDB也支持用户自定义compaction方式，可以通过<code>Options.disable_auto_compaction</code>关闭原生的compaction算法，同时<code>GetLiveFilesMetaData</code>接口可以让外置组件查看每一个database中的数据文件从而决定哪些数据需要merge和合并。通过调用<code>CompactFiles</code>来进行文件的合并，<code>DeleteFile</code>来进行文件的删除</p>
+<h3 id="metadata-storage"><a href="#metadata-storage" class="headerlink" title="metadata storage"></a>metadata storage</h3><p>数据库中的MANIFEST文件记录了数据库的状态，compaction线程会新增新文件，删除旧文件，这些操作会通过 MANIFEST记录来持久化，同样记录操作也是用了batch-commit的算法来缓冲重复的对MANIFEST文件的同步写入</p>
+<h3 id="Avoiding-Stalls"><a href="#Avoiding-Stalls" class="headerlink" title="Avoiding Stalls"></a>Avoiding Stalls</h3><p>后台的compaction线程会将memtable中的内容flush到文件中，如果所有的后台线程都忙着做长时间的compaction，那么突然一个大流量的写入可能就会把memtable写满，这就会导致新的写入被hung住，这个问题可以通过配置rocksdb保持特定的几个线程专门保留来进行flush操作</p>
+<h3 id="Compaction-Filter"><a href="#Compaction-Filter" class="headerlink" title="Compaction Filter"></a>Compaction Filter</h3><p>一些应用可能在compaction的时候可能期望对key做出一些处理，比如数据库内部实现可能需要支持TTL，来删除过期的key，这可以通过自定义实现compaction filter来实现。他提供了用户在compaction的过程中修改key value以及丢弃这个key的数据的能力</p>
+<h3 id="Read-only-mode"><a href="#Read-only-mode" class="headerlink" title="Read only mode"></a>Read only mode</h3><p>database可以以read only的模式打开这样数据库保证所有的数据都不可修改，同时也会极大的提升读性能，因为完全了避免了锁</p>
+<h3 id="Full-Backups-Incremental-Backups-and-Replication"><a href="#Full-Backups-Incremental-Backups-and-Replication" class="headerlink" title="Full Backups, Incremental Backups and Replication"></a>Full Backups, Incremental Backups and Replication</h3><p>RocksDB支持增量的备份，BackupableDB使得Rocksdb的备份很简单，后续会深入介绍</p>
+<p>增量的复制需要能够找到数据库最近的改变，GetUpdatesSince API支持应用tail最近的事务日志，因此他能够连续的获取事务日志，然后将其应用于远程的复制或者备份</p>
+<p>未完待续</p>
 
       
     </div>
@@ -490,7 +451,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Flink/" rel="tag"># Flink</a>
+            <a href="/tags/RocksDB/" rel="tag"># RocksDB</a>
           
         </div>
       
@@ -503,8 +464,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/为什么现代系统架构需要一个新的编程模型--actor编程模型.html" rel="next" title="为什么现代系统架构需要一个新的编程模型 actor编程模型">
-                <i class="fa fa-chevron-left"></i> 为什么现代系统架构需要一个新的编程模型 actor编程模型
+              <a href="/flink-state.html" rel="next" title="flink中状态实现的深入理解">
+                <i class="fa fa-chevron-left"></i> flink中状态实现的深入理解
               </a>
             
           </div>
@@ -512,10 +473,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/常阅读博客.html" rel="prev" title="常阅读博客">
-                常阅读博客 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -721,7 +678,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#window"><span class="nav-number">1.</span> <span class="nav-text">window</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#window的组件"><span class="nav-number">2.</span> <span class="nav-text">window的组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#streamRecord"><span class="nav-number">3.</span> <span class="nav-text">streamRecord</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#窗口merge原理"><span class="nav-number">3.1.</span> <span class="nav-text">窗口merge原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题一"><span class="nav-number">4.1.</span> <span class="nav-text">问题一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题二"><span class="nav-number">4.2.</span> <span class="nav-text">问题二</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#waterMark"><span class="nav-number">5.</span> <span class="nav-text">waterMark</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#watermark元素处理逻辑"><span class="nav-number">5.1.</span> <span class="nav-text">watermark元素处理逻辑</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Snapshot"><span class="nav-number">1.</span> <span class="nav-text">Snapshot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Prefix-Iterators"><span class="nav-number">2.</span> <span class="nav-text">Prefix Iterators</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Persistence"><span class="nav-number">3.</span> <span class="nav-text">Persistence</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fault-Tolerance"><span class="nav-number">4.</span> <span class="nav-text">Fault Tolerance</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Multi-Threaded-Compactions"><span class="nav-number">5.</span> <span class="nav-text">Multi-Threaded Compactions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#compaction-Styles"><span class="nav-number">6.</span> <span class="nav-text">compaction Styles</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#metadata-storage"><span class="nav-number">7.</span> <span class="nav-text">metadata storage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Avoiding-Stalls"><span class="nav-number">8.</span> <span class="nav-text">Avoiding Stalls</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Compaction-Filter"><span class="nav-number">9.</span> <span class="nav-text">Compaction Filter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Read-only-mode"><span class="nav-number">10.</span> <span class="nav-text">Read only mode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Full-Backups-Incremental-Backups-and-Replication"><span class="nav-number">11.</span> <span class="nav-text">Full Backups, Incremental Backups and Replication</span></a></li></ol></div>
             
 
           </div>
@@ -888,7 +845,7 @@
 		_hcwp.push({widget:"Bloggerstream", widget_id: 101742, selector:".hc-comment-count", label: "{\%COUNT%\}" });
 
 		
-		_hcwp.push({widget:"Stream", widget_id: 101742, xid: "Flink Window实现源码分析.html"});
+		_hcwp.push({widget:"Stream", widget_id: 101742, xid: "rocksdb-wiki.html"});
 		
 
 		(function() {

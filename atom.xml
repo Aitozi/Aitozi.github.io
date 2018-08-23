@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.aitozi.com/"/>
-  <updated>2018-08-05T04:42:13.000Z</updated>
+  <updated>2018-08-23T15:24:03.000Z</updated>
   <id>http://www.aitozi.com/</id>
   
   <author>
@@ -14,6 +14,50 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>rocksdb概念简介</title>
+    <link href="http://www.aitozi.com/rocksdb-wiki.html"/>
+    <id>http://www.aitozi.com/rocksdb-wiki.html</id>
+    <published>2018-08-23T15:20:44.000Z</published>
+    <updated>2018-08-23T15:24:03.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>本文翻译自：<a href="https://github.com/facebook/rocksdb/wiki/rocksdb-basics" target="_blank" rel="external">https://github.com/facebook/rocksdb/wiki/rocksdb-basics</a></p>
+<p>主要是rocksdb的一些概念理解和介绍</p>
+<a id="more"></a>
+<p>rocksdb主要组成部分memtable,sstfile,logfile，rocksdb 支持将database切分成多个columnFamily，所有的数据库创建如果没有指定的话会是一个default column<br>他支持批量原子写入，key和value都是纯byte流，key和value的大小都没有做限制</p>
+<p>所有database中的数据都是以一个有序的形式被放置（怎么做的呢？后append的数据怎么有序），应用可以指定key的comparison方法，来指定key的排序方式，Iterator API可以在database做一个RangeScan操作，他会指向一个特定的key，然后进行一个一个遍历。在调用iterator的时候会创建database的即时视图，因此所有查询的key都是一致的。</p>
+<h3 id="Snapshot"><a href="#Snapshot" class="headerlink" title="Snapshot"></a>Snapshot</h3><p>Snapshot Api也支持创建database某一时间点的视图，Get和Iterator Api可以用以读取指定snapshot的数据，从某种意义上说，snapshot和iterator都会提供database的当前视图，但是他们的实现不同。iterator是短期的/前台线程的scan，而长期/后台的scan最好是通过snapshot。iterator会对所有底层与pint-in-time database视图相关的的文件保留一个引用计数，这些文件知道iterator结束之后才会被删除。然而snapshot不会阻碍文件的删除，取而代之的是在compaction的过程会意识到snapshots的存在，直接不会删除在已经存在于snapshot中的key。snapshot在database重启的会丢失，reload rocksdb library会释放所有的snapshot</p>
+<h3 id="Prefix-Iterators"><a href="#Prefix-Iterators" class="headerlink" title="Prefix Iterators"></a>Prefix Iterators</h3><p>大多数基于LSM设计的存储引擎都不太能支持高效的RangeScan API，因为他需要查阅每个文件，但是真正的应用并不是纯粹的随机读取key，一般会以一个key-prefix去查询，rocksdb利用了这个特点做了一些优化。应用可以配置prefix_extractor来指定key-prefix，rocksdb决定，存储的blooms，iterator可以通过ReadOptios指定prefix，然后rocksDB将会使用这些bloom bits来避免查询那些不包含那些key-perfix开始的key的文件。</p>
+<h3 id="Persistence"><a href="#Persistence" class="headerlink" title="Persistence"></a>Persistence</h3><p>rocksdb有一个事务日志，所有的puts操作会被存储在memtables中，同时也会可选的写入事务日志中，在重启的时候，会重新执行事务日志中的记录。事务日志可以配置和sst文件放在不同的目录。这是因为有时你并不想持久化数据文件，同时又可以将事务日志持久化到一个相对较慢的持久化存储中，来确保数据不会丢失。 每一个Put都有一个标志，通过WriteOptios来标志是否需要写入事务日志中，同时也可以配置是否需要同步等到数据已经被写入到事务日志完成之后才将Put操作标记为commit完成。</p>
+<p>在内部实现中，RocksDB会使用batch-commit的机制去批量的将事务操作提交到事务日志中，所以在一次同步调用中会提交多个transactions</p>
+<h3 id="Fault-Tolerance"><a href="#Fault-Tolerance" class="headerlink" title="Fault Tolerance"></a>Fault Tolerance</h3><p>Rocksdb使用checksum去检测存储是否有损坏</p>
+<h3 id="Multi-Threaded-Compactions"><a href="#Multi-Threaded-Compactions" class="headerlink" title="Multi-Threaded Compactions"></a>Multi-Threaded Compactions</h3><p>compaction的存在是为了删除同一个key的多个副本，这种情况发生在用户更新了某个key的值，compaction也负责将要删除的key进行删除。整个database是存储在sstable中的，当memtable满了的时候会写入到Level-0（L0）的文件中，RocksDB在将数据从memtable flush到文件的时候会先将重复的key进行删除。然后一些文件会周期性的读入并形成更大的文件，这就是compaction的过程。</p>
+<p>对于一个LSM的database的写入的吞吐量取决于compaction所能达到的速度，特别是数据存储在ssd或者RAM中。RocksDB可以配置为启用多个并发compaction线程。据观察，与单线程compaction相比，基于ssd的数据库的持续写入速率可能在多线程compaction的情况下增加10倍之多</p>
+<h3 id="compaction-Styles"><a href="#compaction-Styles" class="headerlink" title="compaction Styles"></a>compaction Styles</h3><p>通常的style的compaction是完全基于排序的，运行与L0文件或者L1+. Compaction会挑选一些按时间顺序相邻文件，然后将其合并成一个新的sstable</p>
+<p>level style compaction在数据库存储会分为多个等级，最近的数据存储在L0层，最老的数据存储在Lmax层，只有L0层会存在重叠的key，一次compaction会将Ln的file和Ln+1的file做compaction然后形成新的文件替换Ln+1的文件，Universal Style 和Level style相比通常会有较低的写入放大但是较高的磁盘占用和读放大</p>
+<p>（写入放大）：<br><a href="https://www.zhihu.com/question/31024021" target="_blank" rel="external">https://www.zhihu.com/question/31024021</a><br><a href="https://www.wikiwand.com/zh-hans/%E5%86%99%E5%85%A5%E6%94%BE%E5%A4%A7" target="_blank" rel="external">https://www.wikiwand.com/zh-hans/%E5%86%99%E5%85%A5%E6%94%BE%E5%A4%A7</a></p>
+<p>同时RocksDB也支持用户自定义compaction方式，可以通过<code>Options.disable_auto_compaction</code>关闭原生的compaction算法，同时<code>GetLiveFilesMetaData</code>接口可以让外置组件查看每一个database中的数据文件从而决定哪些数据需要merge和合并。通过调用<code>CompactFiles</code>来进行文件的合并，<code>DeleteFile</code>来进行文件的删除</p>
+<h3 id="metadata-storage"><a href="#metadata-storage" class="headerlink" title="metadata storage"></a>metadata storage</h3><p>数据库中的MANIFEST文件记录了数据库的状态，compaction线程会新增新文件，删除旧文件，这些操作会通过 MANIFEST记录来持久化，同样记录操作也是用了batch-commit的算法来缓冲重复的对MANIFEST文件的同步写入</p>
+<h3 id="Avoiding-Stalls"><a href="#Avoiding-Stalls" class="headerlink" title="Avoiding Stalls"></a>Avoiding Stalls</h3><p>后台的compaction线程会将memtable中的内容flush到文件中，如果所有的后台线程都忙着做长时间的compaction，那么突然一个大流量的写入可能就会把memtable写满，这就会导致新的写入被hung住，这个问题可以通过配置rocksdb保持特定的几个线程专门保留来进行flush操作</p>
+<h3 id="Compaction-Filter"><a href="#Compaction-Filter" class="headerlink" title="Compaction Filter"></a>Compaction Filter</h3><p>一些应用可能在compaction的时候可能期望对key做出一些处理，比如数据库内部实现可能需要支持TTL，来删除过期的key，这可以通过自定义实现compaction filter来实现。他提供了用户在compaction的过程中修改key value以及丢弃这个key的数据的能力</p>
+<h3 id="Read-only-mode"><a href="#Read-only-mode" class="headerlink" title="Read only mode"></a>Read only mode</h3><p>database可以以read only的模式打开这样数据库保证所有的数据都不可修改，同时也会极大的提升读性能，因为完全了避免了锁</p>
+<h3 id="Full-Backups-Incremental-Backups-and-Replication"><a href="#Full-Backups-Incremental-Backups-and-Replication" class="headerlink" title="Full Backups, Incremental Backups and Replication"></a>Full Backups, Incremental Backups and Replication</h3><p>RocksDB支持增量的备份，BackupableDB使得Rocksdb的备份很简单，后续会深入介绍</p>
+<p>增量的复制需要能够找到数据库最近的改变，GetUpdatesSince API支持应用tail最近的事务日志，因此他能够连续的获取事务日志，然后将其应用于远程的复制或者备份</p>
+<p>未完待续</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本文翻译自：&lt;a href=&quot;https://github.com/facebook/rocksdb/wiki/rocksdb-basics&quot;&gt;https://github.com/facebook/rocksdb/wiki/rocksdb-basics&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;主要是rocksdb的一些概念理解和介绍&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="RocksDB" scheme="http://www.aitozi.com/tags/RocksDB/"/>
+    
+  </entry>
   
   <entry>
     <title>flink中状态实现的深入理解</title>
