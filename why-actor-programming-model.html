@@ -89,7 +89,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Flink," />
+  <meta name="keywords" content="akka," />
 
 
 
@@ -107,16 +107,21 @@
 
 
 
-<meta name="description" content="flink中jobgraph的生成逻辑，接前面的文章flink图流转之StreamGraph">
+<meta name="description" content="actor编程模型很早就由Carl Hewitt提出了, 最先是设计来解决在高性能的网络环境中的并发处理场景。只是当时没有这样的环境。如今，网络，硬件的基础设施的能力已经远远超越了那个时代，因此，当时提出的actor模型也有了用武之地。这篇文章讨论了关于传统编程的一些假设和现代实际的多线程，多核cpu架构不匹配的地方.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="flink中jobgraph的生成逻辑">
-<meta property="og:url" content="http://www.aitozi.com/flink-jobgraph-generate.html">
+<meta property="og:title" content="为什么现代系统架构需要一个新的编程模型 actor编程模型">
+<meta property="og:url" content="http://www.aitozi.com/why-actor-programming-model.html">
 <meta property="og:site_name" content="Aitozi">
-<meta property="og:description" content="flink中jobgraph的生成逻辑，接前面的文章flink图流转之StreamGraph">
-<meta property="og:updated_time" content="2018-05-27T12:15:46.000Z">
+<meta property="og:description" content="actor编程模型很早就由Carl Hewitt提出了, 最先是设计来解决在高性能的网络环境中的并发处理场景。只是当时没有这样的环境。如今，网络，硬件的基础设施的能力已经远远超越了那个时代，因此，当时提出的actor模型也有了用武之地。这篇文章讨论了关于传统编程的一些假设和现代实际的多线程，多核cpu架构不匹配的地方.">
+<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/17-12-14/20018675.jpg">
+<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/17-12-14/3331951.jpg">
+<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/17-12-14/31370324.jpg">
+<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/17-12-17/52377993.jpg">
+<meta property="og:updated_time" content="2019-03-14T17:07:29.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="flink中jobgraph的生成逻辑">
-<meta name="twitter:description" content="flink中jobgraph的生成逻辑，接前面的文章flink图流转之StreamGraph">
+<meta name="twitter:title" content="为什么现代系统架构需要一个新的编程模型 actor编程模型">
+<meta name="twitter:description" content="actor编程模型很早就由Carl Hewitt提出了, 最先是设计来解决在高性能的网络环境中的并发处理场景。只是当时没有这样的环境。如今，网络，硬件的基础设施的能力已经远远超越了那个时代，因此，当时提出的actor模型也有了用武之地。这篇文章讨论了关于传统编程的一些假设和现代实际的多线程，多核cpu架构不匹配的地方.">
+<meta name="twitter:image" content="http://or0igopk2.bkt.clouddn.com/17-12-14/20018675.jpg">
 
 
 
@@ -145,13 +150,13 @@
 
 
 
-  <link rel="canonical" href="http://www.aitozi.com/flink-jobgraph-generate.html"/>
+  <link rel="canonical" href="http://www.aitozi.com/why-actor-programming-model.html"/>
 
 
 
 
 
-  <title>flink中jobgraph的生成逻辑 | Aitozi</title>
+  <title>为什么现代系统架构需要一个新的编程模型 actor编程模型 | Aitozi</title>
   
 
 
@@ -294,7 +299,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.aitozi.com/flink-jobgraph-generate.html">
+    <link itemprop="mainEntityOfPage" href="http://www.aitozi.com/why-actor-programming-model.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="aitozi">
@@ -311,7 +316,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">flink中jobgraph的生成逻辑</h2>
+          <h2 class="post-title" itemprop="name headline">为什么现代系统架构需要一个新的编程模型 actor编程模型</h2>
         
 
         <div class="post-meta">
@@ -323,8 +328,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-26T18:43:23+08:00">
-                2018-05-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-17T21:32:20+08:00">
+                2017-12-17
               </time>
             
 
@@ -346,8 +351,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/源码分析/" itemprop="url" rel="index">
-                    <span itemprop="name">源码分析</span>
+                  <a href="/categories/深度好文/" itemprop="url" rel="index">
+                    <span itemprop="name">深度好文</span>
                   </a>
                 </span>
 
@@ -364,9 +369,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/flink-jobgraph-generate.html#comments" itemprop="discussionUrl">
+                <a href="/why-actor-programming-model.html#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="flink-jobgraph-generate.html" itemprop="commentCount"></span>
+                        data-disqus-identifier="why-actor-programming-model.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -399,30 +404,35 @@
       
 
       
-        <p>flink中jobgraph的生成逻辑，接前面的文章<a href="http://aitozi.com/2018/04/11/flink-streamGraph/" target="_blank" rel="external">flink图流转之StreamGraph</a></p>
+        <p>actor编程模型很早就由<code>Carl Hewitt</code>提出了, 最先是设计来解决在高性能的网络环境中的并发处理场景。只是当时没有这样的环境。如今，网络，硬件的基础设施的能力已经远远超越了那个时代，因此，当时提出的actor模型也有了用武之地。这篇文章讨论了关于传统编程的一些假设和现代实际的多线程，多核cpu架构不匹配的地方.</p>
 <a id="more"></a>
-<blockquote>
-<p>今天想了一下源码分析类的文章应该是直接在源码上做注释来的直接，然后再抛开细节概括总体流程和关键点，今天这篇分析jobgraph生成的文章就以这个形式展开</p>
-</blockquote>
-<ol>
-<li>先生成各个节点streamnode的hash值  主体代码在：<code>StreamGraphHasherV2.java</code></li>
-<li>设置chaining<ul>
-<li>找到节点中能chain和不能chain的边</li>
-<li>生成相应的JobVertex节点，并设置StreamConfig（资源，名称，chain的节点），这个streamConfig是在部署期间比较重要的一个配置项，并拼接物理执行顺序，主要在connect函数</li>
+<h1 id="封装所面临的挑战"><a href="#封装所面临的挑战" class="headerlink" title="封装所面临的挑战"></a>封装所面临的挑战</h1><p>OOP思想的支柱是封装，封装意味着对象中的数据是不能从外界直接访问的，他仅能够通过调用内部的方法被修改。因此对象就承担起暴露<strong>正确</strong>，<strong>安全</strong>的方法来保护其封装变量的不变性。举个例子，对一个顺序二叉树来说一定不允许违反一个二叉树的排序不变性。调用者期望二叉树的顺序在查询某段数据的时候能够保持不变，从而他们能够依赖于这种约束。<br>当我们分析OOP应用的运行行为时，我们通常会会画一个消息序列图标来展示方法调用之间的交互，例如：<br><img src="http://or0igopk2.bkt.clouddn.com/17-12-14/20018675.jpg" alt=""><br>不幸的是，上图没有精确的表达出，在执行的过程中这些对象的生命周期。实际上一个线程完成了所有这些调用。对变量不变性的要求是发生在方法调用的线程中：<br><img src="http://or0igopk2.bkt.clouddn.com/17-12-14/3331951.jpg" alt=""><br>这样展示的意义在于你对多线程的情况下建模会把问题变的清晰。当有多个线程的情况下，事情变的不一样。<br><img src="http://or0igopk2.bkt.clouddn.com/17-12-14/31370324.jpg" alt=""><br>我们可以看到中间有一个环节有两个线程进入了统一个方法，但是该对象的封装并没有考虑如何处理这种场景。这两个方法的调用可能是随机交叉的，这就导致要向保证其内部变量的不变一致行必须引入两个线程之间的协调机制,通常的做法是引入锁来解决这个问题，从而确保同一时间只有一个线程在调用该方法.然而：</p>
+<ul>
+<li>锁机制严重限制了并发度，他们在如今cpu的架构下代价很大，需要操作系统暂停线程然后再过段时间再恢复</li>
+<li>调用线程在block之后不能再做其他的工作</li>
+<li>锁还引入了死锁问题。</li>
 </ul>
-</li>
-<li>设置inEdges配置项</li>
-<li>设置slotsharingGroup</li>
-<li>配置checkpoint，这里主要设置需要发送barrier的节点即source节点</li>
-</ol>
-<p><em>其实总结就是分两步：</em></p>
-<ol>
-<li>在createChain过程中创建JobVertex</li>
-<li>设置各个StreamConfig需要的信息用作生成物理执行图的时候使用</li>
-</ol>
-<p>主要涉及的代码为两块，如下：</p>
-<script src="//gist.github.com/2e021e923ed394155b191853e0975a71.js?file=StreamGraphHasherV2.java"></script>
-<script src="//gist.github.com/2e021e923ed394155b191853e0975a71.js?file=StreamingJobGraphGenerator.java"></script>
+<p><strong>导致的结果</strong></p>
+<ul>
+<li>没有锁状态可能会导致冲突</li>
+<li>引入锁，性能会受损，并容易导致死锁,并且锁一般适用于单机的情况，当有多台机器协调工作时，就需要分布式锁，通常比本地锁的性能更差，更影响其可扩展性。</li>
+</ul>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
+<li>对象仅仅能够保证在单线程情况下内部状态的一致性</li>
+<li>锁机制在生产实际中显示并不高效</li>
+</ul>
+<h1 id="现代计算机架构内存共享的问题"><a href="#现代计算机架构内存共享的问题" class="headerlink" title="现代计算机架构内存共享的问题"></a>现代计算机架构内存共享的问题</h1><p>在现代计算机架构中，如果我们定义一个变量，cpu是将其写入cpu缓存，而不是将其直接写到内存中，绝大多数是写到临近该cpu核的cache中去，因此不能被别的cpu core所见，为了让一些本地的修改能让其他的核所见，cpu cache需要将其中的数据刷到其他核中。<br>在jvm中我们通过<code>volatile</code>关键字来明确一块内存地址，这块内存会被所有线程共享。那么为什么我们不将所有的变量能标记为<code>volatile</code>呢？因为将cpu cache的数据传递到各个cpu核是代价非常高的事情</p>
+<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><ul>
+<li>没有真正的共享内存，cpu将数据传输到别的cpu核上，就像在网络中做的一样，cpu内部通讯和网络的通讯在实现上也有很多的共通之处。</li>
+<li>与其通过标记为共享或使用原子数据结构的变量来隐藏消息传递，更规范和原则性的方法是将状态信息保存到一个并发实体中，并通过消息的机制显式地传播并发实体之间的数据或事件</li>
+</ul>
+<h1 id="调用栈的说明"><a href="#调用栈的说明" class="headerlink" title="调用栈的说明"></a>调用栈的说明</h1><p>我们今天常常把所谓的堆栈视为理所当然，但是他们是在一个并发编程不那么重要的时代发明的，因为多cpu系统并不常见。调用堆栈不交叉线程，因此，不建模异步调用链。<br>当线程打算将任务委托给“后台任务”时，问题就出现了。实际上，这实际上意味着委托给另一个线程。这不能是一个简单的方法/函数调用，因为调用在线程中是严格的本地调用。通常发生的情况是，“调用者”将一个对象放入一个和被调用的工作线程共享的内存位置，这反过来调用者又可以在某个事件循环中获取它。这允许“caller”线程继续执行其他任务。<br>这种模式下第一个问题是，如何通知“调用者”任务已经完成了。当一个任务失败时，会出现一个更严重的问题。异常传播到什么地方?它将传播到工作线程的异常处理程序，而完全忽略实际的“调用者”是谁。就是无法将异常抛到主线程中去。<br><img src="http://or0igopk2.bkt.clouddn.com/17-12-17/52377993.jpg" alt=""><br>这是个严重的问题，工作的线程是如何处理这种情况的?它可能无法解决这个问题，因为它通常不知道失败的任务的目的“调用者”线程需要以某种方式被通知到，但是没有调用堆栈来解决异常。失败通知只能通过一个侧通道来完成，例如，在“调用者”线程希望得到结果的情况下，放置一个错误代码。如果此通知不到位，则“调用者”永远不会收到失败的通知，任务就会丢失!<strong>这与网络系统的工作方式惊人地相似，在没有任何通知的情况下，消息/请求可能会丢失/失败。</strong></p>
+<p>这种情况再某些情况下会变得更糟，当一个由主线程发起的工作线程遇到了一个bug退出了最终会出现不可恢复的情况。一个由bug引起的内部异常会抛到线程的根，并使线程关闭。这立即引发了问题，谁应该重新启动由线程托管的服务的正常运行，以及如何恢复到已知的良好状态?乍一看，这似乎是可以管理的，但是我们突然面临一个新的、意想不到的现象。实际的任务，即线程当前正在进行的工作，不再位于任务从(通常是队列)中提取任务的共享内存位置。事实上，由于异常到达顶部，解除所有的调用堆栈，任务状态完全丢失!我们已经丢失了一条消息（即此时的工作线程已经退出），尽管这是本地通信，没有涉及到网络(消息丢失将被预期)。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
+<li>为了在当前系统上实现任何有意义的并发性和性能，线程必须在不阻塞的情况下以有效的方式将任务分配给彼此。有了这种任务委托并发机制(甚至更多的是通过网络/分布式计算)基于调用堆栈的错误处理，需要引入新的显式的错误信号机制。并且失败成为领域模型的一部分。</li>
+<li>代理模式下的并发系统需要处理服务故障，并有方法从它们中恢复，此类服务的客户端需要意识到任务/消息可能在重新启动时丢失。即使没有发生损失，也可能由于先前的排队任务(长队列)、垃圾收集导致的延迟等原因导致响应延迟。在这些情况下，并发系统应该以超时的形式处理响应期限，就像网络/分布式系统一样。</li>
+</ul>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>Akka 官网： <a href="https://doc.akka.io/docs/akka/2.5/guide/actors-motivation.html" target="_blank" rel="external">https://doc.akka.io/docs/akka/2.5/guide/actors-motivation.html</a></p>
 
       
     </div>
@@ -469,7 +479,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Flink/" rel="tag"># Flink</a>
+            <a href="/tags/akka/" rel="tag"># akka</a>
           
         </div>
       
@@ -482,8 +492,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/flink-cep-code.html" rel="next" title="flink cep源码分析">
-                <i class="fa fa-chevron-left"></i> flink cep源码分析
+              <a href="/arraydequeue-source-code.html" rel="next" title="ArrayDeque源码分析">
+                <i class="fa fa-chevron-left"></i> ArrayDeque源码分析
               </a>
             
           </div>
@@ -492,8 +502,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/java-serialization.html" rel="prev" title="Java序列化拾掇">
-                Java序列化拾掇 <i class="fa fa-chevron-right"></i>
+              <a href="/flink-window-source-code-analyse.html" rel="prev" title="flink中window实现的源码分析">
+                flink中window实现的源码分析 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -553,8 +563,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
@@ -694,6 +713,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#封装所面临的挑战"><span class="nav-number">1.</span> <span class="nav-text">封装所面临的挑战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">1.1.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#现代计算机架构内存共享的问题"><span class="nav-number">2.</span> <span class="nav-text">现代计算机架构内存共享的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#小结-1"><span class="nav-number">2.1.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#调用栈的说明"><span class="nav-number">3.</span> <span class="nav-text">调用栈的说明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -851,9 +886,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://www.aitozi.com/flink-jobgraph-generate.html';
-          this.page.identifier = 'flink-jobgraph-generate.html';
-          this.page.title = 'flink中jobgraph的生成逻辑';
+          this.page.url = 'http://www.aitozi.com/why-actor-programming-model.html';
+          this.page.identifier = 'why-actor-programming-model.html';
+          this.page.title = '为什么现代系统架构需要一个新的编程模型 actor编程模型';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://aitozi.disqus.com/embed.js';

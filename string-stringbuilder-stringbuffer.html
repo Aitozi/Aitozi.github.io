@@ -89,7 +89,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Flink," />
+  <meta name="keywords" content="jdk," />
 
 
 
@@ -107,19 +107,16 @@
 
 
 
-<meta name="description" content="关于Flink中window的实现分析">
+<meta name="description" content="常用的jdk的组件的源码分析之：String,StringBuffer,StringBuilder">
 <meta property="og:type" content="article">
-<meta property="og:title" content="flink中window实现的源码分析">
-<meta property="og:url" content="http://www.aitozi.com/Flink Window实现源码分析.html">
+<meta property="og:title" content="String,StringBuffer,StringBuilder的区别">
+<meta property="og:url" content="http://www.aitozi.com/string-stringbuilder-stringbuffer.html">
 <meta property="og:site_name" content="Aitozi">
-<meta property="og:description" content="关于Flink中window的实现分析">
-<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/18-1-7/74574325.jpg">
-<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/18-1-7/87202276.jpg">
-<meta property="og:updated_time" content="2018-01-07T03:17:05.000Z">
+<meta property="og:description" content="常用的jdk的组件的源码分析之：String,StringBuffer,StringBuilder">
+<meta property="og:updated_time" content="2019-03-14T17:09:57.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="flink中window实现的源码分析">
-<meta name="twitter:description" content="关于Flink中window的实现分析">
-<meta name="twitter:image" content="http://or0igopk2.bkt.clouddn.com/18-1-7/74574325.jpg">
+<meta name="twitter:title" content="String,StringBuffer,StringBuilder的区别">
+<meta name="twitter:description" content="常用的jdk的组件的源码分析之：String,StringBuffer,StringBuilder">
 
 
 
@@ -148,13 +145,13 @@
 
 
 
-  <link rel="canonical" href="http://www.aitozi.com/Flink Window实现源码分析.html"/>
+  <link rel="canonical" href="http://www.aitozi.com/string-stringbuilder-stringbuffer.html"/>
 
 
 
 
 
-  <title>flink中window实现的源码分析 | Aitozi</title>
+  <title>String,StringBuffer,StringBuilder的区别 | Aitozi</title>
   
 
 
@@ -297,7 +294,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.aitozi.com/Flink Window实现源码分析.html">
+    <link itemprop="mainEntityOfPage" href="http://www.aitozi.com/string-stringbuilder-stringbuffer.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="aitozi">
@@ -314,7 +311,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">flink中window实现的源码分析</h2>
+          <h2 class="post-title" itemprop="name headline">String,StringBuffer,StringBuilder的区别</h2>
         
 
         <div class="post-meta">
@@ -326,8 +323,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-07T02:05:43+08:00">
-                2018-01-07
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-28T00:13:48+08:00">
+                2018-08-28
               </time>
             
 
@@ -367,9 +364,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/Flink Window实现源码分析.html#comments" itemprop="discussionUrl">
+                <a href="/string-stringbuilder-stringbuffer.html#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="Flink Window实现源码分析.html" itemprop="commentCount"></span>
+                        data-disqus-identifier="string-stringbuilder-stringbuffer.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -402,46 +399,63 @@
       
 
       
-        <p>关于Flink中window的实现分析</p>
+        <p>常用的jdk的组件的源码分析之：<code>String</code>,<code>StringBuffer</code>,<code>StringBuilder</code></p>
 <a id="more"></a>
-<h2 id="window"><a href="#window" class="headerlink" title="window"></a>window</h2><p>window提供了一种处理无界数据的一种手段</p>
-<h2 id="window的组件"><a href="#window的组件" class="headerlink" title="window的组件"></a>window的组件</h2><p>首先我们看window包含了哪些组件：触发器<code>trigger</code>，触发器上下文<code>triggerContext</code>，内部状态<code>windowState</code>，窗口分配器<code>windowassigner</code>, 内部时间服务器<code>internalTimerService</code>,初看到这么多的组件可能会有点懵，下面的分析会一点一点介绍这些组件的作用。</p>
-<p>今天我们从flink接收流元素进行处理的角度来分析其实现，在flink的DAG中流动的有这么几种元素：<code>StreamRecord</code>,<code>LatencyRecord</code>,<code>WaterMark</code>,<code>StreamStatus</code>,我们这里只考虑这样两种元素<code>StreamRecord</code>和<code>WaterMark</code></p>
-<h2 id="streamRecord"><a href="#streamRecord" class="headerlink" title="streamRecord"></a>streamRecord</h2><p>windowOperator实现了<code>KeyContext</code>,其实就是代表每一个windowOperator处理每一个元素就会在一个Key的上下文的环境中去做处理。</p>
-<p>当windowOperator接收到一条<code>StreamRecord</code>,windowOperator会做什么呢?</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">	numRecordsIn.inc();</div><div class="line">	streamOperator.setKeyContextElement1(record);</div><div class="line">	streamOperator.processElement(record);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<ol>
-<li>首先设置该operator的key为当前元素</li>
-<li>根据element所携带的时间戳（processing time或者event  time）分配元素所应该属于的窗口，一个元素可能会隶属于多个窗口，比如slideWindowAssigner。</li>
-<li>如果这个窗口是一个可merge窗口，例如session窗口，那么就会进行和原有窗口的合并和状态的更新</li>
+<p>String 字符串常量<br>StringBuffer 字符串变量（线程安全）<br>StringBuilder 字符串变量（非线程安全）</p>
+<p>String和StringBuffer的主要性能区别其实在于 String是不可变的对象, 因此在每次对String类型进行改变的时候其实都等同于生成了一个新的 String对象，然后将指针指向新的String对象，所以经常改变内容的字符串最好不要用String，因为每次生成对象都会对系统性能产生影响，特别当内存中无引用对象多了以后，JVM的GC就会开始工作，那速度是一定会相当慢的。</p>
+<p>那么String为什么要是不可变的呢？</p>
+<h3 id="String类不可变的好处"><a href="#String类不可变的好处" class="headerlink" title="String类不可变的好处"></a>String类不可变的好处</h3><ol>
+<li>只有当字符串是不可变的，字符串池才有可能实现。字符串池的实现可以在运行时节约很多heap空间，因为不同的字符串变量都指向池中的同一个字符串。但如果字符串是可变的，那么String interning将不能实现，String interning是指对不同的字符串仅仅只保存一个，即不会保存多个相同的字符串。因为这样的话，如果变量改变了它的值，那么其它指向这个值的变量的值也会一起改变。</li>
+<li>如果字符串是可变的，那么会引起很严重的安全问题。譬如，数据库的用户名、密码都是以字符串的形式传入来获得数据库的连接，或者在socket编程中，主机名和端口都是以字符串的形式传入。因为字符串是不可变的，所以它的值是不可改变的，否则黑客们可以钻到空子，改变字符串指向的对象的值，造成安全漏洞。</li>
+<li>因为字符串是不可变的，所以是多线程安全的，同一个字符串实例可以被多个线程共享。这样便不用因为线程安全问题而使用同步。字符串自己便是线程安全的。</li>
+<li>类加载器要用到字符串，不可变性提供了安全性，以便正确的类被加载。譬如你想加载java.sql.Connection类，而这个值被改成了myhacked.Connection，那么会对你的数据库造成不可知的破坏。</li>
+<li>因为字符串是不可变的，所以在它创建的时候hashcode就被缓存了，不需要重新计算。这就使得字符串很适合作为Map中的键，字符串的处理速度要快过其它的键对象。这就是HashMap中的键往往都使用字符串。也同时指出一个理念，千万不要把可变类型作为HashMap和HashSet的键值</li>
 </ol>
-<h3 id="窗口merge原理"><a href="#窗口merge原理" class="headerlink" title="窗口merge原理"></a>窗口merge原理</h3><p><img src="http://or0igopk2.bkt.clouddn.com/18-1-7/74574325.jpg" alt=""></p>
-<ol>
-<li>首先取出之前的所有未清除的窗口，和新分配到的窗口做一次merge，有重叠部分则新生成大的窗口</li>
-<li>将各个小窗口的真实数据merge到合并后的大窗口</li>
-<li>注册大窗口的清理时间触发器，清理原先子窗口的清理时间触发器</li>
+<h3 id="在java中如何设计不可变"><a href="#在java中如何设计不可变" class="headerlink" title="在java中如何设计不可变"></a>在java中如何设计不可变</h3><ol>
+<li>对于属性不提供设值的方法</li>
+<li>所有的属性定义为private final</li>
+<li>类声明为final不允许继承</li>
+<li>return deep cloned objects with copied content for all mutable fields in class</li>
 </ol>
-<p>窗口merge完之后，则会通过<code>triggerContext#OnElement</code>方法去进行判断是否能触发计算，触发方式如前文分析wartermark的那样，就是通过wartermark来判断这个窗口是否可以进行计算</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> TriggerResult <span class="title">onElement</span><span class="params">(Object element, <span class="keyword">long</span> timestamp, TimeWindow window, TriggerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">	<span class="keyword">if</span> (window.maxTimestamp() &lt;= ctx.getCurrentWatermark()) &#123;</div><div class="line">		<span class="comment">// if the watermark is already past the window fire immediately</span></div><div class="line">		<span class="keyword">return</span> TriggerResult.FIRE;</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		ctx.registerEventTimeTimer(window.maxTimestamp());</div><div class="line">		<span class="keyword">return</span> TriggerResult.CONTINUE;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>如果不能触发计算，我们看到其实他是将<code>window.maxTimestamp</code>注册到了<code>eventTimeQueue</code>中, 这里我们先记一下，后文会提到他的作用。</p>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>到这里windowOperator接收到一个<code>StreamRecord</code>元素的处理逻辑已经结束了，如果窗口不是可merge类型的除了不做窗口merge，其他的操作也是大同小异，到这里也许你会有几个疑问(其实是我自己看代码的一些疑问：)</p>
-<ol>
-<li>如果我设置了allowLateness会对我们的计算结果产生什么样的影响呢？</li>
-<li>我是用<code>apply()</code>,<code>process()</code>函数或者<code>reduce()</code>这种聚合函数对于window的<code>cost</code>代价有多大的差别？</li>
-</ol>
-<h3 id="问题一"><a href="#问题一" class="headerlink" title="问题一"></a>问题一</h3><p>上文中提到的在处理元素的最后会注册一个窗口cleanupTimer，那么这个时间是多少呢? <code>window.maxTimestamp() + allowedLateness;</code>  所以我们看到一个窗口存在时长是水位线经过<code>window的最大时间+allowLateness</code>的时间，因此当水位线大于窗口最大时间后就会触发计算，而计算之后状态不会清空，会保留<code>allowedLateness</code>的时长，而此时窗口状态还在保留，所以<strong>上游有晚到的数据来一条就会触发一次该窗口的计算</strong>，而且每次计算的数据都是该窗口的全量数据，所以业务方要慎用，或者下游要做好相应的去重或更新措施，否则可能会造成结果的不准确</p>
-<h3 id="问题二"><a href="#问题二" class="headerlink" title="问题二"></a>问题二</h3><p>不同的函数最终影响的其实是我们最终window保存数据的state的形式有<code>ListState</code>，也有<code>reducingState</code>…,最终影响了rocksdb和checkpoint的大小，不过肯定是能用聚合还是用聚合函数比较好</p>
-<h2 id="waterMark"><a href="#waterMark" class="headerlink" title="waterMark"></a>waterMark</h2><p>当元素来的是一个watermark，window Operator又会以怎样的逻辑去处理呢?</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleWatermark</span><span class="params">(Watermark watermark)</span> </span>&#123;</div><div class="line">	<span class="keyword">try</span> &#123;</div><div class="line">		<span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">			lastEmittedWatermark = watermark.getTimestamp();</div><div class="line">			operator.processWatermark(watermark);</div><div class="line">		&#125;</div><div class="line">	&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"Exception occurred while processing valve output watermark: "</span>, e);		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里我们将关注到开篇提到的<code>internalTimeService</code>,</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">advanceWatermark</span><span class="params">(<span class="keyword">long</span> time)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">	currentWatermark = time;</div><div class="line"></div><div class="line">	InternalTimer&lt;K, N&gt; timer;</div><div class="line"></div><div class="line">	<span class="keyword">while</span> ((timer = eventTimeTimersQueue.peek()) != <span class="keyword">null</span> &amp;&amp; timer.getTimestamp() &lt;= time) &#123;</div><div class="line"></div><div class="line">		Set&lt;InternalTimer&lt;K, N&gt;&gt; timerSet = getEventTimeTimerSetForTimer(timer);</div><div class="line">		timerSet.remove(timer);</div><div class="line">		eventTimeTimersQueue.remove();</div><div class="line"></div><div class="line">		keyContext.setCurrentKey(timer.getKey());</div><div class="line">		triggerTarget.onEventTime(timer);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="watermark元素处理逻辑"><a href="#watermark元素处理逻辑" class="headerlink" title="watermark元素处理逻辑"></a>watermark元素处理逻辑</h3><p><img src="http://or0igopk2.bkt.clouddn.com/18-1-7/87202276.jpg" alt=""></p>
-<ol>
-<li>当流元素是watermark时主要处理逻辑集中在<code>internaltimerservice</code>上</li>
-<li>如果<code>eventTimeTimersQueue</code>这个优先级队列中最早的时间低于了水位线，那么就会取出同一时刻的所有key的timer进行计算</li>
-<li>处理可能意味着窗口的计算触发或者某些窗口的清理</li>
-</ol>
-<p>以上便是flink对于窗口的实现逻辑。</p>
+<p>翻看string的源码，可以看到string的本质是个char数组，并且使用final关键字修饰。但是char数组用final修饰只能让数组的引用地址不变，array数组还是可变的，主要是SUN的工程师没有暴露内部成员字段，所以String不可变主要在底层实现，而不是在final。</p>
+<h3 id="String的内存存储"><a href="#String的内存存储" class="headerlink" title="String的内存存储"></a>String的内存存储</h3><p>一般而言，Java 对象在虚拟机的结构如下：</p>
+<ul>
+<li>对象头（object header）：8 个字节</li>
+<li>Java 原始类型数据：如 int, float, char 等类型的数据，各类型数据占内存。<ul>
+<li>boolean 1</li>
+<li>byte</li>
+<li>char 2</li>
+<li>short </li>
+<li>int 4 </li>
+<li>long 8     </li>
+</ul>
+</li>
+<li>引用（reference）：4 个字节</li>
+<li>填充符（padding）</li>
+</ul>
+<p>然而，一个 Java 对象实际还会占用些额外的空间，如：对象的 class 信息、ID、在虚拟机中的状态。在 Oracle JDK 的 Hotspot 虚拟机中，一个普通的对象需要额外 8 个字节。</p>
+<p>String对象的声明</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">private final char value[]; </div><div class="line">private final int offset; </div><div class="line">private final int count; </div><div class="line">private int hash;</div></pre></td></tr></table></figure>
+<p>那么因该如何计算该 String 所占的空间？</p>
+<p>首先计算一个空的 char 数组所占空间，在 Java 里数组也是对象，因而数组也有对象头，故一个数组所占的空间为对象头所占的空间加上数组长度，即 8 + 4 = 12 字节 , 经过填充后为 16 字节。</p>
+<p>那么一个空 String 所占空间为：</p>
+<p>对象头（8 字节）+ char 数组（16 字节）+ 3 个 int（3 × 4 = 12 字节）+1 个 char 数组的引用 (4 字节 ) = 40 字节。</p>
+<p>因此一个实际的 String 所占空间的计算公式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">8*( ( 8+2*n+4+12)+7 ) / 8 = 8*(int) ( ( ( (n) *2 )+43) /8 )</div></pre></td></tr></table></figure>
+<p>在java中对String对象特殊对待，所以在heap上分为两块，一块是String constant pool存储java字符串常量，另一块存储普通对象和字符串对象，主要区别：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">String a = &quot;abc&quot;;</div><div class="line">String b = new String(&quot;acb&quot;)</div></pre></td></tr></table></figure>
+<p>第一种jvm会先去查找constant pool是否存在此常量，不存在就在constant pool上进行创建，第二种是在堆上创建对象，并且不会加入到constant pool上，因此可能会带来字符串重复占用内存的问题。可以调用String.intern()加入到String constant pool中，其实是JVM heap 中 PermGen 相应的区域。</p>
+<p>jdk1.6和1.7还有所不同，jdk1.7的常量池是在堆中的</p>
+<h3 id="StringBuffer"><a href="#StringBuffer" class="headerlink" title="StringBuffer"></a>StringBuffer</h3><p>StringBuffer和String不同，每次修改都会对 StringBuffer 对象本身进行操作，而不是生成新的对象，再改变对象引用。所以在一般情况下我们推荐使用 StringBuffer ，特别是字符串对象经常改变的情况下。而在某些特别情况下， String 对象的字符串拼接其实是被JVM解释成了 StringBuffer 对象的拼接，所以这些时候 String 对象的速度并不会比 StringBuffer 对象慢，而特别是以下的字符串对象生成中， String效率是远要比 StringBuffer 快的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">String S1 = “This is only a” + “ simple” + “ test”;</div><div class="line">StringBuffer Sb = new StringBuilder(“This is only a”).append(“ simple”).append(“ test”);</div></pre></td></tr></table></figure>
+<p> 你会很惊讶的发现，生成 String S1 对象的速度简直太快了，而这个时候 StringBuffer 居然速度上根本一点都不占优势。其实这是 JVM 的一个把戏，在 JVM 眼里，这个</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">String S1 = “This is only a” + “ simple” + “test”;</div><div class="line">其实就是：</div><div class="line">String S1 = “This is only a simple test”;</div></pre></td></tr></table></figure>
+<p>当然不需要太多的时间了。但大家这里要注意的是，如果你的字符串是来自另外的 String 对象的话，速度就没那么快了，譬如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">String S2 = “This is only a”;</div><div class="line">String S3 = “ simple”;</div><div class="line">String S4 = “ test”;</div><div class="line">String S1 = S2 +S3 + S4;</div></pre></td></tr></table></figure>
+<p>这时候 JVM 会规规矩矩的按照原来的方式去做</p>
+<p><a href="https://www.ibm.com/developerworks/cn/java/j-lo-optmizestring/index.html" target="_blank" rel="external">https://www.ibm.com/developerworks/cn/java/j-lo-optmizestring/index.html</a></p>
+<p><a href="https://blog.csdn.net/qq_36357995/article/details/79985538" target="_blank" rel="external">https://blog.csdn.net/qq_36357995/article/details/79985538</a></p>
+<p><a href="https://segmentfault.com/a/1190000004261063" target="_blank" rel="external">https://segmentfault.com/a/1190000004261063</a></p>
 
       
     </div>
@@ -488,7 +502,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Flink/" rel="tag"># Flink</a>
+            <a href="/tags/jdk/" rel="tag"># jdk</a>
           
         </div>
       
@@ -501,8 +515,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/为什么现代系统架构需要一个新的编程模型--actor编程模型.html" rel="next" title="为什么现代系统架构需要一个新的编程模型 actor编程模型">
-                <i class="fa fa-chevron-left"></i> 为什么现代系统架构需要一个新的编程模型 actor编程模型
+              <a href="/rocksdb-wiki.html" rel="next" title="rocksdb概念简介">
+                <i class="fa fa-chevron-left"></i> rocksdb概念简介
               </a>
             
           </div>
@@ -511,8 +525,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/常阅读博客.html" rel="prev" title="常阅读博客">
-                常阅读博客 <i class="fa fa-chevron-right"></i>
+              <a href="/2019-flag.html" rel="prev" title="to be or not to be in 2019">
+                to be or not to be in 2019 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -597,7 +611,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -732,7 +746,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#window"><span class="nav-number">1.</span> <span class="nav-text">window</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#window的组件"><span class="nav-number">2.</span> <span class="nav-text">window的组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#streamRecord"><span class="nav-number">3.</span> <span class="nav-text">streamRecord</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#窗口merge原理"><span class="nav-number">3.1.</span> <span class="nav-text">窗口merge原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题一"><span class="nav-number">4.1.</span> <span class="nav-text">问题一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题二"><span class="nav-number">4.2.</span> <span class="nav-text">问题二</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#waterMark"><span class="nav-number">5.</span> <span class="nav-text">waterMark</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#watermark元素处理逻辑"><span class="nav-number">5.1.</span> <span class="nav-text">watermark元素处理逻辑</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#String类不可变的好处"><span class="nav-number">1.</span> <span class="nav-text">String类不可变的好处</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在java中如何设计不可变"><span class="nav-number">2.</span> <span class="nav-text">在java中如何设计不可变</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String的内存存储"><span class="nav-number">3.</span> <span class="nav-text">String的内存存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StringBuffer"><span class="nav-number">4.</span> <span class="nav-text">StringBuffer</span></a></li></ol></div>
             
 
           </div>
@@ -895,9 +909,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://www.aitozi.com/Flink Window实现源码分析.html';
-          this.page.identifier = 'Flink Window实现源码分析.html';
-          this.page.title = 'flink中window实现的源码分析';
+          this.page.url = 'http://www.aitozi.com/string-stringbuilder-stringbuffer.html';
+          this.page.identifier = 'string-stringbuilder-stringbuffer.html';
+          this.page.title = 'String,StringBuffer,StringBuilder的区别';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://aitozi.disqus.com/embed.js';

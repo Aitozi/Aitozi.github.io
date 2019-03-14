@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.aitozi.com/"/>
-  <updated>2018-08-27T16:28:32.000Z</updated>
+  <updated>2019-03-14T17:25:37.000Z</updated>
   <id>http://www.aitozi.com/</id>
   
   <author>
@@ -16,13 +16,48 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>【Daily Ask】String,StringBuffer,StringBuilder的区别</title>
-    <link href="http://www.aitozi.com/daily-ask-20180827.html"/>
-    <id>http://www.aitozi.com/daily-ask-20180827.html</id>
-    <published>2018-08-27T16:13:48.000Z</published>
-    <updated>2018-08-27T16:28:32.000Z</updated>
+    <title>to be or not to be in 2019</title>
+    <link href="http://www.aitozi.com/2019-flag.html"/>
+    <id>http://www.aitozi.com/2019-flag.html</id>
+    <published>2019-03-14T17:25:03.000Z</published>
+    <updated>2019-03-14T17:25:37.000Z</updated>
     
-    <content type="html"><![CDATA[<p>20180827</p>
+    <content type="html"><![CDATA[<p>2019年的flag</p>
+<a id="more"></a>
+<p>2019年的Q1快接近尾声了，是时候给今年来一个flag了，今年有以下3个目标：</p>
+<ol>
+<li>跑步500公里</li>
+<li>读书10本+ <em>技术书籍不低于3本</em></li>
+<li>flink，netty，hbase系列的源码分析博客及仓库更新</li>
+<li>机器学习简单入门</li>
+<li>简单学会尤克里里的弹奏</li>
+<li>努力工作，攒钱</li>
+</ol>
+<p>截止时间:</p>
+<p>———————————–2020.01.01———————————————–</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;2019年的flag&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="杂七杂八" scheme="http://www.aitozi.com/categories/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/"/>
+    
+    
+      <category term="flag" scheme="http://www.aitozi.com/tags/flag/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>String,StringBuffer,StringBuilder的区别</title>
+    <link href="http://www.aitozi.com/string-stringbuilder-stringbuffer.html"/>
+    <id>http://www.aitozi.com/string-stringbuilder-stringbuffer.html</id>
+    <published>2018-08-27T16:13:48.000Z</published>
+    <updated>2019-03-14T17:09:57.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>常用的jdk的组件的源码分析之：<code>String</code>,<code>StringBuffer</code>,<code>StringBuilder</code></p>
 <a id="more"></a>
 <p>String 字符串常量<br>StringBuffer 字符串变量（线程安全）<br>StringBuilder 字符串变量（非线程安全）</p>
 <p>String和StringBuffer的主要性能区别其实在于 String是不可变的对象, 因此在每次对String类型进行改变的时候其实都等同于生成了一个新的 String对象，然后将指针指向新的String对象，所以经常改变内容的字符串最好不要用String，因为每次生成对象都会对系统性能产生影响，特别当内存中无引用对象多了以后，JVM的GC就会开始工作，那速度是一定会相当慢的。</p>
@@ -83,14 +118,14 @@
     
     <summary type="html">
     
-      &lt;p&gt;20180827&lt;/p&gt;
+      &lt;p&gt;常用的jdk的组件的源码分析之：&lt;code&gt;String&lt;/code&gt;,&lt;code&gt;StringBuffer&lt;/code&gt;,&lt;code&gt;StringBuilder&lt;/code&gt;&lt;/p&gt;
     
     </summary>
     
-      <category term="java" scheme="http://www.aitozi.com/categories/java/"/>
+      <category term="源码分析" scheme="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
     
     
-      <category term="【Daily Ask】" scheme="http://www.aitozi.com/tags/%E3%80%90Daily-Ask%E3%80%91/"/>
+      <category term="jdk" scheme="http://www.aitozi.com/tags/jdk/"/>
     
   </entry>
   
@@ -99,7 +134,7 @@
     <link href="http://www.aitozi.com/rocksdb-wiki.html"/>
     <id>http://www.aitozi.com/rocksdb-wiki.html</id>
     <published>2018-08-23T15:20:44.000Z</published>
-    <updated>2018-08-23T15:24:03.000Z</updated>
+    <updated>2019-03-14T17:07:11.000Z</updated>
     
     <content type="html"><![CDATA[<p>本文翻译自：<a href="https://github.com/facebook/rocksdb/wiki/rocksdb-basics" target="_blank" rel="external">https://github.com/facebook/rocksdb/wiki/rocksdb-basics</a></p>
 <p>主要是rocksdb的一些概念理解和介绍</p>
@@ -132,6 +167,8 @@
 &lt;p&gt;主要是rocksdb的一些概念理解和介绍&lt;/p&gt;
     
     </summary>
+    
+      <category term="刨根问底" scheme="http://www.aitozi.com/categories/%E5%88%A8%E6%A0%B9%E9%97%AE%E5%BA%95/"/>
     
     
       <category term="RocksDB" scheme="http://www.aitozi.com/tags/RocksDB/"/>
@@ -306,9 +343,9 @@
     <link href="http://www.aitozi.com/dig-protobuf.html"/>
     <id>http://www.aitozi.com/dig-protobuf.html</id>
     <published>2018-07-28T15:28:01.000Z</published>
-    <updated>2018-07-29T05:50:52.000Z</updated>
+    <updated>2019-03-14T17:06:49.000Z</updated>
     
-    <content type="html"><![CDATA[<p>本文带你深入理解和使用protobuf(偏理解:)</p>
+    <content type="html"><![CDATA[<p>本文带你深入理解和使用protobuf</p>
 <a id="more"></a>
 <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Protocol Buffers 是一种轻便高效的结构化数据存储格式，可以用于结构化数据串行化，或者说序列化。它很适合做数据存储或 RPC 数据交换格式。可用于通讯协议、数据存储等领域的语言无关、平台无关、可扩展的序列化结构数据格式。目前提供了 C++、Java、Python、Go 等语言的 API</p>
 <p>使用protobuf需要这样几个步骤：</p>
@@ -393,9 +430,11 @@
     
     <summary type="html">
     
-      &lt;p&gt;本文带你深入理解和使用protobuf(偏理解:)&lt;/p&gt;
+      &lt;p&gt;本文带你深入理解和使用protobuf&lt;/p&gt;
     
     </summary>
+    
+      <category term="刨根问底" scheme="http://www.aitozi.com/categories/%E5%88%A8%E6%A0%B9%E9%97%AE%E5%BA%95/"/>
     
     
       <category term="protobuf" scheme="http://www.aitozi.com/tags/protobuf/"/>
@@ -407,7 +446,7 @@
     <link href="http://www.aitozi.com/java-serialization.html"/>
     <id>http://www.aitozi.com/java-serialization.html</id>
     <published>2018-07-27T16:51:18.000Z</published>
-    <updated>2018-07-27T16:56:21.000Z</updated>
+    <updated>2019-03-14T17:06:29.000Z</updated>
     
     <content type="html"><![CDATA[<p>Java序列化拾掇</p>
 <a id="more"></a>
@@ -496,6 +535,8 @@
     
     </summary>
     
+      <category term="刨根问底" scheme="http://www.aitozi.com/categories/%E5%88%A8%E6%A0%B9%E9%97%AE%E5%BA%95/"/>
+    
     
       <category term="serialization" scheme="http://www.aitozi.com/tags/serialization/"/>
     
@@ -552,7 +593,7 @@
     <link href="http://www.aitozi.com/flink-cep-code.html"/>
     <id>http://www.aitozi.com/flink-cep-code.html</id>
     <published>2018-05-25T13:54:23.000Z</published>
-    <updated>2018-05-25T13:58:48.000Z</updated>
+    <updated>2019-03-14T17:03:52.000Z</updated>
     
     <content type="html"><![CDATA[<p>关于Flink中cep实现原理的分析</p>
 <a id="more"></a>
@@ -593,7 +634,7 @@
     
       <category term="Flink" scheme="http://www.aitozi.com/tags/Flink/"/>
     
-      <category term="cep" scheme="http://www.aitozi.com/tags/cep/"/>
+      <category term="CEP" scheme="http://www.aitozi.com/tags/CEP/"/>
     
   </entry>
   
@@ -705,7 +746,7 @@
     <link href="http://www.aitozi.com/advance-maven-shade-plugin.html"/>
     <id>http://www.aitozi.com/advance-maven-shade-plugin.html</id>
     <published>2018-04-10T14:06:03.000Z</published>
-    <updated>2018-04-10T14:15:18.000Z</updated>
+    <updated>2019-03-14T16:58:55.000Z</updated>
     
     <content type="html"><![CDATA[<p>工作中的maven-shade-plugin插件高级用法小记</p>
 <a id="more"></a>
@@ -748,7 +789,7 @@
     <link href="http://www.aitozi.com/flink-kafka-exactly-once.html"/>
     <id>http://www.aitozi.com/flink-kafka-exactly-once.html</id>
     <published>2018-03-11T14:29:44.000Z</published>
-    <updated>2018-03-11T14:39:45.000Z</updated>
+    <updated>2019-03-14T17:04:58.000Z</updated>
     
     <content type="html"><![CDATA[<p>flink kafka-connector0.10版本分析，与1.4版本中kafka11对比</p>
 <a id="more"></a>
@@ -826,6 +867,8 @@
     
       <category term="Flink" scheme="http://www.aitozi.com/tags/Flink/"/>
     
+      <category term="Kafka" scheme="http://www.aitozi.com/tags/Kafka/"/>
+    
   </entry>
   
   <entry>
@@ -833,7 +876,7 @@
     <link href="http://www.aitozi.com/flink-cep-paper.html"/>
     <id>http://www.aitozi.com/flink-cep-paper.html</id>
     <published>2018-02-25T12:19:15.000Z</published>
-    <updated>2018-02-25T12:44:25.000Z</updated>
+    <updated>2019-03-14T17:04:45.000Z</updated>
     
     <content type="html"><![CDATA[<p>CEP实现论文</p>
 <a id="more"></a>
@@ -947,10 +990,10 @@ F: 结束状态
   
   <entry>
     <title>常阅读博客</title>
-    <link href="http://www.aitozi.com/%E5%B8%B8%E9%98%85%E8%AF%BB%E5%8D%9A%E5%AE%A2.html"/>
-    <id>http://www.aitozi.com/常阅读博客.html</id>
+    <link href="http://www.aitozi.com/blog-collection.html"/>
+    <id>http://www.aitozi.com/blog-collection.html</id>
     <published>2018-01-23T01:58:30.000Z</published>
-    <updated>2018-07-28T08:34:00.000Z</updated>
+    <updated>2019-03-14T16:59:53.000Z</updated>
     
     <content type="html"><![CDATA[<p>优秀可以常阅读汲取的博客</p>
 <a id="more"></a>
@@ -969,15 +1012,15 @@ F: 结束状态
     
     </summary>
     
-      <category term="杂" scheme="http://www.aitozi.com/categories/%E6%9D%82/"/>
+      <category term="杂七杂八" scheme="http://www.aitozi.com/categories/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/"/>
     
     
   </entry>
   
   <entry>
     <title>flink中window实现的源码分析</title>
-    <link href="http://www.aitozi.com/Flink%20Window%E5%AE%9E%E7%8E%B0%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html"/>
-    <id>http://www.aitozi.com/Flink Window实现源码分析.html</id>
+    <link href="http://www.aitozi.com/flink-window-source-code-analyse.html"/>
+    <id>http://www.aitozi.com/flink-window-source-code-analyse.html</id>
     <published>2018-01-06T18:05:43.000Z</published>
     <updated>2018-01-07T03:17:05.000Z</updated>
     
@@ -1038,10 +1081,10 @@ F: 结束状态
   
   <entry>
     <title>为什么现代系统架构需要一个新的编程模型 actor编程模型</title>
-    <link href="http://www.aitozi.com/%E4%B8%BA%E4%BB%80%E4%B9%88%E7%8E%B0%E4%BB%A3%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E9%9C%80%E8%A6%81%E4%B8%80%E4%B8%AA%E6%96%B0%E7%9A%84%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B--actor%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B.html"/>
-    <id>http://www.aitozi.com/为什么现代系统架构需要一个新的编程模型--actor编程模型.html</id>
+    <link href="http://www.aitozi.com/why-actor-programming-model.html"/>
+    <id>http://www.aitozi.com/why-actor-programming-model.html</id>
     <published>2017-12-17T13:32:20.000Z</published>
-    <updated>2017-12-17T13:48:15.000Z</updated>
+    <updated>2019-03-14T17:07:29.000Z</updated>
     
     <content type="html"><![CDATA[<p>actor编程模型很早就由<code>Carl Hewitt</code>提出了, 最先是设计来解决在高性能的网络环境中的并发处理场景。只是当时没有这样的环境。如今，网络，硬件的基础设施的能力已经远远超越了那个时代，因此，当时提出的actor模型也有了用武之地。这篇文章讨论了关于传统编程的一些假设和现代实际的多线程，多核cpu架构不匹配的地方.</p>
 <a id="more"></a>
@@ -1080,7 +1123,7 @@ F: 结束状态
     
     </summary>
     
-      <category term="技术视角" scheme="http://www.aitozi.com/categories/%E6%8A%80%E6%9C%AF%E8%A7%86%E8%A7%92/"/>
+      <category term="深度好文" scheme="http://www.aitozi.com/categories/%E6%B7%B1%E5%BA%A6%E5%A5%BD%E6%96%87/"/>
     
     
       <category term="akka" scheme="http://www.aitozi.com/tags/akka/"/>
@@ -1089,10 +1132,10 @@ F: 结束状态
   
   <entry>
     <title>ArrayDeque源码分析</title>
-    <link href="http://www.aitozi.com/ArrayDeque%E5%AE%9E%E7%8E%B0%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html"/>
-    <id>http://www.aitozi.com/ArrayDeque实现源码分析.html</id>
+    <link href="http://www.aitozi.com/arraydequeue-source-code.html"/>
+    <id>http://www.aitozi.com/arraydequeue-source-code.html</id>
     <published>2017-11-24T07:32:23.000Z</published>
-    <updated>2017-11-24T07:45:26.000Z</updated>
+    <updated>2019-03-14T17:00:00.000Z</updated>
     
     <content type="html"><![CDATA[<p>关于ArrayDeque源码分析</p>
 <a id="more"></a>
@@ -1257,7 +1300,7 @@ F: 结束状态
     <link href="http://www.aitozi.com/flink-watermark.html"/>
     <id>http://www.aitozi.com/flink-watermark.html</id>
     <published>2017-09-10T07:59:23.000Z</published>
-    <updated>2017-09-10T08:13:26.000Z</updated>
+    <updated>2019-03-14T17:05:18.000Z</updated>
     
     <content type="html"><![CDATA[<p>关于Flink中watermark工作原理代码分析</p>
 <a id="more"></a>

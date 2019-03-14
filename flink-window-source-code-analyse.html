@@ -89,7 +89,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="akka," />
+  <meta name="keywords" content="Flink," />
 
 
 
@@ -107,21 +107,19 @@
 
 
 
-<meta name="description" content="actor编程模型很早就由Carl Hewitt提出了, 最先是设计来解决在高性能的网络环境中的并发处理场景。只是当时没有这样的环境。如今，网络，硬件的基础设施的能力已经远远超越了那个时代，因此，当时提出的actor模型也有了用武之地。这篇文章讨论了关于传统编程的一些假设和现代实际的多线程，多核cpu架构不匹配的地方.">
+<meta name="description" content="关于Flink中window的实现分析">
 <meta property="og:type" content="article">
-<meta property="og:title" content="为什么现代系统架构需要一个新的编程模型 actor编程模型">
-<meta property="og:url" content="http://www.aitozi.com/为什么现代系统架构需要一个新的编程模型--actor编程模型.html">
+<meta property="og:title" content="flink中window实现的源码分析">
+<meta property="og:url" content="http://www.aitozi.com/flink-window-source-code-analyse.html">
 <meta property="og:site_name" content="Aitozi">
-<meta property="og:description" content="actor编程模型很早就由Carl Hewitt提出了, 最先是设计来解决在高性能的网络环境中的并发处理场景。只是当时没有这样的环境。如今，网络，硬件的基础设施的能力已经远远超越了那个时代，因此，当时提出的actor模型也有了用武之地。这篇文章讨论了关于传统编程的一些假设和现代实际的多线程，多核cpu架构不匹配的地方.">
-<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/17-12-14/20018675.jpg">
-<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/17-12-14/3331951.jpg">
-<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/17-12-14/31370324.jpg">
-<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/17-12-17/52377993.jpg">
-<meta property="og:updated_time" content="2017-12-17T13:48:15.000Z">
+<meta property="og:description" content="关于Flink中window的实现分析">
+<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/18-1-7/74574325.jpg">
+<meta property="og:image" content="http://or0igopk2.bkt.clouddn.com/18-1-7/87202276.jpg">
+<meta property="og:updated_time" content="2018-01-07T03:17:05.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="为什么现代系统架构需要一个新的编程模型 actor编程模型">
-<meta name="twitter:description" content="actor编程模型很早就由Carl Hewitt提出了, 最先是设计来解决在高性能的网络环境中的并发处理场景。只是当时没有这样的环境。如今，网络，硬件的基础设施的能力已经远远超越了那个时代，因此，当时提出的actor模型也有了用武之地。这篇文章讨论了关于传统编程的一些假设和现代实际的多线程，多核cpu架构不匹配的地方.">
-<meta name="twitter:image" content="http://or0igopk2.bkt.clouddn.com/17-12-14/20018675.jpg">
+<meta name="twitter:title" content="flink中window实现的源码分析">
+<meta name="twitter:description" content="关于Flink中window的实现分析">
+<meta name="twitter:image" content="http://or0igopk2.bkt.clouddn.com/18-1-7/74574325.jpg">
 
 
 
@@ -150,13 +148,13 @@
 
 
 
-  <link rel="canonical" href="http://www.aitozi.com/为什么现代系统架构需要一个新的编程模型--actor编程模型.html"/>
+  <link rel="canonical" href="http://www.aitozi.com/flink-window-source-code-analyse.html"/>
 
 
 
 
 
-  <title>为什么现代系统架构需要一个新的编程模型 actor编程模型 | Aitozi</title>
+  <title>flink中window实现的源码分析 | Aitozi</title>
   
 
 
@@ -299,7 +297,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.aitozi.com/为什么现代系统架构需要一个新的编程模型--actor编程模型.html">
+    <link itemprop="mainEntityOfPage" href="http://www.aitozi.com/flink-window-source-code-analyse.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="aitozi">
@@ -316,7 +314,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">为什么现代系统架构需要一个新的编程模型 actor编程模型</h2>
+          <h2 class="post-title" itemprop="name headline">flink中window实现的源码分析</h2>
         
 
         <div class="post-meta">
@@ -328,8 +326,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-17T21:32:20+08:00">
-                2017-12-17
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-07T02:05:43+08:00">
+                2018-01-07
               </time>
             
 
@@ -351,8 +349,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/技术视角/" itemprop="url" rel="index">
-                    <span itemprop="name">技术视角</span>
+                  <a href="/categories/源码分析/" itemprop="url" rel="index">
+                    <span itemprop="name">源码分析</span>
                   </a>
                 </span>
 
@@ -369,9 +367,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/为什么现代系统架构需要一个新的编程模型--actor编程模型.html#comments" itemprop="discussionUrl">
+                <a href="/flink-window-source-code-analyse.html#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="为什么现代系统架构需要一个新的编程模型--actor编程模型.html" itemprop="commentCount"></span>
+                        data-disqus-identifier="flink-window-source-code-analyse.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -404,35 +402,46 @@
       
 
       
-        <p>actor编程模型很早就由<code>Carl Hewitt</code>提出了, 最先是设计来解决在高性能的网络环境中的并发处理场景。只是当时没有这样的环境。如今，网络，硬件的基础设施的能力已经远远超越了那个时代，因此，当时提出的actor模型也有了用武之地。这篇文章讨论了关于传统编程的一些假设和现代实际的多线程，多核cpu架构不匹配的地方.</p>
+        <p>关于Flink中window的实现分析</p>
 <a id="more"></a>
-<h1 id="封装所面临的挑战"><a href="#封装所面临的挑战" class="headerlink" title="封装所面临的挑战"></a>封装所面临的挑战</h1><p>OOP思想的支柱是封装，封装意味着对象中的数据是不能从外界直接访问的，他仅能够通过调用内部的方法被修改。因此对象就承担起暴露<strong>正确</strong>，<strong>安全</strong>的方法来保护其封装变量的不变性。举个例子，对一个顺序二叉树来说一定不允许违反一个二叉树的排序不变性。调用者期望二叉树的顺序在查询某段数据的时候能够保持不变，从而他们能够依赖于这种约束。<br>当我们分析OOP应用的运行行为时，我们通常会会画一个消息序列图标来展示方法调用之间的交互，例如：<br><img src="http://or0igopk2.bkt.clouddn.com/17-12-14/20018675.jpg" alt=""><br>不幸的是，上图没有精确的表达出，在执行的过程中这些对象的生命周期。实际上一个线程完成了所有这些调用。对变量不变性的要求是发生在方法调用的线程中：<br><img src="http://or0igopk2.bkt.clouddn.com/17-12-14/3331951.jpg" alt=""><br>这样展示的意义在于你对多线程的情况下建模会把问题变的清晰。当有多个线程的情况下，事情变的不一样。<br><img src="http://or0igopk2.bkt.clouddn.com/17-12-14/31370324.jpg" alt=""><br>我们可以看到中间有一个环节有两个线程进入了统一个方法，但是该对象的封装并没有考虑如何处理这种场景。这两个方法的调用可能是随机交叉的，这就导致要向保证其内部变量的不变一致行必须引入两个线程之间的协调机制,通常的做法是引入锁来解决这个问题，从而确保同一时间只有一个线程在调用该方法.然而：</p>
-<ul>
-<li>锁机制严重限制了并发度，他们在如今cpu的架构下代价很大，需要操作系统暂停线程然后再过段时间再恢复</li>
-<li>调用线程在block之后不能再做其他的工作</li>
-<li>锁还引入了死锁问题。</li>
-</ul>
-<p><strong>导致的结果</strong></p>
-<ul>
-<li>没有锁状态可能会导致冲突</li>
-<li>引入锁，性能会受损，并容易导致死锁,并且锁一般适用于单机的情况，当有多台机器协调工作时，就需要分布式锁，通常比本地锁的性能更差，更影响其可扩展性。</li>
-</ul>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
-<li>对象仅仅能够保证在单线程情况下内部状态的一致性</li>
-<li>锁机制在生产实际中显示并不高效</li>
-</ul>
-<h1 id="现代计算机架构内存共享的问题"><a href="#现代计算机架构内存共享的问题" class="headerlink" title="现代计算机架构内存共享的问题"></a>现代计算机架构内存共享的问题</h1><p>在现代计算机架构中，如果我们定义一个变量，cpu是将其写入cpu缓存，而不是将其直接写到内存中，绝大多数是写到临近该cpu核的cache中去，因此不能被别的cpu core所见，为了让一些本地的修改能让其他的核所见，cpu cache需要将其中的数据刷到其他核中。<br>在jvm中我们通过<code>volatile</code>关键字来明确一块内存地址，这块内存会被所有线程共享。那么为什么我们不将所有的变量能标记为<code>volatile</code>呢？因为将cpu cache的数据传递到各个cpu核是代价非常高的事情</p>
-<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><ul>
-<li>没有真正的共享内存，cpu将数据传输到别的cpu核上，就像在网络中做的一样，cpu内部通讯和网络的通讯在实现上也有很多的共通之处。</li>
-<li>与其通过标记为共享或使用原子数据结构的变量来隐藏消息传递，更规范和原则性的方法是将状态信息保存到一个并发实体中，并通过消息的机制显式地传播并发实体之间的数据或事件</li>
-</ul>
-<h1 id="调用栈的说明"><a href="#调用栈的说明" class="headerlink" title="调用栈的说明"></a>调用栈的说明</h1><p>我们今天常常把所谓的堆栈视为理所当然，但是他们是在一个并发编程不那么重要的时代发明的，因为多cpu系统并不常见。调用堆栈不交叉线程，因此，不建模异步调用链。<br>当线程打算将任务委托给“后台任务”时，问题就出现了。实际上，这实际上意味着委托给另一个线程。这不能是一个简单的方法/函数调用，因为调用在线程中是严格的本地调用。通常发生的情况是，“调用者”将一个对象放入一个和被调用的工作线程共享的内存位置，这反过来调用者又可以在某个事件循环中获取它。这允许“caller”线程继续执行其他任务。<br>这种模式下第一个问题是，如何通知“调用者”任务已经完成了。当一个任务失败时，会出现一个更严重的问题。异常传播到什么地方?它将传播到工作线程的异常处理程序，而完全忽略实际的“调用者”是谁。就是无法将异常抛到主线程中去。<br><img src="http://or0igopk2.bkt.clouddn.com/17-12-17/52377993.jpg" alt=""><br>这是个严重的问题，工作的线程是如何处理这种情况的?它可能无法解决这个问题，因为它通常不知道失败的任务的目的“调用者”线程需要以某种方式被通知到，但是没有调用堆栈来解决异常。失败通知只能通过一个侧通道来完成，例如，在“调用者”线程希望得到结果的情况下，放置一个错误代码。如果此通知不到位，则“调用者”永远不会收到失败的通知，任务就会丢失!<strong>这与网络系统的工作方式惊人地相似，在没有任何通知的情况下，消息/请求可能会丢失/失败。</strong></p>
-<p>这种情况再某些情况下会变得更糟，当一个由主线程发起的工作线程遇到了一个bug退出了最终会出现不可恢复的情况。一个由bug引起的内部异常会抛到线程的根，并使线程关闭。这立即引发了问题，谁应该重新启动由线程托管的服务的正常运行，以及如何恢复到已知的良好状态?乍一看，这似乎是可以管理的，但是我们突然面临一个新的、意想不到的现象。实际的任务，即线程当前正在进行的工作，不再位于任务从(通常是队列)中提取任务的共享内存位置。事实上，由于异常到达顶部，解除所有的调用堆栈，任务状态完全丢失!我们已经丢失了一条消息（即此时的工作线程已经退出），尽管这是本地通信，没有涉及到网络(消息丢失将被预期)。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
-<li>为了在当前系统上实现任何有意义的并发性和性能，线程必须在不阻塞的情况下以有效的方式将任务分配给彼此。有了这种任务委托并发机制(甚至更多的是通过网络/分布式计算)基于调用堆栈的错误处理，需要引入新的显式的错误信号机制。并且失败成为领域模型的一部分。</li>
-<li>代理模式下的并发系统需要处理服务故障，并有方法从它们中恢复，此类服务的客户端需要意识到任务/消息可能在重新启动时丢失。即使没有发生损失，也可能由于先前的排队任务(长队列)、垃圾收集导致的延迟等原因导致响应延迟。在这些情况下，并发系统应该以超时的形式处理响应期限，就像网络/分布式系统一样。</li>
-</ul>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>Akka 官网： <a href="https://doc.akka.io/docs/akka/2.5/guide/actors-motivation.html" target="_blank" rel="external">https://doc.akka.io/docs/akka/2.5/guide/actors-motivation.html</a></p>
+<h2 id="window"><a href="#window" class="headerlink" title="window"></a>window</h2><p>window提供了一种处理无界数据的一种手段</p>
+<h2 id="window的组件"><a href="#window的组件" class="headerlink" title="window的组件"></a>window的组件</h2><p>首先我们看window包含了哪些组件：触发器<code>trigger</code>，触发器上下文<code>triggerContext</code>，内部状态<code>windowState</code>，窗口分配器<code>windowassigner</code>, 内部时间服务器<code>internalTimerService</code>,初看到这么多的组件可能会有点懵，下面的分析会一点一点介绍这些组件的作用。</p>
+<p>今天我们从flink接收流元素进行处理的角度来分析其实现，在flink的DAG中流动的有这么几种元素：<code>StreamRecord</code>,<code>LatencyRecord</code>,<code>WaterMark</code>,<code>StreamStatus</code>,我们这里只考虑这样两种元素<code>StreamRecord</code>和<code>WaterMark</code></p>
+<h2 id="streamRecord"><a href="#streamRecord" class="headerlink" title="streamRecord"></a>streamRecord</h2><p>windowOperator实现了<code>KeyContext</code>,其实就是代表每一个windowOperator处理每一个元素就会在一个Key的上下文的环境中去做处理。</p>
+<p>当windowOperator接收到一条<code>StreamRecord</code>,windowOperator会做什么呢?</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">	numRecordsIn.inc();</div><div class="line">	streamOperator.setKeyContextElement1(record);</div><div class="line">	streamOperator.processElement(record);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li>首先设置该operator的key为当前元素</li>
+<li>根据element所携带的时间戳（processing time或者event  time）分配元素所应该属于的窗口，一个元素可能会隶属于多个窗口，比如slideWindowAssigner。</li>
+<li>如果这个窗口是一个可merge窗口，例如session窗口，那么就会进行和原有窗口的合并和状态的更新</li>
+</ol>
+<h3 id="窗口merge原理"><a href="#窗口merge原理" class="headerlink" title="窗口merge原理"></a>窗口merge原理</h3><p><img src="http://or0igopk2.bkt.clouddn.com/18-1-7/74574325.jpg" alt=""></p>
+<ol>
+<li>首先取出之前的所有未清除的窗口，和新分配到的窗口做一次merge，有重叠部分则新生成大的窗口</li>
+<li>将各个小窗口的真实数据merge到合并后的大窗口</li>
+<li>注册大窗口的清理时间触发器，清理原先子窗口的清理时间触发器</li>
+</ol>
+<p>窗口merge完之后，则会通过<code>triggerContext#OnElement</code>方法去进行判断是否能触发计算，触发方式如前文分析wartermark的那样，就是通过wartermark来判断这个窗口是否可以进行计算</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> TriggerResult <span class="title">onElement</span><span class="params">(Object element, <span class="keyword">long</span> timestamp, TimeWindow window, TriggerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">	<span class="keyword">if</span> (window.maxTimestamp() &lt;= ctx.getCurrentWatermark()) &#123;</div><div class="line">		<span class="comment">// if the watermark is already past the window fire immediately</span></div><div class="line">		<span class="keyword">return</span> TriggerResult.FIRE;</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		ctx.registerEventTimeTimer(window.maxTimestamp());</div><div class="line">		<span class="keyword">return</span> TriggerResult.CONTINUE;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果不能触发计算，我们看到其实他是将<code>window.maxTimestamp</code>注册到了<code>eventTimeQueue</code>中, 这里我们先记一下，后文会提到他的作用。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>到这里windowOperator接收到一个<code>StreamRecord</code>元素的处理逻辑已经结束了，如果窗口不是可merge类型的除了不做窗口merge，其他的操作也是大同小异，到这里也许你会有几个疑问(其实是我自己看代码的一些疑问：)</p>
+<ol>
+<li>如果我设置了allowLateness会对我们的计算结果产生什么样的影响呢？</li>
+<li>我是用<code>apply()</code>,<code>process()</code>函数或者<code>reduce()</code>这种聚合函数对于window的<code>cost</code>代价有多大的差别？</li>
+</ol>
+<h3 id="问题一"><a href="#问题一" class="headerlink" title="问题一"></a>问题一</h3><p>上文中提到的在处理元素的最后会注册一个窗口cleanupTimer，那么这个时间是多少呢? <code>window.maxTimestamp() + allowedLateness;</code>  所以我们看到一个窗口存在时长是水位线经过<code>window的最大时间+allowLateness</code>的时间，因此当水位线大于窗口最大时间后就会触发计算，而计算之后状态不会清空，会保留<code>allowedLateness</code>的时长，而此时窗口状态还在保留，所以<strong>上游有晚到的数据来一条就会触发一次该窗口的计算</strong>，而且每次计算的数据都是该窗口的全量数据，所以业务方要慎用，或者下游要做好相应的去重或更新措施，否则可能会造成结果的不准确</p>
+<h3 id="问题二"><a href="#问题二" class="headerlink" title="问题二"></a>问题二</h3><p>不同的函数最终影响的其实是我们最终window保存数据的state的形式有<code>ListState</code>，也有<code>reducingState</code>…,最终影响了rocksdb和checkpoint的大小，不过肯定是能用聚合还是用聚合函数比较好</p>
+<h2 id="waterMark"><a href="#waterMark" class="headerlink" title="waterMark"></a>waterMark</h2><p>当元素来的是一个watermark，window Operator又会以怎样的逻辑去处理呢?</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleWatermark</span><span class="params">(Watermark watermark)</span> </span>&#123;</div><div class="line">	<span class="keyword">try</span> &#123;</div><div class="line">		<span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">			lastEmittedWatermark = watermark.getTimestamp();</div><div class="line">			operator.processWatermark(watermark);</div><div class="line">		&#125;</div><div class="line">	&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"Exception occurred while processing valve output watermark: "</span>, e);		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里我们将关注到开篇提到的<code>internalTimeService</code>,</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">advanceWatermark</span><span class="params">(<span class="keyword">long</span> time)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">	currentWatermark = time;</div><div class="line"></div><div class="line">	InternalTimer&lt;K, N&gt; timer;</div><div class="line"></div><div class="line">	<span class="keyword">while</span> ((timer = eventTimeTimersQueue.peek()) != <span class="keyword">null</span> &amp;&amp; timer.getTimestamp() &lt;= time) &#123;</div><div class="line"></div><div class="line">		Set&lt;InternalTimer&lt;K, N&gt;&gt; timerSet = getEventTimeTimerSetForTimer(timer);</div><div class="line">		timerSet.remove(timer);</div><div class="line">		eventTimeTimersQueue.remove();</div><div class="line"></div><div class="line">		keyContext.setCurrentKey(timer.getKey());</div><div class="line">		triggerTarget.onEventTime(timer);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="watermark元素处理逻辑"><a href="#watermark元素处理逻辑" class="headerlink" title="watermark元素处理逻辑"></a>watermark元素处理逻辑</h3><p><img src="http://or0igopk2.bkt.clouddn.com/18-1-7/87202276.jpg" alt=""></p>
+<ol>
+<li>当流元素是watermark时主要处理逻辑集中在<code>internaltimerservice</code>上</li>
+<li>如果<code>eventTimeTimersQueue</code>这个优先级队列中最早的时间低于了水位线，那么就会取出同一时刻的所有key的timer进行计算</li>
+<li>处理可能意味着窗口的计算触发或者某些窗口的清理</li>
+</ol>
+<p>以上便是flink对于窗口的实现逻辑。</p>
 
       
     </div>
@@ -479,7 +488,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/akka/" rel="tag"># akka</a>
+            <a href="/tags/Flink/" rel="tag"># Flink</a>
           
         </div>
       
@@ -492,8 +501,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/ArrayDeque实现源码分析.html" rel="next" title="ArrayDeque源码分析">
-                <i class="fa fa-chevron-left"></i> ArrayDeque源码分析
+              <a href="/why-actor-programming-model.html" rel="next" title="为什么现代系统架构需要一个新的编程模型 actor编程模型">
+                <i class="fa fa-chevron-left"></i> 为什么现代系统架构需要一个新的编程模型 actor编程模型
               </a>
             
           </div>
@@ -502,8 +511,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/Flink Window实现源码分析.html" rel="prev" title="flink中window实现的源码分析">
-                flink中window实现的源码分析 <i class="fa fa-chevron-right"></i>
+              <a href="/blog-collection.html" rel="prev" title="常阅读博客">
+                常阅读博客 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -588,7 +597,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -723,7 +732,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#封装所面临的挑战"><span class="nav-number">1.</span> <span class="nav-text">封装所面临的挑战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">1.1.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#现代计算机架构内存共享的问题"><span class="nav-number">2.</span> <span class="nav-text">现代计算机架构内存共享的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#小结-1"><span class="nav-number">2.1.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#调用栈的说明"><span class="nav-number">3.</span> <span class="nav-text">调用栈的说明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#window"><span class="nav-number">1.</span> <span class="nav-text">window</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#window的组件"><span class="nav-number">2.</span> <span class="nav-text">window的组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#streamRecord"><span class="nav-number">3.</span> <span class="nav-text">streamRecord</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#窗口merge原理"><span class="nav-number">3.1.</span> <span class="nav-text">窗口merge原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题一"><span class="nav-number">4.1.</span> <span class="nav-text">问题一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题二"><span class="nav-number">4.2.</span> <span class="nav-text">问题二</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#waterMark"><span class="nav-number">5.</span> <span class="nav-text">waterMark</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#watermark元素处理逻辑"><span class="nav-number">5.1.</span> <span class="nav-text">watermark元素处理逻辑</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -886,9 +895,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://www.aitozi.com/为什么现代系统架构需要一个新的编程模型--actor编程模型.html';
-          this.page.identifier = '为什么现代系统架构需要一个新的编程模型--actor编程模型.html';
-          this.page.title = '为什么现代系统架构需要一个新的编程模型 actor编程模型';
+          this.page.url = 'http://www.aitozi.com/flink-window-source-code-analyse.html';
+          this.page.identifier = 'flink-window-source-code-analyse.html';
+          this.page.title = 'flink中window实现的源码分析';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://aitozi.disqus.com/embed.js';
