@@ -2,16 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://www.aitozi.com/git-advance-tips-keeping-on-updating.html</loc>
+    <loc>http://www.aitozi.com/flink-timerservice-based-on-rocksdb-2.html</loc>
     
-    <lastmod>2019-03-16T03:44:32.000Z</lastmod>
+    <lastmod>2019-03-16T04:14:16.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.aitozi.com/flink-timerservice-based-on-rocksdb.html</loc>
+    
+    <lastmod>2019-03-16T04:10:06.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.aitozi.com/flink-network-feature.html</loc>
+    
+    <lastmod>2019-03-16T04:06:26.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.aitozi.com/maven-noclassdeffounderror.html</loc>
     
-    <lastmod>2019-03-15T15:26:43.000Z</lastmod>
+    <lastmod>2019-03-16T03:53:02.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.aitozi.com/git-advance-tips-keeping-on-updating.html</loc>
+    
+    <lastmod>2019-03-16T03:52:16.000Z</lastmod>
     
   </url>
   
