@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.aitozi.com/about/index.html</loc>
+    
+    <lastmod>2019-03-30T02:06:35.633Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.aitozi.com/flink-sql-tutorial.html</loc>
     
-    <lastmod>2019-03-25T15:30:32.000Z</lastmod>
+    <lastmod>2019-03-26T01:51:33.000Z</lastmod>
     
   </url>
   
@@ -145,13 +152,6 @@
     <loc>http://www.aitozi.com/flink-jobgraph-generate.html</loc>
     
     <lastmod>2018-05-27T12:15:46.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.aitozi.com/about/index.html</loc>
-    
-    <lastmod>2018-04-12T08:10:33.000Z</lastmod>
     
   </url>
   

@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+
+    
+    
+  <url>
+    <loc>http://www.aitozi.com/flink-sql-tutorial.html</loc>
+    <lastmod>2019-03-26T01:51:33.000Z</lastmod>
+    <data>
+        <display>
+        <title>flink sql与calcite</title>
+        <pubTime>2019-03-25T08:45:30.000Z</pubTime>
+        
+        <tag>Flink</tag>
+         
+        <tag>Calcite</tag>
+         
+         
+           
+             
+              <breadCrumb title="源码解析" url="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/blog-collection.html</loc>
+    <lastmod>2019-03-25T08:43:21.000Z</lastmod>
+    <data>
+        <display>
+        <title>常阅读博客</title>
+        <pubTime>2018-01-23T01:58:30.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="杂七杂八" url="http://www.aitozi.com/categories/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/flink-timerservice-based-on-rocksdb-2.html</loc>
+    <lastmod>2019-03-16T04:43:21.000Z</lastmod>
+    <data>
+        <display>
+        <title>下篇·flink基于rocksdb的timerService</title>
+        <pubTime>2019-03-16T04:13:03.000Z</pubTime>
+        
+        <tag>Flink</tag>
+         
+         
+           
+             
+              <breadCrumb title="源码分析" url="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/flink-timerservice-based-on-rocksdb.html</loc>
+    <lastmod>2019-03-16T04:36:28.000Z</lastmod>
+    <data>
+        <display>
+        <title>上篇·flink基于rocksdb的timerService</title>
+        <pubTime>2019-03-16T04:08:03.000Z</pubTime>
+        
+        <tag>Flink</tag>
+         
+         
+           
+             
+              <breadCrumb title="源码分析" url="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/flink-network-feature.html</loc>
+    <lastmod>2019-03-16T04:06:26.000Z</lastmod>
+    <data>
+        <display>
+        <title>flink网络传输的前世今生</title>
+        <pubTime>2019-03-16T03:57:03.000Z</pubTime>
+        
+        <tag>Flink</tag>
+         
+        <tag>Netty</tag>
+         
+         
+           
+             
+              <breadCrumb title="源码分析" url="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/maven-noclassdeffounderror.html</loc>
+    <lastmod>2019-03-16T03:53:02.000Z</lastmod>
+    <data>
+        <display>
+        <title>maven java.lang.NoClassDefFoundError with provided scope</title>
+        <pubTime>2019-03-15T15:12:03.000Z</pubTime>
+        
+        <tag>Maven</tag>
+         
+         
+           
+             
+              <breadCrumb title="问题排查" url="http://www.aitozi.com/categories/%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/git-advance-tips-keeping-on-updating.html</loc>
+    <lastmod>2019-03-16T03:52:16.000Z</lastmod>
+    <data>
+        <display>
+        <title>git常用命令大全</title>
+        <pubTime>2019-03-16T03:40:03.000Z</pubTime>
+        
+        <tag>Git</tag>
+         
+         
+           
+             
+              <breadCrumb title="编程工具" url="http://www.aitozi.com/categories/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/2019-flag.html</loc>
+    <lastmod>2019-03-14T17:25:37.000Z</lastmod>
+    <data>
+        <display>
+        <title>to be or not to be in 2019</title>
+        <pubTime>2019-03-14T17:25:03.000Z</pubTime>
+        
+        <tag>flag</tag>
+         
+         
+           
+             
+              <breadCrumb title="杂七杂八" url="http://www.aitozi.com/categories/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/string-stringbuilder-stringbuffer.html</loc>
+    <lastmod>2019-03-14T17:09:57.000Z</lastmod>
+    <data>
+        <display>
+        <title>String,StringBuffer,StringBuilder的区别</title>
+        <pubTime>2018-08-27T16:13:48.000Z</pubTime>
+        
+        <tag>jdk</tag>
+         
+         
+           
+             
+              <breadCrumb title="源码分析" url="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/why-actor-programming-model.html</loc>
+    <lastmod>2019-03-14T17:07:29.000Z</lastmod>
+    <data>
+        <display>
+        <title>为什么现代系统架构需要一个新的编程模型 actor编程模型</title>
+        <pubTime>2017-12-17T13:32:20.000Z</pubTime>
+        
+        <tag>akka</tag>
+         
+         
+           
+             
+              <breadCrumb title="深度好文" url="http://www.aitozi.com/categories/%E6%B7%B1%E5%BA%A6%E5%A5%BD%E6%96%87/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/rocksdb-wiki.html</loc>
+    <lastmod>2019-03-14T17:07:11.000Z</lastmod>
+    <data>
+        <display>
+        <title>rocksdb概念简介</title>
+        <pubTime>2018-08-23T15:20:44.000Z</pubTime>
+        
+        <tag>RocksDB</tag>
+         
+         
+           
+             
+              <breadCrumb title="刨根问底" url="http://www.aitozi.com/categories/%E5%88%A8%E6%A0%B9%E9%97%AE%E5%BA%95/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/dig-protobuf.html</loc>
+    <lastmod>2019-03-14T17:06:49.000Z</lastmod>
+    <data>
+        <display>
+        <title>Protobuf深入理解</title>
+        <pubTime>2018-07-28T15:28:01.000Z</pubTime>
+        
+        <tag>protobuf</tag>
+         
+         
+           
+             
+              <breadCrumb title="刨根问底" url="http://www.aitozi.com/categories/%E5%88%A8%E6%A0%B9%E9%97%AE%E5%BA%95/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/java-serialization.html</loc>
+    <lastmod>2019-03-14T17:06:29.000Z</lastmod>
+    <data>
+        <display>
+        <title>Java序列化拾掇</title>
+        <pubTime>2018-07-27T16:51:18.000Z</pubTime>
+        
+        <tag>serialization</tag>
+         
+         
+           
+             
+              <breadCrumb title="刨根问底" url="http://www.aitozi.com/categories/%E5%88%A8%E6%A0%B9%E9%97%AE%E5%BA%95/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/flink-watermark.html</loc>
+    <lastmod>2019-03-14T17:05:18.000Z</lastmod>
+    <data>
+        <display>
+        <title>flink-watermark</title>
+        <pubTime>2017-09-10T07:59:23.000Z</pubTime>
+        
+        <tag>Flink</tag>
+         
+         
+           
+             
+              <breadCrumb title="源码分析" url="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/flink-kafka-exactly-once.html</loc>
+    <lastmod>2019-03-14T17:04:58.000Z</lastmod>
+    <data>
+        <display>
+        <title>上篇·flink 1.4利用kafka0.11实现完整的一致性语义</title>
+        <pubTime>2018-03-11T14:29:44.000Z</pubTime>
+        
+        <tag>Flink</tag>
+         
+        <tag>Kafka</tag>
+         
+         
+           
+             
+              <breadCrumb title="源码分析" url="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/flink-cep-paper.html</loc>
+    <lastmod>2019-03-14T17:04:45.000Z</lastmod>
+    <data>
+        <display>
+        <title>flink-cep-paper</title>
+        <pubTime>2018-02-25T12:19:15.000Z</pubTime>
+        
+        <tag>Flink</tag>
+         
+        <tag>CEP</tag>
+         
+         
+           
+             
+              <breadCrumb title="论文" url="http://www.aitozi.com/categories/%E8%AE%BA%E6%96%87/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/flink-cep-code.html</loc>
+    <lastmod>2019-03-14T17:03:52.000Z</lastmod>
+    <data>
+        <display>
+        <title>flink cep源码分析</title>
+        <pubTime>2018-05-25T13:54:23.000Z</pubTime>
+        
+        <tag>Flink</tag>
+         
+        <tag>CEP</tag>
+         
+         
+           
+             
+              <breadCrumb title="源码分析" url="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/arraydequeue-source-code.html</loc>
+    <lastmod>2019-03-14T17:00:00.000Z</lastmod>
+    <data>
+        <display>
+        <title>ArrayDeque源码分析</title>
+        <pubTime>2017-11-24T07:32:23.000Z</pubTime>
+        
+        <tag>jdk</tag>
+         
+         
+           
+             
+              <breadCrumb title="源码分析" url="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/advance-maven-shade-plugin.html</loc>
+    <lastmod>2019-03-14T16:58:55.000Z</lastmod>
+    <data>
+        <display>
+        <title>maven-shade-plugin插件高级用法</title>
+        <pubTime>2018-04-10T14:06:03.000Z</pubTime>
+        
+        <tag>Maven</tag>
+         
+         
+           
+             
+              <breadCrumb title="编程工具" url="http://www.aitozi.com/categories/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/flink-state.html</loc>
+    <lastmod>2018-08-05T04:42:13.000Z</lastmod>
+    <data>
+        <display>
+        <title>flink中状态实现的深入理解</title>
+        <pubTime>2018-08-04T08:35:29.000Z</pubTime>
+        
+        <tag>Flink</tag>
+         
+         
+           
+             
+              <breadCrumb title="源码分析" url="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/flink-jobgraph-generate.html</loc>
+    <lastmod>2018-05-27T12:15:46.000Z</lastmod>
+    <data>
+        <display>
+        <title>flink中jobgraph的生成逻辑</title>
+        <pubTime>2018-05-26T10:43:23.000Z</pubTime>
+        
+        <tag>Flink</tag>
+         
+         
+           
+             
+              <breadCrumb title="源码分析" url="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/flink-streamGraph.html</loc>
+    <lastmod>2018-04-10T23:19:36.000Z</lastmod>
+    <data>
+        <display>
+        <title>flink图流转之StreamGraph</title>
+        <pubTime>2018-04-10T23:13:58.000Z</pubTime>
+        
+        <tag>Flink</tag>
+         
+         
+           
+             
+              <breadCrumb title="源码分析" url="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/flink-backpressure-sample.html</loc>
+    <lastmod>2018-04-10T23:08:08.000Z</lastmod>
+    <data>
+        <display>
+        <title>flink-ui中的反压采样</title>
+        <pubTime>2018-04-10T23:02:51.000Z</pubTime>
+        
+        <tag>Flink</tag>
+         
+         
+           
+             
+              <breadCrumb title="源码分析" url="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/flink-window-source-code-analyse.html</loc>
+    <lastmod>2018-01-07T03:17:05.000Z</lastmod>
+    <data>
+        <display>
+        <title>flink中window实现的源码分析</title>
+        <pubTime>2018-01-06T18:05:43.000Z</pubTime>
+        
+        <tag>Flink</tag>
+         
+         
+           
+             
+              <breadCrumb title="源码分析" url="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/flink-latency-tracker.html</loc>
+    <lastmod>2017-09-10T08:03:51.000Z</lastmod>
+    <data>
+        <display>
+        <title>flink-latency-tracker</title>
+        <pubTime>2017-09-08T16:47:35.000Z</pubTime>
+        
+        <tag>Flink</tag>
+         
+         
+           
+             
+              <breadCrumb title="源码分析" url="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/hello-world.html</loc>
+    <lastmod>2017-09-10T07:02:25.000Z</lastmod>
+    <data>
+        <display>
+        <title>Hexo tutorial</title>
+        <pubTime>2016-10-11T16:47:35.000Z</pubTime>
+        
+        <tag>hexo</tag>
+         
+         
+           
+             
+              <breadCrumb title="常用命令" url="http://www.aitozi.com/categories/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+    
+</urlset>
