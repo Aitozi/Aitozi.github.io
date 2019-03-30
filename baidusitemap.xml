@@ -3,6 +3,26 @@
 
 
     
+  <url>
+    <loc>http://www.aitozi.com/BinaryRow-implement.html</loc>
+    <lastmod>2019-03-30T17:55:26.622Z</lastmod>
+    <data>
+        <display>
+        <title>Binary Row数据结构的实现</title>
+        <pubTime>2019-03-30T17:53:46.000Z</pubTime>
+        
+        <tag>Blink</tag>
+         
+         
+           
+             
+              <breadCrumb title="源码解析" url="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
     
   <url>
     <loc>http://www.aitozi.com/flink-sql-tutorial.html</loc>
@@ -316,9 +336,9 @@
         <title>flink-cep-paper</title>
         <pubTime>2018-02-25T12:19:15.000Z</pubTime>
         
-        <tag>Flink</tag>
-         
         <tag>CEP</tag>
+         
+        <tag>Flink</tag>
          
          
            
@@ -338,9 +358,9 @@
         <title>flink cep源码分析</title>
         <pubTime>2018-05-25T13:54:23.000Z</pubTime>
         
-        <tag>Flink</tag>
-         
         <tag>CEP</tag>
+         
+        <tag>Flink</tag>
          
          
            
