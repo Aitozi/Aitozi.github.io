@@ -3,30 +3,10 @@
 
 
     
-  <url>
-    <loc>http://www.aitozi.com/BinaryRow-implement.html</loc>
-    <lastmod>2019-03-30T17:55:26.622Z</lastmod>
-    <data>
-        <display>
-        <title>Binary Row数据结构的实现</title>
-        <pubTime>2019-03-30T17:53:46.000Z</pubTime>
-        
-        <tag>Blink</tag>
-         
-         
-           
-             
-              <breadCrumb title="源码解析" url="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
     
   <url>
     <loc>http://www.aitozi.com/flink-sql-tutorial.html</loc>
-    <lastmod>2019-03-26T01:51:33.000Z</lastmod>
+    <lastmod>2019-03-31T01:06:40.174Z</lastmod>
     <data>
         <display>
         <title>flink sql与calcite</title>
@@ -39,7 +19,27 @@
          
            
              
-              <breadCrumb title="源码解析" url="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+              <breadCrumb title="源码分析" url="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.aitozi.com/BinaryRow-implement.html</loc>
+    <lastmod>2019-03-31T01:05:55.866Z</lastmod>
+    <data>
+        <display>
+        <title>Binary Row数据结构的实现</title>
+        <pubTime>2019-03-30T17:53:46.000Z</pubTime>
+        
+        <tag>Blink</tag>
+         
+         
+           
+             
+              <breadCrumb title="源码分析" url="http://www.aitozi.com/categories/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
           
         </display>
     </data>
