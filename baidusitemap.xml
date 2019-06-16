@@ -4,6 +4,27 @@
 
     
   <url>
+    <loc>http://www.aitozi.com/A-Deep-Dive-into-Flink's-Network-Stack.html</loc>
+    <lastmod>2019-06-16T16:39:52.033Z</lastmod>
+    <data>
+        <display>
+        <title>A Deep-Dive into Flink's Network Stack</title>
+        <pubTime>2019-06-15T20:47:03.000Z</pubTime>
+        
+        <tag>Flink</tag>
+         
+         
+           
+             
+              <breadCrumb title="深度好文" url="http://www.aitozi.com/categories/%E6%B7%B1%E5%BA%A6%E5%A5%BD%E6%96%87/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+    
+  <url>
     <loc>http://www.aitozi.com/jmh-usage.html</loc>
     <lastmod>2019-04-14T15:38:01.797Z</lastmod>
     <data>
@@ -26,7 +47,6 @@
     </data>
     </url>
 
-    
     
   <url>
     <loc>http://www.aitozi.com/flink-sql-tutorial.html</loc>

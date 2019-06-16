@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://www.aitozi.com/jmh-usage.html</loc>
+    <loc>http://www.aitozi.com/A-Deep-Dive-into-Flink's-Network-Stack.html</loc>
     
-    <lastmod>2019-04-14T15:38:01.797Z</lastmod>
+    <lastmod>2019-06-16T16:39:52.033Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.aitozi.com/about/index.html</loc>
     
-    <lastmod>2019-03-31T02:41:51.205Z</lastmod>
+    <lastmod>2019-04-16T07:56:12.789Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.aitozi.com/jmh-usage.html</loc>
+    
+    <lastmod>2019-04-14T15:38:01.797Z</lastmod>
     
   </url>
   
