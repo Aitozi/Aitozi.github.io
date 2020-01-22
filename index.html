@@ -1,1 +1,2557 @@
-<!-- build time:Wed Jan 22 2020 17:55:48 GMT+0800 (China Standard Time) --><!DOCTYPE html><html class="theme-next mist use-motion" lang="zh-Hans"><head><meta name="generator" content="Hexo 3.8.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="google-site-verification" content="DO25iswIsaKZ5NZbYreVDjWtBKTyo1yFAROjSRcJD64"><meta name="theme-color" content="#222"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css"><link href="//fonts.loli.net/css?family=Lato:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css"><link href="//cdn.bootcss.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css"><link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css"><meta name="keywords" content="Hexo, NexT"><link rel="alternate" href="/atom.xml" title="Aitozi" type="application/atom+xml"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2"><meta name="description" content="What makes a difference? Persistence!"><meta property="og:type" content="website"><meta property="og:title" content="Aitozi"><meta property="og:url" content="http://www.aitozi.com/index.html"><meta property="og:site_name" content="Aitozi"><meta property="og:description" content="What makes a difference? Persistence!"><meta property="og:locale" content="zh-Hans"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Aitozi"><meta name="twitter:description" content="What makes a difference? Persistence!"><script type="text/javascript" id="hexo.configurations">var NexT=window.NexT||{},CONFIG={root:"/",scheme:"Mist",sidebar:{position:"left",display:"post",offset:12,offset_float:12,b2t:!1,scrollpercent:!1,onmobile:!1},fancybox:!0,tabs:!0,motion:!0,duoshuo:{userId:"0",author:"博主"},algolia:{applicationID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}}}</script><link rel="canonical" href="http://www.aitozi.com/"><title>Aitozi</title></head><body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans"><div class="container sidebar-position-left page-home"><div class="headband"></div><header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-wrapper"><div class="site-meta"><div class="custom-logo-site-title"><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">Aitozi</span> <span class="logo-line-after"><i></i></span></a></div><h1 class="site-subtitle" itemprop="description"></h1></div><div class="site-nav-toggle"><button><span class="btn-bar"></span> <span class="btn-bar"></span> <span class="btn-bar"></span></button></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i><br>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i><br>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i><br>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i><br>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i><br>关于</a></li></ul></nav></div></header><main id="main" class="main"><div class="main-inner"><div class="content-wrap"><div id="content" class="content"><section id="posts" class="posts-expand"><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><div class="post-block"><link itemprop="mainEntityOfPage" href="http://www.aitozi.com/golang-strong-static-type.html"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="aitozi"><meta itemprop="description" content><meta itemprop="image" content="/images/avatar.png"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Aitozi"></span><header class="post-header"><h2 class="post-title" itemprop="name headline"><a class="post-title-link" href="/golang-strong-static-type.html" itemprop="url">理解golang的强静态类型</a></h2><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i> </span><span class="post-meta-item-text">发表于</span> <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-22T17:54:03+08:00">2020-01-22 </time></span><span class="post-category"><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-folder-o"></i> </span><span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/编程语言/" itemprop="url" rel="index"><span itemprop="name">编程语言</span> </a></span></span><span class="post-comments-count"><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-comment-o"></i> </span><a href="/golang-strong-static-type.html#comments" itemprop="discussionUrl"><span class="post-comments-count disqus-comment-count" data-disqus-identifier="golang-strong-static-type.html" itemprop="commentCount"></span> </a><span class="post-meta-divider">|</span></span><div class="post-wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i> </span><span class="post-meta-item-text">字数统计</span> <span title="字数统计">1.6k </span><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-clock-o"></i> </span><span class="post-meta-item-text">阅读时长</span> <span title="阅读时长">5</span></div></div></header><div class="post-body" itemprop="articleBody"><p>&lt;!--more--&gt;</p><h2>理解golang的强，静态类型</h2><p>关于弱类型，强类型，动态类型，静态类型语言的区别，在这里补充一下</p><h3>Program Errors</h3><ul><li><em>trapped errors</em>。导致程序终止执行，如除0，Java中数组越界访问</li><li><em>untrapped errors</em>。 出错后继续执行，但可能出现任意行为。如C里的缓冲区溢出、Jump到错误地址</li></ul><h3>Forbidden Behaviours</h3><p>语言设计时，可以定义一组<em>forbidden behaviors</em>. 它必须包括所有untrapped errors, 但可能包含trapped errors.</p><h3>Well behaved、ill behaved</h3><ul><li><em>well behaved</em>: 如果程序执行不可能出现forbidden behaviors, 则为<em>well behaved</em>。</li><li><em>ill behaved: 否则为ill behaved...</em></li></ul><p>基于上面的概念再讨论强弱类型，静态和动态类型</p><h3>强弱类型</h3><ul><li>强类型strongly typed: 如果一种语言的所有程序都是well behaved——即不可能出现forbidden behaviors，则该语言为strongly typed。</li><li>弱类型weakly typed: 否则为weakly typed。比如C语言的缓冲区溢出，属于trapped errors，即属于forbidden behaviors..故C是弱类型</li></ul><h3>动态、静态类型</h3><ul><li>静态类型 statically: 如果在编译时拒绝ill behaved程序，则是statically typed;</li><li>动态类型dynamiclly: 如果在运行时拒绝ill behaviors, 则是dynamiclly typed。</li></ul><h3>误区</h3><p>大家觉得C语言要写int a, int b之类的，Python不用写(可以直接写a, b)，所以C是静态，Python是动态。这么理解是不够准确的。譬如Ocaml是静态类型的，但是也可以不用明确地写出来。 Ocaml是静态隐式类型</p><p>静态类型可以分为两种</p><ul><li>如果类型是语言语法的一部分，在是explicitly typed显式类型；</li><li>如果类型通过编译时推导，是implicity typed隐式类型, 比如ML和Haskell</li></ul><h3>例子</h3><p>无类型： 汇编 弱类型、静态类型 ： C/C++ 弱类型、动态类型检查： Perl/PHP 强类型、静态类型检查 ：Java/C# 强类型、动态类型检查 ：Python, Scheme 静态显式类型 ：Java/C 静态隐式类型 ：Ocaml, Haskell</p><p>简化理解</p><ol><li>动态类型语言：意思就是类型的检查是在运行时做的。</li><li>静态类型语言：类型判断是在运行前，在编译期进行判断。</li><li>强类型：一旦一个变量被指定了某个数据类型，如果不经过强制转换，那么它就永远是这个数据类型了。</li><li>弱类型：一个变量可以赋不同数据类型的值</li></ol><p>那么go语言为什么选择的是强静态类型语言的实现呢？</p><p>静态类型的优点：</p><ol><li>IDE聪明的提示，因为静态类型的语言的类型是确定的，所以编辑器可以知道当前的变量有哪些属性和方法。</li><li>编译的时候能够发现类型不匹配的错误，而动态语言至多只能发现语法错误。</li><li>我们在开发过程中明确了某些变量在程序中扮演了什么角色，这是开发可靠性高的程序所必须的。</li></ol><p>静态类型的缺点：</p><ol><li>因为要定义数据类型，程序的规模也变得很大，编程应该考虑程序的本质，而不是把精力集中于一个个数据类型的定义。</li><li>缺乏灵活性，因为一个变量,只能赋值某种类型的对象。明显当程序需要扩展的时候，这会成为枷锁，当然可以通过继承和接口实现，这会陷入另一个深渊，你总会去纠结复杂的继承关系。</li></ol><p>动态类型的优点：</p><ol><li>相反于静态类型，编程完全集中于程序的设计的本质，代码的简洁度也会提高，开发效率可能会数倍的提高。</li><li>因为程序的规模降低， 程序的可理解性也会提高。（静态类型的拥护者可能会认为，少了类型信息，程序变的不可读了。这里认为读程序应该集中在程序的本质上）</li></ol><p>动态类型的缺点：</p><ol><li>程序执行速度慢，因为动态类型的语言，类型检查是在运行期做的。(随着计算机性能的提高，执行速度不是什么严重的问题了，关键是生产力提高了)</li><li>不执行就检测不出错误。</li></ol><p>对于开发大型系统，静态强类型语言会优于动态弱类型语言，代码的可读性和可维护性上都会更强，采用静态强类型语言可以避免程序员在动态语言中无意犯下的绝大多数错误。Go 语言将静态语言的安全性和高效性与动态语言的易开发性进行有机结合，达到完美平衡.(GO语言是一门类型安全(强类型)和内存安全的编程语言。)</p><p>go支持这样定义变量</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var abc = 10</span><br></pre></td></tr></table></figure><p></p><p>让golang看上去有点像动态类型语言，但golang实际上时强类型的，前面的定义会被自动推导出是int类型, 所以Go是一门写起来像动态语言，有着动态语言开发效率的静态语言。</p><h3>快速构建</h3><p>关于golang的快速构建 <a href="https://talks.golang.org/2012/splash.article" target="_blank" rel="noopener">https://talks.golang.org/2012/splash.article</a></p><p>动态语言将快速编译作为自身的一大亮点，像 C++ 那样的静态语言一般都有非常漫长的 编译和链接工作。而同样作为静态语言的 Go 语言，通过自身优良的构建机制，成功地 去除了这个弊端，使得程序的构建过程变得微不足道，拥有了像脚本语言和动态语言那样 的高效开发的能力。 Go 语言中另一个非常重要的特性就是它的构建速度（编译和链接到机器代码的速度），一般情况下构建一个程序的时间只需要数百毫秒到几秒。C 语言中“头文件”的概念却导致越来越多因为依赖关系而使得构建一个大型的项目需要长达几个小时的时间，而Go 语言采用包模型这个模型通过严格的依赖关系检查机制来加快程序构建的速度，提供了非常好的可量测性</p></div><footer class="post-footer"><div class="post-eof"></div></footer></div></article><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><div class="post-block"><link itemprop="mainEntityOfPage" href="http://www.aitozi.com/golang-specific-synax.html"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="aitozi"><meta itemprop="description" content><meta itemprop="image" content="/images/avatar.png"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Aitozi"></span><header class="post-header"><h2 class="post-title" itemprop="name headline"><a class="post-title-link" href="/golang-specific-synax.html" itemprop="url">Golang中的核心功能</a></h2><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i> </span><span class="post-meta-item-text">发表于</span> <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-22T17:48:03+08:00">2020-01-22 </time></span><span class="post-category"><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-folder-o"></i> </span><span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/编程语言/" itemprop="url" rel="index"><span itemprop="name">编程语言</span> </a></span></span><span class="post-comments-count"><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-comment-o"></i> </span><a href="/golang-specific-synax.html#comments" itemprop="discussionUrl"><span class="post-comments-count disqus-comment-count" data-disqus-identifier="golang-specific-synax.html" itemprop="commentCount"></span> </a><span class="post-meta-divider">|</span></span><div class="post-wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i> </span><span class="post-meta-item-text">字数统计</span> <span title="字数统计">8 </span><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-clock-o"></i> </span><span class="post-meta-item-text">阅读时长</span> <span title="阅读时长">1</span></div></div></header><div class="post-body" itemprop="articleBody"><p>&lt;!--more--&gt;</p><p>https://juejin.im/post/5c9c64596fb9a070c40ade78</p></div><footer class="post-footer"><div class="post-eof"></div></footer></div></article><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><div class="post-block"><link itemprop="mainEntityOfPage" href="http://www.aitozi.com/golang-gc.html"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="aitozi"><meta itemprop="description" content><meta itemprop="image" content="/images/avatar.png"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Aitozi"></span><header class="post-header"><h2 class="post-title" itemprop="name headline"><a class="post-title-link" href="/golang-gc.html" itemprop="url">Golang中的GC</a></h2><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i> </span><span class="post-meta-item-text">发表于</span> <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-22T17:47:03+08:00">2020-01-22 </time></span><span class="post-category"><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-folder-o"></i> </span><span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/编程语言/" itemprop="url" rel="index"><span itemprop="name">编程语言</span> </a></span></span><span class="post-comments-count"><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-comment-o"></i> </span><a href="/golang-gc.html#comments" itemprop="discussionUrl"><span class="post-comments-count disqus-comment-count" data-disqus-identifier="golang-gc.html" itemprop="commentCount"></span> </a><span class="post-meta-divider">|</span></span><div class="post-wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i> </span><span class="post-meta-item-text">字数统计</span> <span title="字数统计">14 </span><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-clock-o"></i> </span><span class="post-meta-item-text">阅读时长</span> <span title="阅读时长">1</span></div></div></header><div class="post-body" itemprop="articleBody"><p>golang中的gc: https://github.com/qcrao/Go-Questions/blob/master/GC/GC.md</p></div><footer class="post-footer"><div class="post-eof"></div></footer></div></article><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><div class="post-block"><link itemprop="mainEntityOfPage" href="http://www.aitozi.com/blog-collection.html"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="aitozi"><meta itemprop="description" content><meta itemprop="image" content="/images/avatar.png"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Aitozi"></span><header class="post-header"><h2 class="post-title" itemprop="name headline"><a class="post-title-link" href="/blog-collection.html" itemprop="url">常阅读博客</a></h2><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i> </span><span class="post-meta-item-text">发表于</span> <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-22T09:58:30+08:00">2020-01-22 </time></span><span class="post-category"><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-folder-o"></i> </span><span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/杂七杂八/" itemprop="url" rel="index"><span itemprop="name">杂七杂八</span> </a></span></span><span class="post-comments-count"><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-comment-o"></i> </span><a href="/blog-collection.html#comments" itemprop="discussionUrl"><span class="post-comments-count disqus-comment-count" data-disqus-identifier="blog-collection.html" itemprop="commentCount"></span> </a><span class="post-meta-divider">|</span></span><div class="post-wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i> </span><span class="post-meta-item-text">字数统计</span> <span title="字数统计">175 </span><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-clock-o"></i> </span><span class="post-meta-item-text">阅读时长</span> <span title="阅读时长">1</span></div></div></header><div class="post-body" itemprop="articleBody"><p>[toc]</p><p>优秀可以常阅读汲取的博客</p><p>&lt;!-- more --&gt;</p><h2>java学习</h2><p>五月的仓颉: <a href="http://www.cnblogs.com/xrq730/p/5260294.html" target="_blank" rel="noopener">http://www.cnblogs.com/xrq730/p/5260294.html</a> hollischuang: <a href="http://www.hollischuang.com/" target="_blank" rel="noopener">http://www.hollischuang.com/</a> 死磕java: <a href="http://cmsblogs.com/" target="_blank" rel="noopener">http://cmsblogs.com/</a></p><h2>jvm</h2><p>阿里坤谷莫简豪 <a href="http://greenteajug.cn/" target="_blank" rel="noopener">http://greenteajug.cn/</a> 你假笨: <a href="http://lovestblog.cn" target="_blank" rel="noopener">http://lovestblog.cn</a> <a href="https://www.compressedrefs.com" target="_blank" rel="noopener">https://www.compressedrefs.com</a> RednaxelaFX: <a href="http://rednaxelafx.iteye.com/" target="_blank" rel="noopener">http://rednaxelafx.iteye.com/</a></p><h2>大数据</h2><p>阿里流计算工程师: <a href="http://www.cnblogs.com/fxjwind/" target="_blank" rel="noopener">http://www.cnblogs.com/fxjwind/</a> wuchong: <a href="http://wuchong.me/" target="_blank" rel="noopener">http://wuchong.me/</a> yuzhao: <a href="http://chenyuzhao.me/" target="_blank" rel="noopener">http://chenyuzhao.me/</a> vinoyang: <a href="http://blog.csdn.net/yanghua_kobe?viewmode=contents" target="_blank" rel="noopener">http://blog.csdn.net/yanghua_kobe?viewmode=contents</a> Imalds: <a href="http://blog.csdn.net/lmalds?viewmode=contents" target="_blank" rel="noopener">http://blog.csdn.net/lmalds?viewmode=contents</a> 林意群 <a href="http://blog.csdn.net/androidlushangderen" target="_blank" rel="noopener">http://blog.csdn.net/androidlushangderen</a> 宇宙湾: <a href="https://yuzhouwan.com" target="_blank" rel="noopener">https://yuzhouwan.com</a> <a href="http://www.jasongj.com/" target="_blank" rel="noopener">http://www.jasongj.com/</a> 张茄子: <a href="https://io-meter.com" target="_blank" rel="noopener">https://io-meter.com</a> matt: <a href="http://matt33.com" target="_blank" rel="noopener">http://matt33.com</a> coding-geek: <a href="http://coding-geek.com/" target="_blank" rel="noopener">http://coding-geek.com/</a> duruofei: <a href="http://armsword.com/" target="_blank" rel="noopener">http://armsword.com/</a> <a href="http://cmsblogs.com/" target="_blank" rel="noopener">http://cmsblogs.com/</a></p><h2>大神</h2><p>褚霸 <a href="http://blog.yufeng.info/" target="_blank" rel="noopener">http://blog.yufeng.info/</a></p><h2>Go</h2><p><a href="http://colobu.com/" target="_blank" rel="noopener">http://colobu.com/</a></p><p>https://changkun.de/</p><p>https://sanyuesha.com</p><h2>scala学习</h2><p><a href="http://hongjiang.info/scala/" target="_blank" rel="noopener">http://hongjiang.info/scala/</a></p><h2>面试</h2></div><footer class="post-footer"><div class="post-eof"></div></footer></div></article><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><div class="post-block"><link itemprop="mainEntityOfPage" href="http://www.aitozi.com/go-function-in-golang.html"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="aitozi"><meta itemprop="description" content><meta itemprop="image" content="/images/avatar.png"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Aitozi"></span><header class="post-header"><h2 class="post-title" itemprop="name headline"><a class="post-title-link" href="/go-function-in-golang.html" itemprop="url">Golang中的函数与方法</a></h2><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i> </span><span class="post-meta-item-text">发表于</span> <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-21T10:42:03+08:00">2020-01-21 </time></span><span class="post-category"><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-folder-o"></i> </span><span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/编程语言/" itemprop="url" rel="index"><span itemprop="name">编程语言</span> </a></span></span><span class="post-comments-count"><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-comment-o"></i> </span><a href="/go-function-in-golang.html#comments" itemprop="discussionUrl"><span class="post-comments-count disqus-comment-count" data-disqus-identifier="go-function-in-golang.html" itemprop="commentCount"></span> </a><span class="post-meta-divider">|</span></span><div class="post-wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i> </span><span class="post-meta-item-text">字数统计</span> <span title="字数统计">1.2k </span><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-clock-o"></i> </span><span class="post-meta-item-text">阅读时长</span> <span title="阅读时长">4</span></div></div></header><div class="post-body" itemprop="articleBody"><p>&lt;!--more--&gt;</p><h1>函数</h1><h3>函数返回多值</h3><p></p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">swap</span><span class="params">(x, y <span class="keyword">string</span>)</span> <span class="params">(<span class="keyword">string</span>, <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">   <span class="keyword">return</span> y, x</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">   a, b := swap(<span class="string">"Google"</span>, <span class="string">"Runoob"</span>)</span><br><span class="line">   fmt.Println(a, b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><h3>函数参数可以是值传递也可以是引用传递</h3><p>值传递：值传递是指在调用函数时将实际参数复制一份传递到函数中，这样在函数中如果对参数进行修改，将不会影响到实际参数。</p><p></p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 定义相互交换值的函数 */</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">swap</span><span class="params">(x, y <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">   <span class="keyword">var</span> temp <span class="keyword">int</span></span><br><span class="line"></span><br><span class="line">   temp = x <span class="comment">/* 保存 x 的值 */</span></span><br><span class="line">   x = y    <span class="comment">/* 将 y 值赋给 x */</span></span><br><span class="line">   y = temp <span class="comment">/* 将 temp 值赋给 y*/</span></span><br><span class="line">  </span><br><span class="line">   <span class="keyword">return</span> temp;</span><br><span class="line">&#125;</span><br><span class="line">swap(a, b)</span><br></pre></td></tr></table></figure><p></p><p>引用传递：引用传递是指在调用函数时将实际参数的地址传递到函数中，那么在函数中对参数所进行的修改，将影响到实际参数。</p><p></p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 定义交换值函数*/</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">swap</span><span class="params">(x *<span class="keyword">int</span>, y *<span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">   <span class="keyword">var</span> temp <span class="keyword">int</span></span><br><span class="line">   temp = *x    <span class="comment">/* 保持 x 地址上的值 */</span></span><br><span class="line">   *x = *y      <span class="comment">/* 将 y 值赋给 x */</span></span><br><span class="line">   *y = temp    <span class="comment">/* 将 temp 值赋给 y */</span></span><br><span class="line">&#125;</span><br><span class="line">swap(&amp;a, &amp;b) 传入的是a和b的值地址</span><br></pre></td></tr></table></figure><p></p><p>这两个取决于函数定义时的接受参数的类型是不是引用类型</p><h3>函数作为另一个函数的实参</h3><p></p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">   <span class="string">"fmt"</span></span><br><span class="line">   <span class="string">"math"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">   <span class="comment">/* 声明函数变量 */</span></span><br><span class="line">   getSquareRoot := <span class="function"><span class="keyword">func</span><span class="params">(x <span class="keyword">float64</span>)</span> <span class="title">float64</span></span> &#123;</span><br><span class="line">      <span class="keyword">return</span> math.Sqrt(x)</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* 使用函数 */</span></span><br><span class="line">   fmt.Println(getSquareRoot(<span class="number">9</span>))</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p>函数作为参数传递，实现回调</p><p></p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 声明一个函数类型</span></span><br><span class="line"><span class="keyword">type</span> cb <span class="function"><span class="keyword">func</span><span class="params">(<span class="keyword">int</span>)</span> <span class="title">int</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    testCallBack(<span class="number">1</span>, callBack) <span class="comment">// 这个是下面声明的callback函数</span></span><br><span class="line">    testCallBack(<span class="number">2</span>, <span class="function"><span class="keyword">func</span><span class="params">(x <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123; <span class="comment">// 类似java中的匿名函数</span></span><br><span class="line">        fmt.Printf(<span class="string">"我是回调，x：%d\n"</span>, x)</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">testCallBack</span><span class="params">(x <span class="keyword">int</span>, f cb)</span></span> &#123;</span><br><span class="line">    f(x)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">callBack</span><span class="params">(x <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"我是回调，x：%d\n"</span>, x)</span><br><span class="line">    <span class="keyword">return</span> x</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><h3>闭包</h3><p>Go 语言支持匿名函数，可作为闭包。匿名函数是一个&quot;内联&quot;语句或表达式。匿名函数的优越性在于可以直接使用函数内的变量，不必申明。</p><p>以下实例中，我们创建了函数 getSequence() ，返回另外一个函数。该函数的目的是在闭包中递增 i 变量，代码如下：</p><p></p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getSequence</span><span class="params">()</span> <span class="title">func</span><span class="params">()</span> <span class="title">int</span></span> &#123;</span><br><span class="line">   i:=<span class="number">0</span></span><br><span class="line">   <span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="title">int</span></span> &#123;</span><br><span class="line">      i+=<span class="number">1</span></span><br><span class="line">     <span class="keyword">return</span> i  </span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">   <span class="comment">/* nextNumber 为一个函数，函数 i 为 0 */</span></span><br><span class="line">   nextNumber := getSequence()  </span><br><span class="line"></span><br><span class="line">   <span class="comment">/* 调用 nextNumber 函数，i 变量自增 1 并返回 */</span></span><br><span class="line">   fmt.Println(nextNumber())</span><br><span class="line">   fmt.Println(nextNumber())</span><br><span class="line">   fmt.Println(nextNumber())</span><br><span class="line">   </span><br><span class="line">   <span class="comment">/* 创建新的函数 nextNumber1，并查看结果 */</span></span><br><span class="line">   nextNumber1 := getSequence()  </span><br><span class="line">   fmt.Println(nextNumber1())</span><br><span class="line">   fmt.Println(nextNumber1())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p>执行结果</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">1</span><br><span class="line">2</span><br></pre></td></tr></table></figure><p></p><h3>方法</h3><p>在Go 语言中同时有函数和方法，函数是指不属于任何结构体、类型的方法，也就是说，函数是没有接收这的；而方法是有接收者的，我们说的方法要么是属于一个结构体，要么是属于一个新定义的类型。而ava是面向对象的语言，其实只有方法，没有函数这一说，要类比的话，go中的函数可能类似于java中的静态方法，而go中的方法则类似于java中的成员方法。一个方法就是一个包含了接受者的函数，接受者可以是命名类型或者结构体类型的一个值或者是一个指针。所有给定类型的方法属于该类型的方法集。</p><p>语法格式如下：</p><p></p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(variable_name variable_data_type)</span> <span class="title">function_name</span><span class="params">()</span> [<span class="title">return_type</span>]</span>&#123;</span><br><span class="line">   <span class="comment">/* 函数体*/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p>方法的声明和函数类似，他们的区别是：方法在定义的时候，会在<code>func</code>和方法名之间增加一个参数，这个参数就是接收者，这样我们定义的这个方法就和接收者绑定在了一起，称之为这个接收者的方法。</p><p></p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">   <span class="string">"fmt"</span>  </span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 定义结构体 */</span></span><br><span class="line"><span class="keyword">type</span> Circle <span class="keyword">struct</span> &#123;</span><br><span class="line">  radius <span class="keyword">float64</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">var</span> c1 Circle</span><br><span class="line">  c1.radius = <span class="number">10.00</span></span><br><span class="line">  fmt.Println(<span class="string">"圆的面积 = "</span>, c1.getArea())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//该 method 属于 Circle 类型对象中的方法</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c Circle)</span> <span class="title">getArea</span><span class="params">()</span> <span class="title">float64</span></span> &#123;</span><br><span class="line">  <span class="comment">//c.radius 即为 Circle 类型对象中的属性</span></span><br><span class="line">  <span class="keyword">return</span> <span class="number">3.14</span> * c.radius * c.radius</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p>Go 没有面向对象，而我们知道常见的 Java。</p><p>C++ 等语言中，实现类的方法做法都是编译器隐式的给函数加一个 this 指针，而在 Go 里，这个 this 指针需要明确的申明出来，其实和其它 OO 语言并没有很大的区别。</p><p>在 C++ 中是这样的:</p><p></p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Circle &#123;</span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">float</span> <span class="title">getArea</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="number">3.14</span> * radius * radius;</span><br><span class="line">    &#125;</span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">float</span> radius;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 其中 getArea 经过编译器处理大致变为</span></span><br><span class="line"><span class="function"><span class="keyword">float</span> <span class="title">getArea</span><span class="params">(Circle *<span class="keyword">const</span> c)</span> </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p>在 Go 中则是如下:</p><p></p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c Circle)</span> <span class="title">getArea</span><span class="params">()</span> <span class="title">float64</span></span> &#123;</span><br><span class="line">  <span class="comment">//c.radius 即为 Circle 类型对象中的属性</span></span><br><span class="line">  <span class="keyword">return</span> <span class="number">3.14</span> * c.radius * c.radius</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p></div><footer class="post-footer"><div class="post-eof"></div></footer></div></article><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><div class="post-block"><link itemprop="mainEntityOfPage" href="http://www.aitozi.com/whats-the-point-of-our-live.html"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="aitozi"><meta itemprop="description" content><meta itemprop="image" content="/images/avatar.png"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Aitozi"></span><header class="post-header"><h2 class="post-title" itemprop="name headline"><a class="post-title-link" href="/whats-the-point-of-our-live.html" itemprop="url">人生的意义是什么？活着的意义是什么？</a></h2><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i> </span><span class="post-meta-item-text">发表于</span> <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-15T14:32:20+08:00">2019-09-15 </time></span><span class="post-category"><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-folder-o"></i> </span><span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/深度好文/" itemprop="url" rel="index"><span itemprop="name">深度好文</span> </a></span></span><span class="post-comments-count"><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-comment-o"></i> </span><a href="/whats-the-point-of-our-live.html#comments" itemprop="discussionUrl"><span class="post-comments-count disqus-comment-count" data-disqus-identifier="whats-the-point-of-our-live.html" itemprop="commentCount"></span> </a><span class="post-meta-divider">|</span></span><div class="post-wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i> </span><span class="post-meta-item-text">字数统计</span> <span title="字数统计">4.8k </span><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-clock-o"></i> </span><span class="post-meta-item-text">阅读时长</span> <span title="阅读时长">16</span></div></div></header><div class="post-body" itemprop="articleBody"><blockquote><p>声明：本文章是摘录自知乎的回答，触发我去做摘录的原因是在和兔子辩论人生的意义的时候，想去翻阅之前在知乎看到的一篇高赞回答，竟然发现答案已经被折叠了。为了避免这些曾经让我陷入思考的文章流失，也为了能在我的自留地留下这些思考的痕迹。</p></blockquote><p>“不论将来做什么，或是伟大或是平凡，所有人都将面临死亡，每个人都会被时间所遗忘，消失在宇宙中。人的一生重复地上学放学或是上班下班，一切都这样无聊。从小就被说要做对社会有贡献的人，或是名人，牛人，有钱人，争权夺势，或是苦心研究，可是这些到最后又有什么意义呢？反正人都得死。什么也没有。有人说，人死了，可他的贡献在，会被后人永远铭记，也可以帮助国家和人类历史的发展，可是国家又是什么？就算做出了改变国家或者人类历史的事情，可是地球也终将毁灭呀？到时候人类和国家也都消失了，所有的一切都不存在了。为什么还要活着呢？或者是为什么还要努力地、拼命地活着呢？不论是好的还是坏的都将消失，为什么要做别人眼中所谓好的。”</p><p>&lt;!--more--&gt;</p><p>以上是知乎上的一个问题，以下是原答案，发布于2014-08-09 作者：光的记忆 链接：<a href="https://www.zhihu.com/question/24329745/answer/28988224" target="_blank" rel="noopener">https://www.zhihu.com/question/24329745/answer/28988224</a></p><hr><p>我今天可以一次性地解决题主的这个问题。</p><p>只是解决的方式恐怕和题主期待的不一样。我们期待的解决方式是有个人来告诉我们人生有什么意义。而我提供的答案是：我可以告诉你怎么摆脱这个问题的困扰。摆脱这个问题的困扰其实不需要回答这个问题。</p><p>让我们顺着思路一步一步来。</p><p>这个世俗社会以金钱来衡量人的成功，我们不想和大多数人一样碌碌无为地过完一生，那样我们的人生就没有意义了。我们想要活得不一样，想要脱颖而出成为人上人，但是这世界上那么多人，成功的人那么少，这个概率小得让我们感到绝望。 于是，一方面，我们想要成功，想要被世俗认可，另一方面，我们觉得自己成功的机会渺茫，就算退而求其次找个深爱的人过一生也不是那么容易，我们不禁开始琢磨：如果一定要和所有碌碌无为的人一样浑浑噩噩地活着，我的人生还有什么意义？</p><p>关于人生的意义，有这三种可能性。</p><p>1.人生有意义，意义就是赚大钱，当大官，和相爱的人在一起。</p><p>2.人生有意义，意义是某个1里面没提到的东西。</p><p>3.人生无意义。</p><p>已经没有其他可能性了。那么这三个里面必然有一个是正确的。那么什么样的东西才能叫做意义？意义就是能够让你觉得我活了这一辈子，因为有了“它”，所以没白活。有了它之后，我的人生达到了真正的满足，即使死去也毫无遗憾，它是我毕生追求的东西，是我一切行为的终极方向。听上去有点像“信仰”。但是意义和信仰不同，信仰是一种你必须去追求的才能达到的东西，<strong>而意义是本来就存在的东西。是本来就有的状态</strong>。</p><p>假如1是真的。</p><p>那么假如有一天你真的赚到了大钱，成为了一名企业家，比如说刘强东那样，有钱，有奶茶，出任ceo，迎娶白富美，走向人生巅峰。那么你的人生就是有意义的了。那么你这一辈子就没白活，那么你死而无憾。那我让你马上就死，你会死吗？</p><p>你会说：</p><p>你这不是坑爹吗！好不容易有钱了，好不容易有奶茶了，你至少先让我爽一阵子吧。你要是现在就让我死了，那我赚这些钱还有什么意义？所以说你想要的并不仅仅是钱而已，你想要的是有钱之后的那种爽。那你想爽多久？我觉得多久你都不会嫌久。。。 基本上所有成功学类的书都可以归为这第一类，成功学一般来说一整本书主要讲两件事：1.坚持梦想。2.努力。成功学的书会不断暗示你最后的成功是你人生唯一的目的和意义。但是它只敢暗示，不敢挑明了写出来。因为成功的概率太低了，低于1%。而且成功学的书会暗示你，假如你没成功，怪你自己不够努力，或者没有坚持住自己的梦想。于是就把责任推得一干二净。然而正常人的常识告诉我们努力和成功（至少是成功学里描述的成功）并没有必然联系，成功的希望太渺茫了。 那一个一辈子都没希望成功的人活着又有什么意义？没有意义活着又和死了有什么区别？ 由于这个希望太渺茫，与其活在害怕人生没有意义的恐惧之中，不如干脆就不把这个当成意义，我们可以找一些更容易达到的目标当做意义，来获得内心的平静。这就引出了选项2。</p><p>假如2是真的。</p><p>人生有意义，意义是某个其他的东西。是什么东西呢？基本上所有鸡汤心理学书籍都可以归为这一类。这些书里面对人生的意义大致可以分为两大类：</p><p>1.爱，尤其是给予爱。</p><p>2.旅途沿路的风景。</p><p>比如我们从另外一个热门问题：人终会消失，人生有何意义？为什么要活着？里面最高票@GayScript的答案，列举了很多人生中美好的东西。我整理如下：</p><p>1.好吃的，比如鸭脖、扯面、麻辣香锅。</p><p>2.好听的音乐，比如youngandbeautiful等</p><p>3.好看的小说，比如《白夜行》等</p><p>4.好看的电视，比如《甄嬛传》</p><p>第二高票@陈粒的答案，整理如下：</p><p>1.明白些道理——理性思考</p><p>2.遇见有趣的事——乐观心态</p><p>第三高票@唐棣的答案，整理如下：</p><p>1.像吃蛋糕和甜甜圈一样，在于吃的过程。</p><p>Gayscript的答案，好吃的好听的好看的，都是美好体验的一部分，也就是人生旅途的一部分。而陈粒的答案，思考和心态，也是人生的一个过程。唐棣的答案，就更加明显了，用吃的过程比喻人生的过程，强调享受这个过程。这是一件很矛盾的事情。一方面整个社会都在吹捧有钱有地位还有真爱（主要还是前两项）的人，而另一方面鸡汤心理学的书籍都非要把读者的视线从金钱地位这种功利的东西上面拉回来。为什么要拉回来呢？就是因为这些其他的小事情更容易做到啊，也不会让你陷入害怕努力一辈子也没成功而找不到活着的意义的恐惧中。</p><p>那题主看到这里想必会嘀咕：就因为选项1太难达到，所以就告诉自己“那我就不要选项1了，我从简单的东西里面找意义”这不是自欺欺人吗！</p><p>别忘了，选项1真正吸引你的，不是金钱和地位，而是那种爽的感觉。</p><p>题主可能又会说：是啊，但那种爽只有金钱和地位还有深爱的人才能带来啊，你吃点东西看点电视怎么可能和有钱的爽相提并论！</p><p>其实。。。还有更爽的。。。你信吗？而且这种爽都不用你努力赚钱成功。</p><p>以大脑分泌的多巴胺的含量多少来量化爽的话，（多巴胺：传递快乐、兴奋情绪的功能，又被称作快乐物质。）</p><p>美食，可以提升多巴胺到150%。这就是世界上那么多吃货的原因。</p><p>性，可以提升多巴胺到200%。日常生活中你基本找不到比性高潮更爽的时刻了。</p><p>天天吃喝玩乐，天天打炮的生活，你有兴趣吗？你既然到知乎来提问题了，你多半会觉得，那种生活毫无目标，没有过的价值。</p><p>是因为不够爽吗？我们还有更爽的东西。</p><p>可卡因，可以提升350%的多巴胺。</p><p>冰毒，可以提升1200%。</p><p>把你记忆中最爽的那次性高潮，快感乘以10倍，都达不到冰毒带给你的体验。你会觉得你在世界之颠，你是世界上最快乐的人，你精力无限，你能力无限，你可以飞起来。在药物面前，一切生活中的爽都变得苍白无力。那假如我给你提供足量的冰毒，让你不间断地吸，一直爽到死，你愿意吗？</p><p>你愿意这样活吗？恐怕你想到那种生活脑子里就只有恐惧了吧。</p><p>因为你想要的，不仅仅是爽而已。你会觉得只有爽的人生过于低俗了，你想要一个高大上的意义。</p><p>如果我跟你说，你要为了你爱的人和爱你的人而活着。你可能会问：凭什么？我多累啊？ 如果我跟你说，你要为了造福社会，为社会作贡献，为人类作贡献而活着，比如比尔盖茨做慈善，比如甘地和曼德拉为了和平，比如奥巴马为了全美国人的幸福。你可能会说：那都太远了，我自己还没活明白呢，哪有心情管别人。</p><p>你说：有没有不那么“道貌岸然”，又很高大上的理由？我要一个真正神圣而终极的意义，不要和这些俗事俗人扯在一起。</p><p>这个问题我思考过超过10年，后来我发现，真正超俗的终极意义，所有想脱离平凡而向往最终的伟大的进化，最后都指向了同一个归宿——宗教。 只有神，才能给你一个终极的意义。</p><p>你说：。。。。。。我是无神论，你给我来点实际的。</p><p>好。</p><p>无神论者，最后的终极意义，也就是进化的终极意义，是推动人类向往更高级的文明，更高级的秩序发展，而我们一生也许只是帮助推动这个历史进程往前走短短一步而已。（理论支持：《非零年代》）</p><p>你说：。。。。。。这是人类的意义，我根本活不到那天，太虚了，有没有接地气一点的，你就不能把注意力放在我身上，别总扯全人类什么的。</p><p>我说：。。。。。。我弄死你。你现在为什么不马上去死？阻止你死的原因就是你活着的意义。</p><p>你说：我就是不想死啊，没什么特别原因。这不能算是意义吧？而且我感觉我还没活明白，没找到意义，我死也死得不明不白啊。这也不算是意义吧？</p><p>对方辩友你赢了。。。我已经没有更好的回答了。</p><p>到目前为止出现过的所有备选答案：</p><p>1.好吃的，好听的，好看的 2.明白些道理，遇见有趣的事 3.像吃蛋糕和甜甜圈一样，在于吃的过程。 4.纯粹为了快感而嗑药。 5.为了我爱的人和爱我的人。 6.为社会和他人作贡献。 7.为神服务。 8.推动人类进化。</p><p>每一个都可以作为活着的意义，但是如果你真的要问为什么，我活着就为了吃吗？我活着就为了那点快感吗？我为什么要学习新事物有什么意义？我为什么要为了别人活着？我为什么要奉献自己给全人类？我就不能自己好好活着吗？ 如果你愿意，你可以为其中任何一项而活着；如果你不想，哪一项也没有足够的说服力让你非为这个活不可。</p><p>那最终答案是什么？如果你已经问到这里了，就只剩最后一个可能性了。<strong>人活着没有任何意义。</strong>。你必须搞清楚这个先后顺序，你是先存在于这个世界上，然后才开始寻找意义的。<strong>你不是因为有意义才活着。</strong> <strong>你是因为活着才去寻找意义。</strong> **你跟所有物体，石头，树木，动物一样，都只是存在。他们的存在没有意义，你的存在也没有意义。**但是作为人类，你有思维，你有自我察觉，你有价值判断，所以你觉得自己应该有一个意义。（理论支持：斯蒂芬·霍金《TheGrandDesign》）</p><p>而且，你发现周围的人得过且过，而自己需要一个真正的意义，你觉得自己很特别。实际上你确实很特别，但不是你想的那种特别。你的特别之处仅仅在于——可能你目前的多巴胺水平比他们低而已。多巴胺，大脑中的激素，决定了你怎么思考。当多巴胺偏低的时候，人就开始思考生命的意义，生活的意义。试图用一种理智的东西来说服自己忍受不快乐的生活。如果多巴胺水平更低，就会陷入抑郁情绪。如果你接触抑郁症患者，你会发现他们经常说的一句就是：那又有什么意义？活着又有什么意义？如果你多巴胺再低一点，变成重症抑郁，那时你就开始想要自杀了，因为你觉得活着没意义。 而如果你的多巴胺和大多数人水平一样，你基本就会和大多数人一样，觉得就这样活着挺好啊。生活中这么多美好的事情，就像gayscript列举的那样，有好吃的好玩的好看的，这样的生活不是挺好吗？如果你再高一点，你就会觉得生活简直太美好了，根本不需要什么意义，活着本身就已经是最大的幸运。阳光照着你你很开心，走在草地上你很开心，恋人的一个笑，那就是你生命的全部意义。 但是我们不要急，多巴胺的水平不是固定的，是可以随时调整的。往往我们成长的每个阶段会有不同的想法，有时两个想法截然相反。比如小学时候你很积极学习，初中时候你很厌学这类的，有可能会是多巴胺的原因。（也有可能是别的原因） 为什么所有鸡汤心理学都告诉你在怀疑人生的时候，要体验旅途，要爱别人？因为这么做了之后，你的多巴胺水平就会升高啊！然后你就不会纠结到底有什么意义了！ 如果你说：那不是自欺欺人吗？只是把问题拖到后面了而已。</p><p><strong>不，事实是，问题根本就不存在！</strong></p><p>你之前为什么会觉得钱和地位是意义？只不过是你对钱和地位有需求而已。</p><p>我又要拿出万能的马斯洛了。。。</p><p>你需要钱和地位和爱情，来满足你（从下往上）第二层到第四层的需求。只是因为你有这种需求，你就会以为这就是你的意义。也就是说，意义只不过是心理需求的一种体现而已。事实上当我几年前发现真正神圣而终极的意义只有宗教的时候，我开始明白<strong>意义不是一个固定的东西，它是一个可变的东西，在不同的人生阶段代表不同的东西</strong>。后来的学习研究也证实了我的观点，它真的是随着需求而变的。 <strong>正确的顺序是：先存在=&gt;因为活着而有需求=&gt;把需求当做意义。</strong></p><p>首先你要接受一个事实，而不是逃避这个事实，那就是你活着。只有当你真正接受了这个事实，才会开始想：既然现在我活着，我可以做点什么？</p><p><strong>为什么一定要接受这个事实？就像心理学上的接纳不完美的自己一样，接纳自己不完美的生活，接纳自己不需要意义的存在。你不是因为什么意义才出生的，你就这么突然地活着了，你坚持活下去的原因就是你不想死而已。无论你这一生的意义是什么，你活着的这一生所做的选择都是根据短期长期快感决定的，而且在不久的将来，你也会突然地死去。整个人类的进化也许有意义，但是这个视角太大了基本上和你没什么关系。你就这么活着，就这么存在着，也将会就这么死去。你没有别的选择，这是事实。你就是你，你活着就是活着。</strong></p><p>举个最简单的例子，你不会因为2+2=4而苦恼，你不会想2+2为什么等于4。因为为2+2=4而苦恼是没有意义的，因为你接受了2+2=4。（理论来源：耶鲁公开课《死亡》）</p><p>没有意义会让你变空虚了吗？</p><p><strong>不，一旦接受了这个设定，你就从意义中解放了出来。没有了意义的束缚，你应该更自由，因为你可以做自己想做的事情而不是意义让你做的事情，你可以真正掌控自己的生活，让它按照你设想的方式发展。</strong> 所以不是先找到意义然后再活着，而是先努力生活，然后你自然会给自己赋予一个自己满意的意义。 认真赚钱，认真去爱，认真体验生命的美好，认真学习，认真见识新世界。你想让你的人生在哪方面拓展就在哪方面加油。这就是热爱生活。然后你就会明白为什么活着。这就是真正完全摆脱这种问题的困扰的方法，那就是积极，乐观，阳光地去拥抱生活！</p></div><footer class="post-footer"><div class="post-eof"></div></footer></div></article><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><div class="post-block"><link itemprop="mainEntityOfPage" href="http://www.aitozi.com/A-Deep-Dive-into-Flink's-Network-Stack.html"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="aitozi"><meta itemprop="description" content><meta itemprop="image" content="/images/avatar.png"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Aitozi"></span><header class="post-header"><h2 class="post-title" itemprop="name headline"><a class="post-title-link" href="/A-Deep-Dive-into-Flink's-Network-Stack.html" itemprop="url">A Deep-Dive into Flink's Network Stack</a></h2><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i> </span><span class="post-meta-item-text">发表于</span> <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-16T04:47:03+08:00">2019-06-16 </time></span><span class="post-category"><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-folder-o"></i> </span><span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/深度好文/" itemprop="url" rel="index"><span itemprop="name">深度好文</span> </a></span></span><span class="post-comments-count"><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-comment-o"></i> </span><a href="/A-Deep-Dive-into-Flink's-Network-Stack.html#comments" itemprop="discussionUrl"><span class="post-comments-count disqus-comment-count" data-disqus-identifier="A-Deep-Dive-into-Flink's-Network-Stack.html" itemprop="commentCount"></span> </a><span class="post-meta-divider">|</span></span><div class="post-wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i> </span><span class="post-meta-item-text">字数统计</span> <span title="字数统计">3.7k </span><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-clock-o"></i> </span><span class="post-meta-item-text">阅读时长</span> <span title="阅读时长">13</span></div></div></header><div class="post-body" itemprop="articleBody"><p>[toc]</p><p>本文翻译自flink官网的一篇博文，详细介绍Flink架构中的网络栈，下面就让我们来一睹为快吧。</p><p>&lt;!--more--&gt;</p><h3>简介</h3><p>Flink网络栈是flink中的核心组件，是flink-runtime模块的一部分。它连接了所有TaskManager中独立的工作单元（subtasks）。这是流入数据流经的地方，因此你所观察到的吞吐量和延迟都和他息息相关，可以说Flink的网络栈决定了Flink框架本身性能的好坏。和TaskManager，Jobmanager之间通信所使用的akka rpc框架不同的是，flink网络栈采用了更底层的网络api，使用的是Netty框架。</p><h3>Logical View</h3><p><img src="https://flink.apache.org/img/blog/2019-06-05-network-stack/flink-network-stack1.png" alt="logical view"></p><p>它抽象了以下三个概念的不同设置：</p><ul><li>Subtask output type (ResultPartitionType):<ul><li>pipelined (bounded or unbounded)： 上游一产生数据，就一条一条的往下游发送，作为有界或无界的数据流</li><li>blocking: 只有当上游的全部结果就绪之后才向下游发送数据</li></ul></li><li>Scheduling type:<ul><li>all at once (eager)： 同时部署所有的subtask（流式应用采用这种模式）</li><li>next stage on first output (lazy): 当上游的生产者开始有输出结果的时候，才开始不是下游的subtask，是一种lazy模式</li><li>next stage on complete output: 当上游的数据全部就绪之后才开始下游subtask的部署。</li></ul></li><li>Transport:<ul><li>high throughput: 不采用一条一条发送数据的模式，Flink缓存一批数据到network buffer中，攒批发送。这个减少了网络开销的单条边际成本，带来了高吞吐</li><li>low latency via buffer timeout: 通过减少发送未攒满一个buffer的timeout时间，牺牲一定的吞吐带来更低的延迟</li></ul></li></ul><p>我们将在下面这部分讨论吞吐和延迟的优化。这一部分将查看网络栈的物理层，对于这部分，我们将详细阐述output type以及调度模式。首先，subtask的输出类型和调度类型是紧密交织在一起的，两者的特定组合才有效。Pipelined result partition是流式的输出，流式输出需要将数据发送到一个正在工作的subtask，因此目标task就需要在上游结果产出下发之前deploy完成或者在任务启动最初完成deploy。 Batch作业产出有限的结果，而stream作业产出无限的结果。</p><p>Batch作业也可以以阻塞的方式产出结果，具体取决于operator和conector的使用模式。在这种方式下，下游算子需要再上游结果完全ready之后才进行部署，在这种方式下资源使用效率会更高.</p><p>下表总结了有效的组合方式：</p><table><thead><tr><th>Output Type</th><th>Scheduling Type</th><th>Applies to…</th></tr></thead><tbody><tr><td>pipelined, unbounded</td><td>all at once</td><td>Streaming jobs</td></tr><tr><td></td><td>next stage on first output</td><td>n/a¹</td></tr><tr><td>pipelined, bounded</td><td>all at once</td><td>n/a²</td></tr><tr><td></td><td>next stage on first output</td><td>Batch jobs</td></tr><tr><td>blocking</td><td>next stage on complete output</td><td>Batch jobs</td></tr></tbody></table><p>【1】: 当前没有再flink中使用 【2】: 在<a href="https://flink.apache.org/roadmap.html#batch-and-streaming-unification" target="_blank" rel="noopener">Batch/Streaming unification</a>完成后可能在流式作业中使用</p><p>另外对于有多个输入的subtask的batch作业，调度开始有两种模式，在所有input产出数据或者任意一个输入产出数据的时候。</p><h3>Physical Transport</h3><p>为了理解真实的吴礼数据的连接，请回想一下，在Flink中，不同的task可能会共享一个同一个slot，通过slot sharing group机制，TaskManager也可以提供多个slot来允许一个task的多个subtask跑在一个TaskManager上。</p><p>举个下图中的例子，我们假想一个有四个并发的任务，部署在两个分别有2个slot的TaskManager上。TaskManager 1 运行subtask A.1，A.2，B.1 和 B.2 而TaskManager 2 运行subtaskA.3,A.4,B.3,B.4。假设A和B之间的shuffle方式是<code>keyBy()</code>,这样在每一个TaskManager上都有2x4个逻辑连接，有些走local的，有些是通过网络的，如下图所示。</p><p><img src="https://github.com/Aitozi/images/blob/master/flink/flink-network-stack-1.jpg?raw=true" alt></p><p>不同task之间的每个（远程）网络连接，都将在flink网络栈中获得自己的TCP通道，但是，如果同一个任务的不同子任务被调度到同一个TaskManager上，他们和另一个TaskManager上的TCP连接将会共享（多路复用），在我们的例子中A.1 -&gt; B.3, A.1 -&gt; B.4 以及A.2 -&gt; B.3,A.2 -&gt; B.4将会复用一个tcp连接（这里有点疑问，按我的理解应该是每个TM之间都会共享channel才对）。</p><p><img src="https://flink.apache.org/img/blog/2019-06-05-network-stack/flink-network-stack2.png" alt></p><p>每个subtask的输出被称作<code>ResultPartition</code>, 每一个又被细分为<code>ResultSubPartition</code>,一个逻辑channel会有一个。在这个阶段，Flink已经不再单独处理每条记录了，而是将一组序列化完的数据打包拷贝到network buffer中，每一个subtask中local buffer pool（发送端和接收端各有一个pool）中所能获取的最多的buffer数量是通过以下的配置决定的</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">channels * buffers-per-channel + floating-buffers-per-gate</span><br></pre></td></tr></table></figure><p></p><p>通常一个TaskManager上总的buffer数量不需要配置，在需要是可以查看相关的配置项<a href="https://ci.apache.org/projects/flink/flink-docs-release-1.8/ops/config.html#configuring-the-network-buffers" target="_blank" rel="noopener">Configuring the Network Buffers</a></p><h3>Inflicting Backpressure (1)</h3><p>当一个subtask的发送端的buffer用尽之后 - buffer可能用于result subpartition的buffer队列，也可能正用于低阶的Netty的网络栈中尚未回收。在这种情况下producer就被block住，无法进一步发送数据。</p><p>消费端也是一样的方式，从底层netty网络栈传输来的buffer需要通过network buffer才能被正确消费，如果在消费端的network buffer用尽了，Flink将停止从channel中读入数据，直到有新的network buffer用来做数据的转化。这种情况下将会反压上游所有通过这个tcp channel的多路复用发送数据的生产端，这样也就限制了其他下游的消费能力。在下图阐述了一个有性能瓶颈的B.4 subtask将会引起backpressure，最终将会引起B.3无法消费和处理新的数据，尽管B.3还有足够的network buffer。</p><p><img src="https://flink.apache.org/img/blog/2019-06-05-network-stack/flink-network-stack3.png" alt></p><p>为了彻底解决这个问题，Flink1.5引入了流控机制。</p><h3>Credit-based Flow Control</h3><p>基于流控的网络传输能够确保正在传输的数据在接受端都有可以接受的buffer（传输的数据都是得到确认之后才可以向下游发送的）。新的传输模式仍然基于Flink原有的network buffer的能力，在其上做了一些扩展。除了仅仅有一个共享的本地buffer pool，每一个remote inputchannel现在会有其自己独占的一批buffer池，相对地，共享池中的buffer就被称为发floating buffer因为他们对于每一个inputchannel都是可以获取的。</p><p>接收端现在将会以<code>Credits</code>的形式通知发送端告知它能够接收多少buffer（1 buffer = 1 credit）。 每一个result subpartition将持续记录相对应channel的credits。只有当下游的通道有credits的时候，才会通过netty将上游的buffer发送出去，每发送一个buffer，就会减去一个credits，除了发送buffer数据，同时还会携带当前的backlog信息（指的是当前这个subparititon还有多少buffer在等待发送），接收端拿到这个信息之后就会去申请相应的合适数量的floating buffer来处理subpartition中排队等待处理的buffer。接收端一般会申请和backlog一样多的buffer，但这个并不总是能申请到这么多，也可能当前根本没有buffer可以申请。接收端将会通过监听buffer池，等待buffer使用完回收的时候就可以开始新的buffer申请</p><p><img src="https://flink.apache.org/img/blog/2019-06-05-network-stack/flink-network-stack4.png" alt></p><p>流控模式下使用<code>buffers-per-channel</code>来指定每一个channel的独占buffer的大小，使用<code>floating-buffers-per-gate</code>来指定local buffer pool的大小这两个参数的默认值理论上可以达到和非流控模式下的最大吞吐量，可能你需要根据你的网络带宽或者rt要求来调整相关的参数</p><h3>Inflicting Backpressure (2)</h3><p>和没有流控的模式相比，credits能够提供更加直接有效的控制： 如果消费端无法快速处理造成消费端的buffer用尽，这样该recevier的credits就会降为0，发送端就不会再发送数据到这个partition。反压只发生在了这个通道上，并不会影响tcp通道的数据传输，因此其他接收端的消费能力并不会受到影响。</p><h3>What do we Gain? Where is the Catch?</h3><p>通过这样的优化整体的资源使用率应该会得到上升，并且通过对正在传输的数据量的直接控制，也带来了checkpoint对齐时间的优化。但是receiver端发送消息也带来了额外的开销（在这之前接收端是只要负责收数据就好了，没有发消息的动作），尤其是在开启了SSL加密的情况下。并且一个input channel无法使用所有的buffer pool，因为独占的buffer无法共享。而且如果你产出数据比你发布credits慢，就会导致无法尽可能快的下发数据，虽然这些情况会带来性能上的损失，但是通常还是建议开启流控的模式，因为带来的诸多好处。</p><p>另一件你可能会注意到的是因为我们在发送端和接收端之间会缓存更少的数据可能会更早的碰到反压，可以通过调节上述的exclusive和floating buffer的大小来缓解</p><h3>Writing Records into Network Buffers and Reading them again</h3><p>下图对上面的图做了一些扩展，添加了一些周边组件使用的一些细节</p><p><img src="https://flink.apache.org/img/blog/2019-06-05-network-stack/flink-network-stack6.png" alt></p><p>在创建一个record将其传递给下游，比如通过<code>Collector#collect()</code>,它将被传递到RecordWriter中，recordwriter将这个java对象序列化成二进制数组，最终被拷贝至networkbuffer中像上述几节中的处理方式进行处理。RecordWriter首先将数据通过SpanningRecordWriter序列化到对上的一个byte数组中。然后将会将这些byte数组写到相应目标channel的的network buffer中，我们再最后一小节再回来讨论这块细节。</p><p>在接收端，netty会将接收到的buffer写入相应的input channel，流式任务的task最后将会读取这些队列中的buffer，将其通过RecordReader反序列化出来，和序列化过程类似，反序列也需要处理一些特殊情况，比如一条记录跨过了多个network buffer，可能是因为一条记录比较大，大过了单个networkbuffer大小（32K），也有可能数据被加入networkbuffer的时候已经没有足够的容纳空间了。</p><h3>Flushing Buffers to Netty</h3><p>在上图中，流控的机制实际上就是在NettyServer和NettyClient组件中实现的，RecordWriter正在写的buffer总是最开始是空的没有数据的状态被加入到result subpatition中，然后再渐渐的被序列化的记录填满，但是netty是什么时候真正处理这些buffer呢？</p><p>显然他不能一有数据就去请求，因为这会带来巨大的开销，涉及到跨线程通信和同步，并且也会将整个buffer废弃掉。</p><p>在Flink中有3个情况可以将buffer变为NettyServer可以消费的状态：</p><ul><li>buffer写满了</li><li>buffer timeout时间条件满足了</li><li>一个特殊的event发送了，比如checkpoint barrier，为了保证一致性就需要发送</li></ul><h3>Flush after Buffer Full</h3><p>在序列化完成后，RecordWriter会将这些bytes写出到合适的subpartition的network buffer队列中去，尽管一个RecordWriter可以处理多个subpartition，但是每一个subpartition都只会有一个writer向其写数据。NettyServer会从多个subpartition读取buffer，通过一个channel发送出去。这是经典的生产者和消费者模式，正如下图所示。在(1)序列化和(2)将数据写出到buffer，RecordWriter会更新buffer的writer下标，一旦buffer已经满了，RecordWriter会从他的local buffer pool中申请一块新的buffer用来写当前记录的剩余的bytes，或者写下一条记录，并且将新的buffer添加搭配subpartition的queue中。 （4）通知NettyServer数据已经ready，当netty能够发送数据时，就会（5）从queue中获取buffer，通过TCP channel将数据发送给下游。</p><p><img src="https://flink.apache.org/img/blog/2019-06-05-network-stack/flink-network-stack7.png" alt></p><h3>Flush after Buffer Timeout</h3><p>为了能够支持低延迟的处理场景，我们不能只依赖buffer变满的下发信号。可能会由于上游某些通道数据不多带了发送延迟。因此还有周期性的发送机制：<code>OutputFlusher</code>。下图展示了这个flusher机制是如何和其他组件协同工作的。</p><p>RecordWriter进行序列化并将数据写入network buffer。但是并行的output flusher（3，4）会通知NettyServer进行数据的消费。当NettyServer收到通知之后，他将会消费buffer中可以消费的数据，并且更新buffer的reader index。buffer仍然会保留在队列中，下一次对该buffer的读取操作会从上次的reader index开始。严格的说flusher并没有保障数据的发送，他仅仅是通知NettyServer可以进行数据发送，如果正处于反压状态，flusher并没有什么实际效果</p><p><img src="https://flink.apache.org/img/blog/2019-06-05-network-stack/flink-network-stack8.png" alt></p><h3>Flush after special event</h3><p>一些特殊消息也会触发数据的flush，最重要的就是checkpoint barrier和end-of-stream</p><h3>Future remarks</h3><p>和Flink1.5之前相比，network buffers现在被放置在了subpartition的队列中，而且每次flush我们并不会关闭buffer，这给我们带来一些好处：</p><ul><li>减少了同步带来的消耗（output flusher和RecordWriter是相互独立的）</li><li>在负载高，Netty是性能瓶颈的情况下我们仍然可以在不完整的buffer中累积数据</li><li>减少了netty的通知信号</li></ul><p>但是你可能也注意到在低负载的场景下，cpu使用率和TCP发包率会变高，这是因为flink会利用cpu来达到想要的低延迟，在高负载情况下性能可能会更好一些，因为去除了一些同步的消耗。</p><h3>Buffer Builder &amp; Buffer Consumer</h3><p>这一节可以参考我之前博客中的相关分析<a href="http://aitozi.com/flink-network-feature.html#BufferBuilder%EF%BC%8CBufferConsumer%EF%BC%8CPositionMarker" target="_blank" rel="noopener">BufferBuiler/BufferConsumer</a></p><h3>Latency vs. Throughput</h3><p>Network buffers是被使用来以期望达到更高的资源利用率，并且让数据再buffer中等待一段时间来攒批发送来达到更高的吞吐。尽管这个等待时长可以通过设置buffer timeout时间。你可能会好奇想找出latency和thoughout之间的平衡关系。显然，你是不可能同时拥有这两者的。下图显示了不同的time out时间设置，0ms-100ms所带来的吞吐量的提升，这些测试是跑在100个就节点，每个节点8个slots，没有业务逻辑只有纯粹的网络栈开销。</p><p><img src="https://flink.apache.org/img/blog/2019-06-05-network-stack/flink-network-stack9.png" alt></p><p>如你所见，Flink1.5+，即使是非常低的缓冲区超时（例如1ms）也提供高达默认超时的75％的最大吞吐量。</p><p>参考: <a href="https://flink.apache.org/2019/06/05/flink-network-stack.html" target="_blank" rel="noopener">https://flink.apache.org/2019/06/05/flink-network-stack.html</a></p></div><footer class="post-footer"><div class="post-eof"></div></footer></div></article><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><div class="post-block"><link itemprop="mainEntityOfPage" href="http://www.aitozi.com/jmh-usage.html"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="aitozi"><meta itemprop="description" content><meta itemprop="image" content="/images/avatar.png"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Aitozi"></span><header class="post-header"><h2 class="post-title" itemprop="name headline"><a class="post-title-link" href="/jmh-usage.html" itemprop="url">Jmh测试框架和flink benchmark工程</a></h2><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i> </span><span class="post-meta-item-text">发表于</span> <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-14T21:05:46+08:00">2019-04-14 </time></span><span class="post-category"><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-folder-o"></i> </span><span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/性能优化/" itemprop="url" rel="index"><span itemprop="name">性能优化</span> </a></span></span><span class="post-comments-count"><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-comment-o"></i> </span><a href="/jmh-usage.html#comments" itemprop="discussionUrl"><span class="post-comments-count disqus-comment-count" data-disqus-identifier="jmh-usage.html" itemprop="commentCount"></span> </a><span class="post-meta-divider">|</span></span><div class="post-wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i> </span><span class="post-meta-item-text">字数统计</span> <span title="字数统计">1.6k </span><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-clock-o"></i> </span><span class="post-meta-item-text">阅读时长</span> <span title="阅读时长">6</span></div></div></header><div class="post-body" itemprop="articleBody"><p>[toc]</p><p>本文着重介绍对jmh框架的理解和使用，以及在<a href="https://github.com/dataArtisans/flink-benchmarks," title="flink-benchmark" target="_blank" rel="noopener">flink-benchmark</a>中的应用。</p><p>&lt;!-- more --&gt;</p><h3>概述</h3><p>JMH是一个由OpenJDK/Oracle里面那群开发了Java编译器的大牛们所开发的Micro Benchmark Framework。何谓Micro Benchmark呢？简单地说就是在method层面上的 benchmark，精度可以精确到微秒级。可以看出JMH主要使用在当你已经找出了热点函数，而需要对热点函数进行进一步的优化时，就可以使用JMH对优化的效果进行定量的分析。在flink-benchmark框架中主要用来对network和state进行定量分析，来确保每次对这两个模块的修改不会导致性能的regress.</p><p><a href="http://apache-flink-mailing-list-archive.1008284.n3.nabble.com/Codespeed-deployment-for-Flink-td24274.html" target="_blank" rel="noopener">http://apache-flink-mailing-list-archive.1008284.n3.nabble.com/Codespeed-deployment-for-Flink-td24274.html</a></p><p>比较典型的使用场景有：</p><p>想定量地知道某个函数需要执行多长时间，以及执行时间和输入n的相关性,一个函数有两种不同实现（例如实现A使用了FixedThreadPool，实现B使用了ForkJoinPool），不知道哪种实现性能更好.</p><h3>参数含义</h3><p>测试case:</p><p><a href="https://github.com/Aitozi/test-case/blob/68a6d5dbc28220cb54b8057d147632f3aed6bd31/src/main/java/jmh/SimpleBenchT.java" target="_blank" rel="noopener">https://github.com/Aitozi/test-case/blob/68a6d5dbc28220cb54b8057d147632f3aed6bd31/src/main/java/jmh/SimpleBenchT.java</a></p><h4>@BenchmarkMode</h4><p>基准测试类型。这里选择的是Throughput也就是吞吐量。根据源码点进去，每种类型后面都有对应的解释，比较好理解，吞吐量会得到单位时间内可以进行的操作数。</p><ul><li>Throughput: 整体吞吐量，例如“1秒内可以执行多少次调用”。</li><li>AverageTime: 调用的平均时间，例如“每次调用平均耗时xxx毫秒”。</li><li>SampleTime: 随机取样，最后输出取样结果的分布，例如“99%的调用在xxx毫秒以内，99.99%的调用在xxx毫秒以内”</li><li>SingleShotTime: 以上模式都是默认一次iteration是1s，唯有SingleShotTime是只运行一次。往往同时把warmup次数设为0，用于测试冷启动时的性能。</li><li>All 执行所有的类型测试</li></ul><h4>@Warmup</h4><p>进行基准测试前需要进行预热。一般我们前几次进行程序测试的时候都会比较慢， 所以要让程序进行几轮预热，保证测试的准确性。其中的参数iterations也就非常好理解了，就是预热轮数。</p><p>为什么需要预热？因为JVM的JIT机制的存在，如果某个函数被调用多次之后，JVM会尝试将其编译成为机器码从而提高执行速度。所以为了让benchmark的结果更加接近真实情况就需要进行预热。</p><h4>@Measurement</h4><p>测试参数</p><ul><li>iterations 进行测试的轮次</li><li>time 每轮进行的时长</li><li>timeUnit 时长单位</li></ul><p>都是一些基本的参数，可以根据具体情况调整。一般比较重的东西可以进行大量的测试，放到服务器上运行。</p><h4>@Threads</h4><p>每个进程中的测试线程，这个非常好理解，根据具体情况选择，一般为cpu乘以2。</p><h4>@Fork</h4><p>进行fork的次数。如果fork数是2的话，则JMH会fork出两个进程来进行测试。</p><h4>@OutputTimeUnit</h4><p>这个比较简单了，基准测试结果的时间类型。一般选择秒、毫秒、微秒。</p><h4>@Benchmark</h4><p>方法级注解，表示该方法是需要进行benchmark的对象，用法和JUnit的@Test类似。</p><h4>@Param</h4><p>属性级注解，@Param可以用来指定某项参数的多种情况。特别适合用来测试一个函数在不同的参数输入的情况下的性能。</p><h4>@Setup</h4><p>方法级注解，这个注解的作用就是我们需要在测试之前进行一些准备工作，比如对一些数据的初始化之类的。</p><h4>@TearDown</h4><p>方法级注解，这个注解的作用就是我们需要在测试之后进行一些结束工作，比如关闭线程池，数据库连接等的，主要用于资源的回收等。</p><h4>@State</h4><p>当使用@Setup参数的时候，必须在类上加这个参数，不然会提示无法运行。</p><p>State用于声明某个类是一个“状态”，然后接受一个Scope参数用来表示该状态的共享范围。 因为很多benchmark会需要一些表示状态的类，JMH允许你把这些类以依赖注入的方式注入到 benchmark函数里。Scope主要分为三种。</p><p>Thread: 该状态为每个线程独享。 Group: 该状态为同一个组里面所有线程共享。 Benchmark: 该状态在所有线程间共享。</p><p>关于State的用法，官方的<a href="http://hg.openjdk.java.net/code-tools/jmh/file/cb9aa824b55a/jmh-samples/src/main/java/org/openjdk/jmh/samples/JMHSample_03_States.java," title="sample" target="_blank" rel="noopener">code sample</a>里有比较好的例子。</p><h4>其他</h4><ul><li><p>CompilerControl控制 compiler 的行为，例如强制 inline，不允许编译等。</p></li><li><p>Group 可以把多个 benchmark 定义为同一个 group，则它们会被同时执行，主要用于测试多个相互之间存在影响的方法。</p></li><li><p>Level 用于控制 @Setup，@TearDown 的调用时机，默认是 Level.Trial，即benchmark开始前和结束后。</p></li><li><p>Profiler JMH 支持一些 profiler，可以显示等待时间和运行时间比，热点函数等。</p></li></ul><h3>flink benchmark</h3><h4>serialization</h4><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">@Benchmark</span><br><span class="line">@OperationsPerInvocation(value = RECORDS_PER_INVOCATION) </span><br><span class="line">/**</span><br><span class="line">* 告诉jmh该测试方法内部会执行RECORDS_PER_INVOCATION次数，最后计算score的时候需要</span><br><span class="line">* 把这个考虑上.http://javadox.com/org.openjdk.jmh/jmh-core/0.9/org/openjdk/jmh/annotations/OperationsPerInvocation.html</span><br><span class="line">/</span><br><span class="line">public void serializerKryoWithoutRegistration() throws Exception &#123;</span><br><span class="line">	LocalStreamEnvironment env =</span><br><span class="line">			StreamExecutionEnvironment.createLocalEnvironment(4);</span><br><span class="line">	env.getConfig().enableForceKryo();</span><br><span class="line"></span><br><span class="line">	env.addSource(new PojoSource(RECORDS_PER_INVOCATION, 10))</span><br><span class="line">			.rebalance()</span><br><span class="line">			.addSink(new DiscardingSink&lt;&gt;());</span><br><span class="line"></span><br><span class="line">	env.execute();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p>以及： <code>SerializationFrameworkMiniBenchmarks</code></p><h4>keyby</h4><p>测试在tuple和array上的keyby性能</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">@Benchmark</span><br><span class="line">@OperationsPerInvocation(value = KeyByBenchmarks.TUPLE_RECORDS_PER_INVOCATION)</span><br><span class="line">public void tupleKeyBy() throws Exception &#123;</span><br><span class="line">	LocalStreamEnvironment env =</span><br><span class="line">			StreamExecutionEnvironment.createLocalEnvironment(4);</span><br><span class="line"></span><br><span class="line">	env.addSource(new IncreasingTupleSource(TUPLE_RECORDS_PER_INVOCATION, 10))</span><br><span class="line">			.keyBy(0)</span><br><span class="line">			.addSink(new DiscardingSink&lt;&gt;());</span><br><span class="line"></span><br><span class="line">	env.execute();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Benchmark</span><br><span class="line">@OperationsPerInvocation(value = KeyByBenchmarks.ARRAY_RECORDS_PER_INVOCATION)</span><br><span class="line">public void arrayKeyBy() throws Exception &#123;</span><br><span class="line">	LocalStreamEnvironment env =</span><br><span class="line">			StreamExecutionEnvironment.createLocalEnvironment(4);</span><br><span class="line"></span><br><span class="line">	env.addSource(new IncreasingArraySource(ARRAY_RECORDS_PER_INVOCATION, 10))</span><br><span class="line">			.keyBy(0)</span><br><span class="line">			.addSink(new DiscardingSink&lt;&gt;());</span><br><span class="line"></span><br><span class="line">	env.execute();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><h4>state backend</h4><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> source</span><br><span class="line">.map(new MultiplyIntLongByTwo())</span><br><span class="line">.keyBy(record -&gt; record.key)</span><br><span class="line">.window(windowAssigner)</span><br><span class="line">.reduce(new SumReduceIntLong())</span><br><span class="line">.addSink(new CollectSink());</span><br></pre></td></tr></table></figure><p></p><p>利用window窗口聚合，对不同backend做不同的基准测试，测试的和state api不够直接</p><h4>window</h4><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">@Benchmark</span><br><span class="line">public void tumblingWindow(TimeWindowContext context) throws Exception &#123;</span><br><span class="line">	IntLongApplications.reduceWithWindow(context.source, TumblingEventTimeWindows.of(Time.seconds(10_000)));</span><br><span class="line">	context.execute();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Benchmark</span><br><span class="line">public void slidingWindow(TimeWindowContext context) throws Exception &#123;</span><br><span class="line">	IntLongApplications.reduceWithWindow(context.source, SlidingEventTimeWindows.of(Time.seconds(10_000), Time.seconds(1000)));</span><br><span class="line">	context.execute();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Benchmark</span><br><span class="line">public void sessionWindow(TimeWindowContext context) throws Exception &#123;</span><br><span class="line">	IntLongApplications.reduceWithWindow(context.source, EventTimeSessionWindows.withGap(Time.seconds(500)));</span><br><span class="line">	context.execute();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><h4>network</h4><p>测试吞吐和延迟:</p><ul><li>StreamNetworkThroughputBenchmarkExecutor</li><li>StreamNetworkLatencyBenchmarkExecutor</li></ul><h4>state operations</h4><p><a href="https://github.com/dataArtisans/flink-benchmarks/pull/13" target="_blank" rel="noopener">https://github.com/dataArtisans/flink-benchmarks/pull/13</a></p><p>###参考</p><p><a href="https://www.xncoding.com/2018/01/07/java/jmh.html" target="_blank" rel="noopener">https://www.xncoding.com/2018/01/07/java/jmh.html</a> <a href="http://tutorials.jenkov.com/java-performance/jmh.html" target="_blank" rel="noopener">http://tutorials.jenkov.com/java-performance/jmh.html</a> <a href="https://www.cnkirito.moe/java-jmh/" target="_blank" rel="noopener">https://www.cnkirito.moe/java-jmh/</a> 详细介绍平常测试代码中的陷阱</p></div><footer class="post-footer"><div class="post-eof"></div></footer></div></article><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><div class="post-block"><link itemprop="mainEntityOfPage" href="http://www.aitozi.com/BinaryRow-implement.html"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="aitozi"><meta itemprop="description" content><meta itemprop="image" content="/images/avatar.png"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Aitozi"></span><header class="post-header"><h2 class="post-title" itemprop="name headline"><a class="post-title-link" href="/BinaryRow-implement.html" itemprop="url">Binary Row数据结构的实现</a></h2><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i> </span><span class="post-meta-item-text">发表于</span> <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-31T01:53:46+08:00">2019-03-31 </time></span><span class="post-category"><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-folder-o"></i> </span><span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/源码分析/" itemprop="url" rel="index"><span itemprop="name">源码分析</span> </a></span></span><span class="post-comments-count"><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-comment-o"></i> </span><a href="/BinaryRow-implement.html#comments" itemprop="discussionUrl"><span class="post-comments-count disqus-comment-count" data-disqus-identifier="BinaryRow-implement.html" itemprop="commentCount"></span> </a><span class="post-meta-divider">|</span></span><div class="post-wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i> </span><span class="post-meta-item-text">字数统计</span> <span title="字数统计">2.7k </span><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-clock-o"></i> </span><span class="post-meta-item-text">阅读时长</span> <span title="阅读时长">13</span></div></div></header><div class="post-body" itemprop="articleBody"><p>[toc]</p><p>Binary Row是blink开源版本<a href="https://github.com/apache/flink/tree/blink" target="_blank" rel="noopener">https://github.com/apache/flink/tree/blink</a>中提到的一个runtime层面优化的特性，主要是应用于sql模块，简单来说，由于sql本身自带schema，在上下游数据传输的时候就可以利用这个schema信息来简化序列化和反序列化的过程，本文就来具体分析这个特性的实现。</p><p>&lt;!--more--&gt;</p><p>主要实现代码在</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">flink-table org.apache.flink.table.typeutils</span><br><span class="line">flink-table-common org.apache.flink.table.dataformat</span><br><span class="line">flink-table-common org.apache.flink.table.typeutils</span><br></pre></td></tr></table></figure><p></p><h3>Binary Row</h3><p>我们要理解sql层的数据传输是用的什么结构，只需要去观察runtime层实现的算子的传输数据类型即可，通过查看代码可以发现中间算子传输的均为<code>BaseRow</code></p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public TwoInputSelection processElement1(StreamRecord&lt;BaseRow&gt; element) throws Exception &#123;&#125;</span><br></pre></td></tr></table></figure><p></p><p>而之前版本的数据传输的是一个Row,内部是一个<code>Object[]</code>，在传输的过程中使用<code>RowSerializer</code>进行每一个字段的序列化和反序列化</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public void serialize(Row record, DataOutputView target) throws IOException &#123;</span><br><span class="line">	int len = fieldSerializers.length;</span><br><span class="line"></span><br><span class="line">	if (record.getArity() != len) &#123;</span><br><span class="line">		throw new RuntimeException(&quot;Row arity of from does not match serializers.&quot;);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// write a null mask</span><br><span class="line">	writeNullMask(len, record, target);</span><br><span class="line"></span><br><span class="line">	// serialize non-null fields</span><br><span class="line">	for (int i = 0; i &lt; len; i++) &#123;</span><br><span class="line">		Object o = record.getField(i);</span><br><span class="line">		if (o != null) &#123;</span><br><span class="line">			fieldSerializers[i].serialize(o, target);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p>新的实现中以BaseRow代替了Row，baserow是一个基类，在不同的场景下有不同的子类去实现相应的功能。</p><h4>GenericRow</h4><p>能够方便的用以更新字段，其内部实现也是一个Object数组，</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// kafka source deserialization schema 从source处就解析成一个BaseRow</span><br><span class="line">public GenericRow deserialize(byte[] messageKey, byte[] message, String topic, int partition, long offset) throws IOException &#123;</span><br><span class="line">	GenericRow row = new GenericRow(5);</span><br><span class="line">	row.update(0, messageKey);</span><br><span class="line">	row.update(1, message);</span><br><span class="line">	row.update(2, BinaryString.fromString(topic));</span><br><span class="line">	row.update(3, partition);</span><br><span class="line">	row.update(4, offset);</span><br><span class="line">	return row;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><h4>JoinedRow</h4><p>主要能够方便的将两个row进行拼接成一个baserow</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// windowoperator中发送一个key和aggRes的组合的row到下游</span><br><span class="line">reuseOutput.replace((BaseRow) getCurrentKey(), aggResult);</span><br></pre></td></tr></table></figure><p></p><h4>BinaryRow</h4><p>BaseRow序列化是先转化成BinaryRow，然后再通过BinaryRowSerializer进行序列化</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// BaseRowSerializer.java</span><br><span class="line">public void serialize(BaseRow row, DataOutputView target) throws IOException &#123;</span><br><span class="line">	BinaryRow binaryRow;</span><br><span class="line">	if (row.getClass() == BinaryRow.class) &#123;</span><br><span class="line">		binaryRow = (BinaryRow) row;</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		binaryRow = baseRowToBinary(row);</span><br><span class="line">	&#125;</span><br><span class="line">	binarySerializer.serialize(binaryRow, target);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public BinaryRow baseRowToBinary(BaseRow baseRow) throws IOException &#123;</span><br><span class="line">	BinaryRow row = getProjection().apply(baseRow);</span><br><span class="line">	row.setHeader(baseRow.getHeader());</span><br><span class="line">	return row;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p>可以看到baseToRow的过程中首先是会通过codeGen生成映射函数，然后将baserow转成binaryrow，测试将以下的GenericRow转化成BinaryRow生成如下代码</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">GenericRow gR = new GenericRow(3);</span><br><span class="line">gR.update(0, 1);</span><br><span class="line">gR.update(1, 2L);</span><br><span class="line">gR.update(2, &quot;test&quot;);</span><br><span class="line"></span><br><span class="line">BaseRowSerializer&lt;GenericRow&gt; serializer = new BaseRowSerializer&lt;&gt;(Types.INT, Types.LONG, Types.STRING);</span><br><span class="line">BinaryRow row = serializer.baseRowToBinary(gR);</span><br></pre></td></tr></table></figure><p></p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">public class BaseRowSerializerProjection$0 extends org.apache.flink.table.codegen.Projection&lt;org.apache.flink.table.dataformat.BaseRow, org.apache.flink.table.dataformat.BinaryRow&gt; &#123;</span><br><span class="line"></span><br><span class="line">        org.apache.flink.table.dataformat.BinaryString reuseBString$3 = new org.apache.flink.table.dataformat.BinaryString();</span><br><span class="line">        final org.apache.flink.table.dataformat.BinaryRow out = new org.apache.flink.table.dataformat.BinaryRow(3);</span><br><span class="line">        // 先构建一个BinaryRowWriter</span><br><span class="line">        final org.apache.flink.table.dataformat.BinaryRowWriter outWriter = new org.apache.flink.table.dataformat.BinaryRowWriter(out);</span><br><span class="line"></span><br><span class="line">        public BaseRowSerializerProjection$0() throws Exception &#123;</span><br><span class="line">          </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public org.apache.flink.table.dataformat.BinaryRow apply(org.apache.flink.table.dataformat.BaseRow in1) &#123;</span><br><span class="line">          int field$1;</span><br><span class="line">          boolean isNull$1;</span><br><span class="line">          long field$2;</span><br><span class="line">          boolean isNull$2;</span><br><span class="line">          org.apache.flink.table.dataformat.BinaryString field$4;</span><br><span class="line">          boolean isNull$4;</span><br><span class="line">          outWriter.reset();</span><br><span class="line">          isNull$1 = in1.isNullAt(0);</span><br><span class="line">          field$1 = -1;</span><br><span class="line">          if (!isNull$1) &#123;</span><br><span class="line">            field$1 = in1.getInt(0);</span><br><span class="line">          &#125;</span><br><span class="line">          if (isNull$1) &#123;</span><br><span class="line">            outWriter.setNullAt(0);</span><br><span class="line">          &#125; else &#123;</span><br><span class="line">            outWriter.writeInt(0, field$1);</span><br><span class="line">          &#125;</span><br><span class="line">          isNull$2 = in1.isNullAt(1);</span><br><span class="line">          field$2 = -1L;</span><br><span class="line">          if (!isNull$2) &#123;</span><br><span class="line">            field$2 = in1.getLong(1);</span><br><span class="line">          &#125;</span><br><span class="line">          if (isNull$2) &#123;</span><br><span class="line">            outWriter.setNullAt(1);</span><br><span class="line">          &#125; else &#123;</span><br><span class="line">            outWriter.writeLong(1, field$2);</span><br><span class="line">          &#125;</span><br><span class="line">          isNull$4 = in1.isNullAt(2);</span><br><span class="line">          field$4 = org.apache.flink.table.dataformat.BinaryString.EMPTY_UTF8;</span><br><span class="line">          if (!isNull$4) &#123;</span><br><span class="line">            field$4 = in1.getBinaryString(2, reuseBString$3);</span><br><span class="line">          &#125;</span><br><span class="line">          if (isNull$4) &#123;</span><br><span class="line">            outWriter.setNullAt(2);</span><br><span class="line">          &#125; else &#123;</span><br><span class="line">            outWriter.writeBinaryString(2, field$4);</span><br><span class="line">          &#125;</span><br><span class="line">          outWriter.complete();</span><br><span class="line">          return out;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure><p></p><p>通过codeGen的代码可以得出，对于普通的baserow，通过BinaryRowWriter，将baserow的每个字段写入到BinaryRow中，写入完成后，序列化的工作就都通过BinaryRowSerializer来完成。这样的好处有以下几个:</p><ul><li>如果某个中间算子只需要获取上游传输下来的某几个字段的值，那么只需要通过getXXX来直接获取，减少反序列化的量</li><li>如果中间结果不发生改变，只需要将binaryRow直接拷贝出去，也减少了序列化的量</li></ul><p>BinaryRow序列化的过程，可以看到就是直接的内存拷贝的过程</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public void serialize(BinaryRow record, DataOutputView target) throws IOException &#123;</span><br><span class="line">	int sizeInBytes = record.getSizeInBytes();</span><br><span class="line">	target.writeInt(sizeInBytes);</span><br><span class="line">	int offset = record.getBaseOffset();</span><br><span class="line">	for (MemorySegment segment : record.getAllSegments()) &#123;</span><br><span class="line">		int remain = segment.size() - offset;</span><br><span class="line">		int copySize = remain &gt; sizeInBytes ? sizeInBytes : remain;</span><br><span class="line">		target.write(segment, offset, copySize);</span><br><span class="line"></span><br><span class="line">		sizeInBytes -= copySize;</span><br><span class="line">		offset = 0;</span><br><span class="line">	&#125;</span><br><span class="line">	if (sizeInBytes != 0) &#123;</span><br><span class="line">		throw new RuntimeException(&quot;No copy finished, this should be a bug, &quot; +</span><br><span class="line">				&quot;The remaining length is: &quot; + sizeInBytes);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><h4>BinaryString</h4><p>在上面codegen的一段代码中，关于string的处理引入了一个概念BinaryString</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">field$4 = org.apache.flink.table.dataformat.BinaryString.EMPTY_UTF8;</span><br><span class="line">if (!isNull$4) &#123;</span><br><span class="line">  field$4 = in1.getBinaryString(2, reuseBString$3);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// GenericRow的getBinaryString的实现</span><br><span class="line">public BinaryString getBinaryString(int ordinal) &#123;</span><br><span class="line">	Object value = this.fields[ordinal];</span><br><span class="line">	if (value instanceof BinaryString) &#123;</span><br><span class="line">		return (BinaryString) value;</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		return BinaryString.fromString((String) value);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p>那么BinaryString是什么作用呢? 看注释</p><blockquote><p>A utf8 string which is backed by {@link MemorySegment} instead of String. Its data may span multiple {@link MemorySegment}s. 一个直接存储在MemorySegment上的utf8的字符串，一个字符串数据可能会跨segment</p></blockquote><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">private MemorySegment[] segments;</span><br><span class="line">private int offset;</span><br><span class="line">private int numBytes;</span><br><span class="line"></span><br><span class="line">/** Cache the java string for the binary string to avoid redundant decode. */</span><br><span class="line">private String javaString;</span><br></pre></td></tr></table></figure><p></p><p>针对string类型，会在codegen阶段，将其转化成一个binaryString。从binarystring初始化的时候没有存储在MemorySegment之上，而是仅仅只是保存string的字符串信息，等到有对string的操作的时候,才会通过这个方法将其序列化，并包装成memorysegments</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public void ensureEncoded() &#123;</span><br><span class="line">	if (!isEncoded()) &#123;</span><br><span class="line">		encodeToBytes();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private void encodeToBytes() &#123;</span><br><span class="line">	if (javaString != null) &#123;</span><br><span class="line">		byte[] bytes = StringUtf8Utils.encodeUTF8(javaString);</span><br><span class="line">		pointTo(bytes, 0, bytes.length, javaString);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p>序列化</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">public void serialize(BinaryString record, DataOutputView target) throws IOException &#123;</span><br><span class="line">	byte[] bytes = record.getBytes();</span><br><span class="line">	target.writeInt(bytes.length);</span><br><span class="line">	target.write(bytes);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Maybe not copied, if want copy, please use copyTo.</span><br><span class="line"> */</span><br><span class="line">public static byte[] getBytes(MemorySegment[] segments, int baseOffset, int sizeInBytes) &#123;</span><br><span class="line">	// avoid copy if `base` is `byte[]`</span><br><span class="line">	if (segments.length == 1) &#123;</span><br><span class="line">		byte[] heapMemory = segments[0].getHeapMemory();</span><br><span class="line">		// 基于byte[]数组的memorysegment</span><br><span class="line">		if (baseOffset == 0</span><br><span class="line">				&amp;&amp; heapMemory != null</span><br><span class="line">				&amp;&amp; heapMemory.length == sizeInBytes) &#123;</span><br><span class="line">			return heapMemory;</span><br><span class="line">		&#125; else &#123;</span><br><span class="line">			// 将内存从堆外内存拷贝出来</span><br><span class="line">			byte[] bytes = new byte[sizeInBytes];</span><br><span class="line">			segments[0].get(baseOffset, bytes, 0, sizeInBytes);</span><br><span class="line">			return bytes;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		byte[] bytes = new byte[sizeInBytes];</span><br><span class="line">		BinaryRowUtil.copySlow(segments, baseOffset, bytes, 0, sizeInBytes);</span><br><span class="line">		return bytes;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p>BinaryString有什么好处呢？</p><ol><li>仅仅序列化一次</li><li>是可以修改的string，而不会产生中间对象</li><li>序列化的时候仅仅是内存的拷贝</li></ol><h4>BinaryArray</h4><p>同样的基于memorysegment实现的还有BinaryMap和BinaryArray，这两者都有一个Generic的实现用以快速的更新, GenericArray要求<strong>数据类型都是相同的类型</strong></p><p>BinaryArray的存储格式:</p><blockquote><p>[numElements(int)] + [null bits(4-byte word boundaries)] + [values or offset&amp;length] + [variable length part].</p></blockquote><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">public void serialize(BaseArray record, DataOutputView target) throws IOException &#123;</span><br><span class="line">	BinaryArray binaryArray = baseArrayToBinary(record);</span><br><span class="line">	target.write(binaryArray.getBytes());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public BinaryArray baseArrayToBinary(BaseArray from) &#123;</span><br><span class="line">	if (from instanceof BinaryArray) &#123;</span><br><span class="line">		return (BinaryArray) from;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	int numElements = from.numElements();</span><br><span class="line">	if (reuseBinaryArray == null) &#123;</span><br><span class="line">		reuseBinaryArray = new BinaryArray();</span><br><span class="line">	&#125;</span><br><span class="line">	if (reuseBinaryWriter == null || reuseBinaryWriter.getNumElements() != numElements) &#123;</span><br><span class="line">		reuseBinaryWriter = new BinaryArrayWriter(</span><br><span class="line">			reuseBinaryArray, numElements, BinaryArray.calculateElementSize(eleType));</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		reuseBinaryWriter.reset();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	for (int i = 0; i &lt; numElements; i++) &#123;</span><br><span class="line">		if (from.isNullAt(i)) &#123;</span><br><span class="line">			reuseBinaryWriter.setNullAt(i, eleType);</span><br><span class="line">		&#125; else &#123;</span><br><span class="line">			BaseRowUtil.write(reuseBinaryWriter, i,</span><br><span class="line">					TypeGetterSetters.get(from, i, eleType), eleType, elementSerializer);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	reuseBinaryWriter.complete();</span><br><span class="line"></span><br><span class="line">	return reuseBinaryArray;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p>从BinaryArraySerializer可以看到，处理方式和BaseRow很像，先baseToBinary，然后直接从segments拷贝byte。</p><h4>DataStructureConverters</h4><p>以上的类型和这个类型convert搭配使用才发挥出相应的效果，这个工具类的作用在于在codegen的阶段，根据输入的类型去转化为相对应的InternalType</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">def genToInternal(ctx: CodeGeneratorContext, t: DataType): String =&gt; String = &#123;</span><br><span class="line">    val iTerm = boxedTypeTermForType(t.toInternalType)</span><br><span class="line">    val eTerm = externalBoxedTermForType(t)</span><br><span class="line">    if (isIdentity(t)) &#123;</span><br><span class="line">      term =&gt; s&quot;($iTerm) $term&quot;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      val scalarFuncTerm = classOf[BuildInScalarFunctions].getCanonicalName</span><br><span class="line">      TypeConverters.createExternalTypeInfoFromDataType(t) match &#123;</span><br><span class="line">        case Types.STRING =&gt; term =&gt; s&quot;$BINARY_STRING.fromString($term)&quot;</span><br><span class="line">        case Types.SQL_DATE | Types.SQL_TIME =&gt;</span><br><span class="line">          term =&gt; s&quot;$scalarFuncTerm.safeToInt(($eTerm) $term)&quot;</span><br><span class="line">        case Types.SQL_TIMESTAMP =&gt; term =&gt; s&quot;$scalarFuncTerm.safeToLong(($eTerm) $term)&quot;</span><br><span class="line">        case _ =&gt;</span><br><span class="line">          val converter = genConvertField(ctx, createToInternalConverter(t))</span><br><span class="line">          term =&gt; s&quot;($iTerm) $converter.apply($term)&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">// 生成的类型转化函数</span><br><span class="line">val internal = genToInternalIfNeeded(ctx, resultExternalType, resultClass, javaTerm)</span><br><span class="line">        s&quot;&quot;&quot;</span><br><span class="line">            |$javaTypeTerm $javaTerm = ($javaTypeTerm) $evalResult;</span><br><span class="line">            |$resultTerm = $javaTerm == null ? null : ($internal);</span><br><span class="line">            &quot;&quot;&quot;.stripMargin</span><br></pre></td></tr></table></figure><p></p><p>这样在codegen阶段就完成了相应类型的替换</p><h4>BinaryRow和BinaryArray的底层存储</h4><p>上面我们看到了binaryRow的使用方式，通过writeXXX的方式将数据写入到一个row中，一个row中可以写入基本类型，也可以写入binaryString, binaryArray，binaryMap等等变长的数据结构，其存储方式如下所示：</p><p><img src="https://github.com/Aitozi/images/blob/master/flink/flink-binaryrow.jpg?raw=true" alt="BinaryRow"></p><blockquote><p>A Row has two part: Fixed-length part and variable-length part. Fixed-length part contains null bit set and field values. Null bit set is used for null tracking and is aligned to 8-byte word boundaries. <code>Field values</code> holds fixed-length primitive types and variable-length values which can be stored in 8 bytes inside. If it do not fit the variable-length field, then store the length and offset of variable-length part. Fixed-length part will certainly fall into a MemorySegment, which will speed up the read and write of field. Variable-length part may fall into multiple MemorySegments.</p></blockquote><p>在将其他格式通过baseRowToBinaryRow的时候，确定了BinaryRow包含的field个数，</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public BinaryRowWriter(BinaryRow row, int initialSize) &#123;</span><br><span class="line">	this.nullBitsSizeInBytes = BinaryRow.calculateBitSetWidthInBytes(row.getArity());</span><br><span class="line">	this.fixedSize = row.getFixedLengthPartSize();</span><br><span class="line">	this.cursor = fixedSize;</span><br><span class="line"></span><br><span class="line">	this.segment = MemorySegmentFactory.wrap(new byte[fixedSize + initialSize]);</span><br><span class="line">	this.row = row;</span><br><span class="line">	this.row.pointTo(segment, 0, segment.size());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public static int calculateBitSetWidthInBytes(int arity) &#123;</span><br><span class="line">	// add 8 bit header</span><br><span class="line">	return ((arity + 63 + 8) / 64) * 8;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p>这个函数是计算出null值得Flag位需要多少Byte来表示，这里的+63是将其对其到8的倍数（向上去整的意思），+8和spark代码相比其实是因为flink多了一个header存储回撤消息的标志位,null bits中第一个byte存储了header位的信息，这里的null bits的作用主要是用在runtime处理时可以快速判断一条数据是不是null值。</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public boolean anyNull() &#123;</span><br><span class="line">	// 这里有一个疑问，判断null的时候不是应该跳过第一个header位吗</span><br><span class="line">	for (int i = 0; i &lt; nullBitsSizeInBytes; i += 8) &#123;</span><br><span class="line">		if (segment.getLong(i) != 0) &#123;</span><br><span class="line">			return true;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public int getFixedLengthPartSize() &#123;</span><br><span class="line">	return nullBitsSizeInBytes + 8 * arity;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p>获取整个固定长度字段的长度，再写变长区时就从这个offset写起。</p><p><strong>写定长数据</strong></p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public void writeByte(int pos, byte value) &#123;</span><br><span class="line">	segment.put(getFieldOffset(pos), value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p><strong>写不定长的数据</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public void writeString(int pos, String input) &#123;</span><br><span class="line">	byte[] bytes = StringUtf8Utils.allocateBytes(input.length() * MAX_BYTES_PER_CHAR);</span><br><span class="line">	int len = StringUtf8Utils.encodeUTF8(input, bytes);</span><br><span class="line">	if (len &lt;= 7) &#123;</span><br><span class="line">		// 小于记录length的长度时直接写在固定长度区</span><br><span class="line">		writeLittleBytes(segment, getFieldOffset(pos), bytes, len);</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		writeBigBytes(pos, bytes, len);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p>BinaryRow/BinaryRowWriter的实现和Spark中UnsafeRow/UnsafeRowWriter的实现非常相似，spark中的对此数据结构解释更为清晰一些。</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * An Unsafe implementation of Row which is backed by raw memory instead of Java objects.</span><br><span class="line"> *</span><br><span class="line"> * Each tuple has three parts: [null bit set] [values] [variable length portion]</span><br><span class="line"> *</span><br><span class="line"> * The bit set is used for null tracking and is aligned to 8-byte word boundaries.  It stores</span><br><span class="line"> * one bit per field.</span><br><span class="line"> *</span><br><span class="line"> * In the `values` region, we store one 8-byte word per field. For fields that hold fixed-length</span><br><span class="line"> * primitive types, such as long, double, or int, we store the value directly in the word. For</span><br><span class="line"> * fields with non-primitive or variable-length values, we store a relative offset (w.r.t. the</span><br><span class="line"> * base address of the row) that points to the beginning of the variable-length field, and length</span><br><span class="line"> * (they are combined into a long).</span><br><span class="line"> *</span><br><span class="line"> */</span><br></pre></td></tr></table></figure><p></p><h3>题外话</h3><p>看代码的时候遵循的是一种推理加源码追踪的手段，但是代码在初始设计的时候应该是另一种维度的思考，因此应该换一种思路去想如果自己来实现这个feature需要考虑什么地方，多多思考。</p></div><footer class="post-footer"><div class="post-eof"></div></footer></div></article><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><div class="post-block"><link itemprop="mainEntityOfPage" href="http://www.aitozi.com/flink-sql-tutorial.html"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="aitozi"><meta itemprop="description" content><meta itemprop="image" content="/images/avatar.png"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Aitozi"></span><header class="post-header"><h2 class="post-title" itemprop="name headline"><a class="post-title-link" href="/flink-sql-tutorial.html" itemprop="url">flink sql与calcite</a></h2><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i> </span><span class="post-meta-item-text">发表于</span> <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-25T16:45:30+08:00">2019-03-25 </time></span><span class="post-category"><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-folder-o"></i> </span><span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/源码分析/" itemprop="url" rel="index"><span itemprop="name">源码分析</span> </a></span></span><span class="post-comments-count"><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-comment-o"></i> </span><a href="/flink-sql-tutorial.html#comments" itemprop="discussionUrl"><span class="post-comments-count disqus-comment-count" data-disqus-identifier="flink-sql-tutorial.html" itemprop="commentCount"></span> </a><span class="post-meta-divider">|</span></span><div class="post-wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i> </span><span class="post-meta-item-text">字数统计</span> <span title="字数统计">1.5k </span><span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-clock-o"></i> </span><span class="post-meta-item-text">阅读时长</span> <span title="阅读时长">7</span></div></div></header><div class="post-body" itemprop="articleBody"><p>[toc]</p><p>基于Flink1.4.2版本分析flink与calcite结合构建的flink sql模块。</p><p>&lt;!--more--&gt;</p><p>Flink SQL是现在Flink社区中着重发展的一个模块，我理解主要原因是因为</p><ol><li>SQL是一门发展很有的通用的描述性语言，接入门槛较低</li><li>有希望在sql层面实现流批计算的统一</li><li>能够通过sql优化器内置优化能力，避免需要每个用户方需要理解低阶任务的调优，屏蔽实现细节</li></ol><h3>概述</h3><p>Flink SQL的总体执行流程为：</p><ul><li><em>SELECT</em>查询语句经过caclite parse成SqlNode</li><li>SqlNode经过validate校验</li><li>SqlNode经过calcite转化为relNode</li><li><em>Insert</em>语句将relNode经过calcite的优化和转化成FlinkRelNode</li><li>将相应的FlinkRelNode和codeGen生成的Function结合生成相应的执行算子</li></ul><p>下面以一个查询sql来讲解整体流程:</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">val stream = env</span><br><span class="line">        .fromCollection(data)</span><br><span class="line">        .assignTimestampsAndWatermarks(</span><br><span class="line">          new TimestampAndWatermarkWithOffset[(Long, String, String)](0L))</span><br><span class="line">val table = stream.toTable(tEnv, &apos;a, &apos;b, &apos;c, &apos;rowtime.rowtime)</span><br><span class="line"></span><br><span class="line">tEnv.registerTable(&quot;T1&quot;, table)</span><br><span class="line"></span><br><span class="line">val sqlQuery = &quot;SELECT c, COUNT(*), COUNT(1), COUNT(b) FROM T1 &quot; +</span><br><span class="line">  &quot;GROUP BY TUMBLE(rowtime, interval &apos;5&apos; SECOND), c&quot;</span><br><span class="line"></span><br><span class="line">val result = tEnv.sqlQuery(sqlQuery).toAppendStream[Row]</span><br><span class="line">result.addSink(new StreamITCase.StringSink[Row])</span><br><span class="line"></span><br><span class="line">env.execute()</span><br></pre></td></tr></table></figure><p></p><h3>parse</h3><h4>SqlNode</h4><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">val parser: SqlParser = SqlParser.create(sql, parserConfig)</span><br><span class="line">val sqlNode: SqlNode = parser.parseStmt</span><br><span class="line">sqlNode</span><br></pre></td></tr></table></figure><p></p><p><img src="https://github.com/Aitozi/images/blob/master/flink/flink-sql-node.png?raw=true" alt="SqlNode" title="SqlNode"></p><p>SqlNode表示的是一颗sql解析树，由于Flink暂时只支持SELECT查询，所以我们这里得到的其实是一个<code>SqlSelect</code>实例，SqlSelect是一个SqlCall，SqlCall继承自SqlNode，每一个无叶子节点的节点就是一个Sqlcall，常见的SqlNode的子类就是，SqlKind是所有SqlNode类型的枚举类:</p><ul><li>SqlCall 表示一个树的无叶子节点的调用，例如图中的Count(*)</li><li>SqlNodeList 表示SqlNode的集合</li><li>SqlIdentifer 表示某个标识符</li></ul><h4>SqlOperator</h4><p>SqlNode的成员方法：</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public List&lt;SqlNode&gt; getOperandList() &#123;</span><br><span class="line">  return ImmutableNullableList.of(keywordList, selectList, from, where,</span><br><span class="line">      groupBy, having, windowDecls, orderBy, offset, fetch);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public SqlOperator getOperator() &#123;</span><br><span class="line">  return SqlSelectOperator.INSTANCE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p>getOperator返回的是这个是个什么操作，operands得到的运算对象。每一个SqlNode是由作用于一系列SqlNode的SqlOperator组成，SqlFunction也是一种SqlOperator. 这里SqlSelect node是SqlSelectOperator作用于以下的SqlNode节点</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">SqlNodeList keywordList;</span><br><span class="line">SqlNodeList selectList;</span><br><span class="line">SqlNode from;</span><br><span class="line">SqlNode where;</span><br><span class="line">SqlNodeList groupBy;</span><br><span class="line">SqlNode having;</span><br><span class="line">SqlNodeList windowDecls;</span><br><span class="line">SqlNodeList orderBy;</span><br><span class="line">SqlNode offset;</span><br><span class="line">SqlNode fetch;</span><br><span class="line">SqlMatchRecognize matchRecognize;</span><br></pre></td></tr></table></figure><p></p><h3>rel</h3><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">val rexBuilder: RexBuilder = createRexBuilder</span><br><span class="line">val cluster: RelOptCluster = FlinkRelOptClusterFactory.create(planner, rexBuilder)</span><br><span class="line">val config = SqlToRelConverter.configBuilder()</span><br><span class="line">  .withTrimUnusedFields(false).withConvertTableAccess(false).build()</span><br><span class="line">val sqlToRelConverter: SqlToRelConverter = new SqlToRelConverter(</span><br><span class="line">  new ViewExpanderImpl, validator, createCatalogReader, cluster, convertletTable, config)</span><br><span class="line">root = sqlToRelConverter.convertQuery(validatedSqlNode, false, true)</span><br></pre></td></tr></table></figure><p></p><p>这个过程是将SqlNode转化为RelNode的过程，RelNode表示关系型表达式,代表的是对数据的一个操作常见的有Project,Scan,Filter,Join等。通过explain可以看到相应的逻辑执行计划，以下还包括优化后的物理执行计划的一部分</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"> == Abstract Syntax Tree ==</span><br><span class="line">LogicalProject(c=[$1], EXPR$1=[$2], EXPR$2=[$2], EXPR$3=[$3])</span><br><span class="line">  LogicalAggregate(group=[&#123;0, 1&#125;], EXPR$1=[COUNT()], EXPR$3=[COUNT($3)])</span><br><span class="line">    LogicalProject($f0=[TUMBLE($3, 5000)], c=[$2], $f2=[1], b=[$1])</span><br><span class="line">      LogicalTableScan(table=[[T1]])</span><br><span class="line"></span><br><span class="line">== Optimized Logical Plan ==</span><br><span class="line">DataStreamCalc(select=[c, EXPR$1, EXPR$1 AS EXPR$2, EXPR$3])</span><br><span class="line">  DataStreamGroupWindowAggregate(groupBy=[c], window=[TumblingGroupWindow(&apos;w$, &apos;rowtime, 5000.millis)], select=[c, COUNT(*) AS EXPR$1, COUNT(b) AS EXPR$3])</span><br><span class="line">    DataStreamCalc(select=[rowtime, c, 1 AS $f2, b])</span><br><span class="line">      DataStreamScan(table=[[_DataStreamTable_0]])</span><br><span class="line"></span><br><span class="line">== Physical Execution Plan ==</span><br><span class="line">Stage 1 : Data Source</span><br><span class="line">	content : collect elements with CollectionInputFormat</span><br><span class="line"></span><br><span class="line">	Stage 2 : Operator</span><br><span class="line">		content : Timestamps/Watermarks</span><br><span class="line">		ship_strategy : FORWARD</span><br><span class="line"></span><br><span class="line">		Stage 3 : Operator</span><br><span class="line">			content : from: (a, b, c, rowtime)</span><br><span class="line">			ship_strategy : FORWARD</span><br><span class="line"></span><br><span class="line">			Stage 4 : Operator</span><br><span class="line">				content : select: (rowtime, c, 1 AS $f2, b)</span><br><span class="line">				ship_strategy : FORWARD</span><br><span class="line"></span><br><span class="line">				Stage 5 : Operator</span><br><span class="line">					content : time attribute: (rowtime)</span><br><span class="line">					ship_strategy : FORWARD</span><br><span class="line"></span><br><span class="line">					Stage 7 : Operator</span><br><span class="line">						content : groupBy: (c), window: (TumblingGroupWindow(&apos;w$, &apos;rowtime, 5000.millis)), select: (c, COUNT(*) AS EXPR$1, COUNT(b) AS EXPR$3)</span><br><span class="line">						ship_strategy : HASH</span><br><span class="line"></span><br><span class="line">						Stage 8 : Operator</span><br><span class="line">							content : select: (c, EXPR$1, EXPR$1 AS EXPR$2, EXPR$3)</span><br><span class="line">							ship_strategy : FORWARD</span><br></pre></td></tr></table></figure><p></p><p>Flink sql查询的时候只做到这里的LogicalNode生成之后就完成了，等待sink才会触发下一步优化和转化逻辑。</p><h4>RelNode，RexNode</h4><p>RelNode的实现类有LogicalProject，LogicalScan等表示的是数据处理方式，rexnode表示的是行表达式，是包含在一个RelNode中的,RexNode类中的exps字段就存储了相应的数据操作所需要的行表达式</p><p>参考以下讨论:</p><blockquote><p>Difference between sqlnode and relnode and rexnode https://www.mail-archive.com/dev@calcite.apache.org/msg01674.html</p></blockquote><h4>RexTraits, RelTraitDef</h4><p>这个表示的是一个RelNode的物理特性，用于在convertRule中使用</p><p>在一个<code>ConverterRule</code>中的convert</p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">val scan: FlinkLogicalNativeTableScan = rel.asInstanceOf[FlinkLogicalNativeTableScan]</span><br><span class="line">val traitSet: RelTraitSet = rel.getTraitSet.replace(FlinkConventions.DATASTREAM)</span><br></pre></td></tr></table></figure><p></p><p></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public RelTraitSet replace(</span><br><span class="line">    RelTrait trait) &#123;</span><br><span class="line">  // Quick check for common case</span><br><span class="line">  if (containsShallow(traits, trait)) &#123;</span><br><span class="line">    return this;</span><br><span class="line">  &#125;</span><br><span class="line">  final RelTraitDef traitDef = trait.getTraitDef();</span><br><span class="line">  int index = findIndex(traitDef);</span><br><span class="line">  if (index &lt; 0) &#123;</span><br><span class="line">    // Trait is not present. Ignore it.</span><br><span class="line">    return this;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return replace(index, trait);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p>实际上是把某一类relTraitsDef的trait实现更换掉，相当于变更了RelNode的物理实现，planner转化过程应该只是trait的转化过程以及相应的RelNode的物理化的过程，按照论文中的解释:</p><blockquote><p>Traits. Calcite does not use different entities to represent logical and physical operators. Instead, it describes the physical properties associated with an operator using traits. These traits help the optimizer evaluate the cost of different alternative plans. Changing a trait value does not change the logical expression being evaluated, i.e., the rows produced by the given operator will still be the same</p></blockquote><p>因此在Flink中的转化<code>StreamTableEnvironment#optimize</code>,match之后根据HepPlanner和VocanoPlanner进行convert转化成物理算子，例如将</p><p><code>LogicalJoin(RelNode) -&gt; DataStreamJoin(FlinkRelNode) -&gt; translateToPlan -&gt; NonWindowJoin (runtime)</code></p><h3>总结</h3><p>Flink SQL具体在flink中的实现分为LogicalPlan层，经过应用rule optimize之后的RelNode层，例如: DataStreamJoin, 再通过translate的时候code generator以及调用相应的runtime层的具体算子实现（这个对应的是physical plan的翻译），以上就完成了从SQL到Flink执行计划的翻译。从整个流程看calcite全程参与，使用方式非常的方便，足见整个calcite框架的扩展性做的很好。 Flink SQL中还有许多其他的细节：SQL中的回撤消息，join，distinct的具体通用算子的实现，还有sql优化，分流，ddl的实现，antlr的实现,窗口聚合等等这些实现细节后文再具体分析。</p><h3>参考</h3><p>介绍calcite与flink sql比较好的几篇文章：</p><p><a href="https://zhuanlan.zhihu.com/p/48735419" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/48735419</a> <a href="https://arxiv.org/pdf/1802.10233.pdf" target="_blank" rel="noopener">https://arxiv.org/pdf/1802.10233.pdf</a> calcite的论文 <a href="https://zhuanlan.zhihu.com/p/51221350" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/51221350</a> <a href="https://zhuanlan.zhihu.com/p/58249033" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/58249033</a> <a href="https://zhuanlan.zhihu.com/p/59643962" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/59643962</a></p><hr><p><a href="http://matt33.com/2019/03/17/apache-calcite-planner/" target="_blank" rel="noopener">http://matt33.com/2019/03/17/apache-calcite-planner/</a> <a href="http://matt33.com/2019/03/07/apache-calcite-process-flow/" target="_blank" rel="noopener">http://matt33.com/2019/03/07/apache-calcite-process-flow/</a> <a href="https://www.slideshare.net/julianhyde/costbased-query-optimization-in-apache-phoenix-using-apache-calcite?qid=b7a1ca0f-e7bf-49ad-bc51-0615ec8a4971&amp;v=&amp;b=&amp;from_search=4" target="_blank" rel="noopener">https://www.slideshare.net/julianhyde/costbased-query-optimization-in-apache-phoenix-using-apache-calcite?qid=b7a1ca0f-e7bf-49ad-bc51-0615ec8a4971&amp;v=&amp;b=&amp;from_search=4</a></p><hr><p><a href="https://issues.apache.org/jira/browse/FLINK-7146" target="_blank" rel="noopener">https://issues.apache.org/jira/browse/FLINK-7146</a> Flink SQL DDL支持 <a href="https://docs.google.com/document/d/1TTP-GCC8wSsibJaSUyFZ_5NBAHYEB1FVmPpP7RgDGBA/edit#heading=h.wpsqidkaaoil" target="_blank" rel="noopener">https://docs.google.com/document/d/1TTP-GCC8wSsibJaSUyFZ_5NBAHYEB1FVmPpP7RgDGBA/edit#heading=h.wpsqidkaaoil</a> doc</p><p><a href="https://github.com/TatianaJin/calcite_playground/wiki/Query-Planning-&amp;-Optimization-II.a:-VolcanoPlanner-Basics" target="_blank" rel="noopener">https://github.com/TatianaJin/calcite_playground/wiki/Query-Planning-&amp;-Optimization-II.a:-VolcanoPlanner-Basics</a></p></div><footer class="post-footer"><div class="post-eof"></div></footer></div></article></section><nav class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a></nav></div></div><div class="sidebar-toggle"><div class="sidebar-toggle-line-wrap"><span class="sidebar-toggle-line sidebar-toggle-line-first"></span> <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span> <span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id="sidebar" class="sidebar"><div class="sidebar-inner"><section class="site-overview sidebar-panel sidebar-panel-active"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"><img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="aitozi"><p class="site-author-name" itemprop="name">aitozi</p><p class="site-description motion-element" itemprop="description"></p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"><a href="/archives/"><span class="site-state-item-count">34</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"><a href="/categories/index.html"><span class="site-state-item-count">10</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"><a href="/tags/index.html"><span class="site-state-item-count">19</span> <span class="site-state-item-name">标签</span></a></div></nav><div class="feed-link motion-element"><a href="/atom.xml" rel="alternate"><i class="fa fa-rss"></i> RSS</a></div><div class="links-of-author motion-element"><span class="links-of-author-item"><a href="gjying1314@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i> E-Mail</a></span></div><div class="links-of-blogroll motion-element links-of-blogroll-inline"><div class="links-of-blogroll-title"><i class="fa fa-fw fa-globe"></i> Links</div><ul class="links-of-blogroll-list"><li class="links-of-blogroll-item"><a href="http://wuchong.me/" title="wuchong" target="_blank">wuchong</a></li><li class="links-of-blogroll-item"><a href="http://chenyuzhao.me/" title="yuzhao" target="_blank">yuzhao</a></li><li class="links-of-blogroll-item"><a href="http://blog.csdn.net/yanghua_kobe?viewmode=contents" title="vinoyang" target="_blank">vinoyang</a></li><li class="links-of-blogroll-item"><a href="http://blog.csdn.net/lmalds?viewmode=contents" title="Imalds" target="_blank">Imalds</a></li><li class="links-of-blogroll-item"><a href="http://blog.csdn.net/androidlushangderen" title="hadoop" target="_blank">hadoop</a></li><li class="links-of-blogroll-item"><a href="http://www.cnblogs.com/xrq730/p/5260294.html" title="java开发" target="_blank">java开发</a></li><li class="links-of-blogroll-item"><a href="http://www.hollischuang.com/" title="阿里工程师" target="_blank">阿里工程师</a></li><li class="links-of-blogroll-item"><a href="http://www.cnblogs.com/fxjwind/" title="阿里流计算工程师" target="_blank">阿里流计算工程师</a></li><li class="links-of-blogroll-item"><a href="http://jm.taobao.org/" title="阿里中间件博客" target="_blank">阿里中间件博客</a></li><li class="links-of-blogroll-item"><a href="http://armsword.com/" title="duruofei" target="_blank">duruofei</a></li><li class="links-of-blogroll-item"><a href="http://blog.yufeng.info/" title="褚霸" target="_blank">褚霸</a></li><li class="links-of-blogroll-item"><a href="https://yuzhouwan.com" title="宇宙湾" target="_blank">宇宙湾</a></li><li class="links-of-blogroll-item"><a href="http://matt33.com" title="matt" target="_blank">matt</a></li><li class="links-of-blogroll-item"><a href="http://coding-geek.com/" title="coding-geek" target="_blank">coding-geek</a></li></ul></div></section></div></aside></div></main><footer id="footer" class="footer"><div class="footer-inner"><div class="copyright">&copy; <span itemprop="copyrightYear">2020</span> <span class="with-love"><i class="fa fa-heart"></i> </span><span class="author" itemprop="copyrightHolder">aitozi</span></div><div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div><div class="theme-info">主题 - <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a></div><div class="busuanzi-count"><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span class="site-uv"><i class="fa fa-user"></i> <span class="busuanzi-value" id="busuanzi_value_site_uv"></span> </span><span class="site-pv"><i class="fa fa-eye"></i> <span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="back-to-top"><i class="fa fa-arrow-up"></i></div></div><script type="text/javascript">"[object Function]"!==Object.prototype.toString.call(window.Promise)&&(window.Promise=null)</script><script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/fastclick/1.0.6/fastclick.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/jquery.lazyload/1.9.3/jquery.lazyload.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script><script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script><script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script><script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script><script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script><script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script><script id="dsq-count-scr" src="https://aitozi.disqus.com/count.js" async></script><script>!function(){var t=document.createElement("script"),s=window.location.protocol.split(":")[0];"https"===s?t.src="https://zz.bdstatic.com/linksubmit/push.js":t.src="http://push.zhanzhang.baidu.com/push.js";var e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(t,e)}()</script></body></html><!-- rebuild by neat -->
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="google-site-verification" content="DO25iswIsaKZ5NZbYreVDjWtBKTyo1yFAROjSRcJD64">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.loli.net/css?family=Lato:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Aitozi" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2">
+
+
+
+
+
+
+<meta name="description" content="What makes a difference? Persistence!">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Aitozi">
+<meta property="og:url" content="http://www.aitozi.com/index.html">
+<meta property="og:site_name" content="Aitozi">
+<meta property="og:description" content="What makes a difference? Persistence!">
+<meta property="og:locale" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Aitozi">
+<meta name="twitter:description" content="What makes a difference? Persistence!">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.aitozi.com/">
+
+
+
+
+
+  <title>Aitozi</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left 
+   page-home 
+ ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Aitozi</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.aitozi.com/golang-strong-static-type.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="aitozi">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aitozi">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/golang-strong-static-type.html" itemprop="url">理解golang的强静态类型</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-22T17:54:03+08:00">
+                2020-01-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程语言/" itemprop="url" rel="index">
+                    <span itemprop="name">编程语言</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/golang-strong-static-type.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="golang-strong-static-type.html" itemprop="commentCount"></span>
+                </a>
+                <span class="post-meta-divider">|</span>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  1.6k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  5
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>more</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/golang-strong-static-type.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.aitozi.com/golang-specific-synax.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="aitozi">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aitozi">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/golang-specific-synax.html" itemprop="url">Golang中的核心功能</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-22T17:48:03+08:00">
+                2020-01-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程语言/" itemprop="url" rel="index">
+                    <span itemprop="name">编程语言</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/golang-specific-synax.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="golang-specific-synax.html" itemprop="commentCount"></span>
+                </a>
+                <span class="post-meta-divider">|</span>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  5
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  1
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><a href="https://juejin.im/post/5c9c64596fb9a070c40ade78" target="_blank" rel="noopener">https://juejin.im/post/5c9c64596fb9a070c40ade78</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.aitozi.com/golang-gc.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="aitozi">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aitozi">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/golang-gc.html" itemprop="url">Golang中的GC</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-22T17:47:03+08:00">
+                2020-01-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程语言/" itemprop="url" rel="index">
+                    <span itemprop="name">编程语言</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/golang-gc.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="golang-gc.html" itemprop="commentCount"></span>
+                </a>
+                <span class="post-meta-divider">|</span>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  14
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  1
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>golang中的gc: <a href="https://github.com/qcrao/Go-Questions/blob/master/GC/GC.md" target="_blank" rel="noopener">https://github.com/qcrao/Go-Questions/blob/master/GC/GC.md</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.aitozi.com/blog-collection.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="aitozi">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aitozi">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/blog-collection.html" itemprop="url">常阅读博客</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-22T09:58:30+08:00">
+                2020-01-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/杂七杂八/" itemprop="url" rel="index">
+                    <span itemprop="name">杂七杂八</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/blog-collection.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="blog-collection.html" itemprop="commentCount"></span>
+                </a>
+                <span class="post-meta-divider">|</span>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  166
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  1
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>[toc]</p>
+<p>优秀可以常阅读汲取的博客</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/blog-collection.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.aitozi.com/go-function-in-golang.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="aitozi">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aitozi">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/go-function-in-golang.html" itemprop="url">Golang中的函数与方法</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-21T10:42:03+08:00">
+                2020-01-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程语言/" itemprop="url" rel="index">
+                    <span itemprop="name">编程语言</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/go-function-in-golang.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="go-function-in-golang.html" itemprop="commentCount"></span>
+                </a>
+                <span class="post-meta-divider">|</span>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  1.2k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  4
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>golang中的函数与方法</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/go-function-in-golang.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.aitozi.com/whats-the-point-of-our-live.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="aitozi">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aitozi">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/whats-the-point-of-our-live.html" itemprop="url">人生的意义是什么？活着的意义是什么？</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-15T14:32:20+08:00">
+                2019-09-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深度好文/" itemprop="url" rel="index">
+                    <span itemprop="name">深度好文</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/whats-the-point-of-our-live.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="whats-the-point-of-our-live.html" itemprop="commentCount"></span>
+                </a>
+                <span class="post-meta-divider">|</span>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  4.8k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  16
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <blockquote>
+<p>声明：本文章是摘录自知乎的回答，触发我去做摘录的原因是在和兔子辩论人生的意义的时候，想去翻阅之前在知乎看到的一篇高赞回答，竟然发现答案已经被折叠了。为了避免这些曾经让我陷入思考的文章流失，也为了能在我的自留地留下这些思考的痕迹。</p>
+</blockquote>
+<p>“不论将来做什么，或是伟大或是平凡，所有人都将面临死亡，每个人都会被时间所遗忘，消失在宇宙中。人的一生重复地上学放学或是上班下班，一切都这样无聊。从小就被说要做对社会有贡献的人，或是名人，牛人，有钱人，争权夺势，或是苦心研究，可是这些到最后又有什么意义呢？反正人都得死。什么也没有。有人说，人死了，可他的贡献在，会被后人永远铭记，也可以帮助国家和人类历史的发展，可是国家又是什么？就算做出了改变国家或者人类历史的事情，可是地球也终将毁灭呀？到时候人类和国家也都消失了，所有的一切都不存在了。为什么还要活着呢？或者是为什么还要努力地、拼命地活着呢？不论是好的还是坏的都将消失，为什么要做别人眼中所谓好的。”</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/whats-the-point-of-our-live.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.aitozi.com/A-Deep-Dive-into-Flink's-Network-Stack.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="aitozi">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aitozi">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/A-Deep-Dive-into-Flink's-Network-Stack.html" itemprop="url">A Deep-Dive into Flink's Network Stack</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-16T04:47:03+08:00">
+                2019-06-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深度好文/" itemprop="url" rel="index">
+                    <span itemprop="name">深度好文</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/A-Deep-Dive-into-Flink's-Network-Stack.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="A-Deep-Dive-into-Flink's-Network-Stack.html" itemprop="commentCount"></span>
+                </a>
+                <span class="post-meta-divider">|</span>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  3.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  13
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>[toc]</p>
+<p>本文翻译自flink官网的一篇博文，详细介绍Flink架构中的网络栈，下面就让我们来一睹为快吧。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/A-Deep-Dive-into-Flink's-Network-Stack.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.aitozi.com/jmh-usage.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="aitozi">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aitozi">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/jmh-usage.html" itemprop="url">Jmh测试框架和flink benchmark工程</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-14T21:05:46+08:00">
+                2019-04-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/性能优化/" itemprop="url" rel="index">
+                    <span itemprop="name">性能优化</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/jmh-usage.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="jmh-usage.html" itemprop="commentCount"></span>
+                </a>
+                <span class="post-meta-divider">|</span>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  1.6k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  6
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>[toc]</p>
+<p>本文着重介绍对jmh框架的理解和使用，以及在<a href="https://github.com/dataArtisans/flink-benchmarks," title="flink-benchmark" target="_blank" rel="noopener">flink-benchmark</a>中的应用。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/jmh-usage.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.aitozi.com/BinaryRow-implement.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="aitozi">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aitozi">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/BinaryRow-implement.html" itemprop="url">Binary Row数据结构的实现</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-31T01:53:46+08:00">
+                2019-03-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/源码分析/" itemprop="url" rel="index">
+                    <span itemprop="name">源码分析</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/BinaryRow-implement.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="BinaryRow-implement.html" itemprop="commentCount"></span>
+                </a>
+                <span class="post-meta-divider">|</span>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  2.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  13
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>[toc]</p>
+<p>Binary Row是blink开源版本<a href="https://github.com/apache/flink/tree/blink" target="_blank" rel="noopener">https://github.com/apache/flink/tree/blink</a>中提到的一个runtime层面优化的特性，主要是应用于sql模块，简单来说，由于sql本身自带schema，在上下游数据传输的时候就可以利用这个schema信息来简化序列化和反序列化的过程，本文就来具体分析这个特性的实现。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/BinaryRow-implement.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.aitozi.com/flink-sql-tutorial.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="aitozi">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aitozi">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/flink-sql-tutorial.html" itemprop="url">flink sql与calcite</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-25T16:45:30+08:00">
+                2019-03-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/源码分析/" itemprop="url" rel="index">
+                    <span itemprop="name">源码分析</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/flink-sql-tutorial.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="flink-sql-tutorial.html" itemprop="commentCount"></span>
+                </a>
+                <span class="post-meta-divider">|</span>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  1.5k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  7
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>[toc]</p>
+<p>基于Flink1.4.2版本分析flink与calcite结合构建的flink sql模块。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/flink-sql-tutorial.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="aitozi">
+          <p class="site-author-name" itemprop="name">aitozi</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="gjying1314@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                    
+                      E-Mail
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://wuchong.me/" title="wuchong" target="_blank">wuchong</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://chenyuzhao.me/" title="yuzhao" target="_blank">yuzhao</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/yanghua_kobe?viewmode=contents" title="vinoyang" target="_blank">vinoyang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/lmalds?viewmode=contents" title="Imalds" target="_blank">Imalds</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/androidlushangderen" title="hadoop" target="_blank">hadoop</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/xrq730/p/5260294.html" title="java开发" target="_blank">java开发</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.hollischuang.com/" title="阿里工程师" target="_blank">阿里工程师</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/fxjwind/" title="阿里流计算工程师" target="_blank">阿里流计算工程师</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://jm.taobao.org/" title="阿里中间件博客" target="_blank">阿里中间件博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://armsword.com/" title="duruofei" target="_blank">duruofei</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.yufeng.info/" title="褚霸" target="_blank">褚霸</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://yuzhouwan.com" title="宇宙湾" target="_blank">宇宙湾</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://matt33.com" title="matt" target="_blank">matt</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://coding-geek.com/" title="coding-geek" target="_blank">coding-geek</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">aitozi</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.lazyload/1.9.3/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://aitozi.disqus.com/count.js" async></script>
+    
+
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
