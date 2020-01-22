@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.aitozi.com/blog-collection.html</loc>
+    
+    <lastmod>2020-01-22T12:40:56.290Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.aitozi.com/golang-specific-synax.html</loc>
     
     <lastmod>2020-01-22T12:40:03.982Z</lastmod>
@@ -26,13 +33,6 @@
     <loc>http://www.aitozi.com/golang-gc.html</loc>
     
     <lastmod>2020-01-22T12:31:01.245Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.aitozi.com/blog-collection.html</loc>
-    
-    <lastmod>2020-01-22T09:31:01.814Z</lastmod>
     
   </url>
   

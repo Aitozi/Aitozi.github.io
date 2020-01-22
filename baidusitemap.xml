@@ -4,6 +4,24 @@
 
     
   <url>
+    <loc>http://www.aitozi.com/blog-collection.html</loc>
+    <lastmod>2020-01-22T12:40:56.290Z</lastmod>
+    <data>
+        <display>
+        <title>常阅读博客</title>
+        <pubTime>2020-01-22T01:58:30.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="杂七杂八" url="http://www.aitozi.com/categories/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.aitozi.com/golang-specific-synax.html</loc>
     <lastmod>2020-01-22T12:40:03.982Z</lastmod>
     <data>
@@ -77,24 +95,6 @@
            
              
               <breadCrumb title="编程语言" url="http://www.aitozi.com/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.aitozi.com/blog-collection.html</loc>
-    <lastmod>2020-01-22T09:31:01.814Z</lastmod>
-    <data>
-        <display>
-        <title>常阅读博客</title>
-        <pubTime>2020-01-22T01:58:30.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="杂七杂八" url="http://www.aitozi.com/categories/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/"/>
           
         </display>
     </data>
